@@ -18,8 +18,6 @@ import javafx.scene.text.*;
 public class ProblemPane extends StackPane {
 	
 	private static final Font DEFAULT_PROBLEM_FONT = Font.font("Times New Roman", FontWeight.BOLD, 16);
-	
-	private final FixedQueue<Double> times;
 	private final Supplier<? extends Problem> problemSupplier;
 	private final Label problemLabel, answerLabel;
 	private final TextField field;
@@ -30,7 +28,6 @@ public class ProblemPane extends StackPane {
 	private Problem currentProblem;
 	
 	public ProblemPane(final Supplier<? extends Problem> problemSupplier) {
-		this.times = new FixedQueue<>(100);
 		this.problemSupplier = Objects.requireNonNull(problemSupplier);
 		problemLabel = Labels.of(DEFAULT_PROBLEM_FONT); //gets text in the generateProblem method
 		answerLabel = new Label();
