@@ -6,21 +6,21 @@ import java.util.*;
  * @author Sam Hooper
  *
  */
-public class FixedDoubleQueue extends AbstractFixedQueue {
+public class FixedBooleanQueue extends AbstractFixedQueue {
 	
-	private final double[] elements;
+	private final boolean[] elements;
 	
-	private double total;
+	private int trues;
 	
-	public FixedDoubleQueue(final int capacity) {
+	public FixedBooleanQueue(final int capacity) {
 		super(capacity);
-		this.elements = new double[this.capacity];
+		this.elements = new boolean[this.capacity];
 	}
 	
 	/**
-	 * Adds the given {@code double} to the front (first) in this {@link FixedDoubleQueue}.
+	 * Adds the given {@code double} to the front (first) in this {@link FixedBooleanQueue}.
 	 */
-	public void addFirst(final double item) {
+	public void addFirst(final boolean item) {
 		if(size == elements.length) {
 			removeLast();
 		}
@@ -33,16 +33,17 @@ public class FixedDoubleQueue extends AbstractFixedQueue {
 	 * Called at the end of any add method. The argument is the {@code double} that was added. When this method is called,
 	 * size must have already been incremented. This method updates the {@link #average} and {@link #total} values.
 	 */
-	private void added(double item) {
-		total += item;
+	private void added(boolean item) {
+		if(item)
+			trues++;
 	}
 	
 	/**
-	 * Removes and returns the element at the back (last) in this {@link FixedDoubleQueue}.
+	 * Removes and returns the element at the back (last) in this {@link FixedBooleanQueue}.
 	 * @throws IllegalStateException if empty
 	 */
-	public double removeLast() {
-		final double item = getLast(); //throws the IllegalStateException if necessary
+	public boolean removeLast() {
+		final boolean item = getLast(); //throws the IllegalStateException if necessary
 		decTail();
 		size--;
 		removed(item);
@@ -53,22 +54,30 @@ public class FixedDoubleQueue extends AbstractFixedQueue {
 	 * Called at the end of any remove method. The argument is the {@code double} that was removed. When this method is called,
 	 * size must have already been decremented. This method updates the {@link #average} and {@link #total} values.
 	 */
-	private void removed(double item) {
-		total -= item;
+	private void removed(boolean item) {
+		if(item)
+			trues--;
 	}
 	
-	public double getLast() {
+	public boolean getLast() {
 		if(isEmpty())
 			throw new NoSuchElementException();
 		return elements[tail];
 	}
 	
-	public double total() {
-		return total;
+	public double trues() {
+		return trues;
 	}
 	
-	public double average() {
-		return total / size();
+	public double falses() {
+		return size() - trues;
+	}
+	
+	/**
+	 * Between {@code 0} and {@code 1} (inclusive).
+	 */
+	public double truthProportion() {
+		return 1.0 * trues / size;
 	}
 	
 	@Override
