@@ -17,20 +17,29 @@ import javafx.scene.text.*;
  */
 public class ProblemPane extends StackPane {
 	
+	/**
+	 * Number of the user's most recent problem attempts whose times will be kept in temporary storage.
+	 */
+	private static final int TIMES_TRACKED = 100;
+
 	private static final Font DEFAULT_PROBLEM_FONT = Font.font("Times New Roman", FontWeight.BOLD, 16);
+	
+	private final FixedDoubleQueue times = new FixedDoubleQueue(TIMES_TRACKED);
 	private final Supplier<? extends Problem> problemSupplier;
-	private final Label problemLabel, answerLabel;
+	private final Label problemLabel, answerLabel, lastTimeLabel, averageTimeLabel;
 	private final TextField field;
 	private final HBox buttonBox;
 	private final Button submit, clear, showAnswer;
 	private final CheckBox clearOnWrongAnswer, deleteText;
-	
+	private double startTime = -1; 
 	private Problem currentProblem;
 	
 	public ProblemPane(final Supplier<? extends Problem> problemSupplier) {
 		this.problemSupplier = Objects.requireNonNull(problemSupplier);
 		problemLabel = Labels.of(DEFAULT_PROBLEM_FONT); //gets text in the generateProblem method
 		answerLabel = new Label();
+		this.lastTimeLabel = new Label();
+		this.averageTimeLabel = new Label();
 		submit = Buttons.of("Submit", () -> acceptInput());
 		showAnswer = Buttons.of("Show Answer", this::showAnswer);
 		clear = Buttons.of("Clear", this::clearInputField);
@@ -54,12 +63,29 @@ public class ProblemPane extends StackPane {
 		deleteText.setSelected(true);
 		VBox vBox = new VBox(10, problemLabel, field, buttonBox, deleteText, clearOnWrongAnswer = new CheckBox("Clear on wrong answer"));
 		vBox.setAlignment(Pos.CENTER);
+		
+		HBox timeBox = new HBox(10, lastTimeLabel, averageTimeLabel);
+		AnchorPane anchor = new AnchorPane(timeBox);
+		anchor.setMouseTransparent(true);
+		AnchorPane.setBottomAnchor(timeBox, 10d);
+		AnchorPane.setLeftAnchor(timeBox, 10d);
+		AnchorPane.setRightAnchor(timeBox, 10d);
+		
+		getChildren().addAll(vBox, anchor);
+		
+		
 		generateProblemAndUpdateLabel();
-		getChildren().add(vBox);
+		startTime = System.nanoTime();
 	}
 	
+	/**
+	 * Does nothing if the input {@link String#isBlank() is blank}.
+	 */
 	private void acceptInput() {
-		acceptInput(field.getText().strip());
+		final String input = field.getText().strip();
+		if(input.isBlank())
+			return;
+		acceptInput(input);
 	}
 
 	private void acceptInput(final String inputString) {
@@ -85,11 +111,24 @@ public class ProblemPane extends StackPane {
 		return currentProblem.isCorrect(inputString);
 	}
 	
+	/**
+	 * Updates {@link #startTime}.
+	 */
 	private void setupNextProblem() {
+		updateTimes();
 		clearInputField();
 		field.setBorder(null);
 		clearAnswerLabel();
 		generateProblemAndUpdateLabel();
+		startTime = System.nanoTime();
+	}
+
+	private void updateTimes() {
+		final double time;
+		setLastTime(time = System.nanoTime() - startTime);
+		times.addFirst(time);
+		averageTimeLabel.setText(String.format("Last %d Average: %s", times.size(), secString(times.getAverage())));
+		
 	}
 
 	private void clearInputField() {
@@ -127,5 +166,13 @@ public class ProblemPane extends StackPane {
 	
 	public Supplier<? extends Problem> getSupplier() {
 		return problemSupplier;
+	}
+	
+	private void setLastTime(double timeInNanos) {
+		lastTimeLabel.setText("Last Time: " + secString(timeInNanos));
+	}
+
+	private String secString(double timeInNanos) {
+		return String.format("%.3fs", timeInNanos / 1_000_000_000);
 	}
 }
