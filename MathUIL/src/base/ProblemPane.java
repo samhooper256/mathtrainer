@@ -20,7 +20,7 @@ public class ProblemPane extends StackPane {
 	/**
 	 * Number of the user's most recent problem attempts whose times will be kept in temporary storage.
 	 */
-	private static final int RESULTS_TRACKED = 100;
+	private static final int RESULTS_TRACKED = 6;
 
 	private static final Font DEFAULT_PROBLEM_FONT = Font.font("Times New Roman", FontWeight.BOLD, 16);
 	

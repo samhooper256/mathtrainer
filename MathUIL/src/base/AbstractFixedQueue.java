@@ -41,6 +41,11 @@ public class AbstractFixedQueue {
 		return head;
 	}
 	
+	protected int decced(int num) {
+		if(--num < 0)
+			num = capacity - 1;
+		return num;
+	}
 	/**
 	 * decrements {@link #tail} mod {@link #capacity} and returns the decremented value.
 	 */

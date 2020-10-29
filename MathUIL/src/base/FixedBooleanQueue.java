@@ -14,16 +14,15 @@ public class FixedBooleanQueue extends AbstractFixedQueue {
 	
 	public FixedBooleanQueue(final int capacity) {
 		super(capacity);
-		this.elements = new boolean[this.capacity];
+		this.elements = new boolean[this.capacity + 1];
 	}
 	
 	/**
 	 * Adds the given {@code double} to the front (first) in this {@link FixedBooleanQueue}.
 	 */
 	public void addFirst(final boolean item) {
-		if(size == elements.length) {
+		if(size == capacity)
 			removeLast();
-		}
 		elements[decHead()] = item;
 		size++;
 		added(item);
@@ -62,14 +61,14 @@ public class FixedBooleanQueue extends AbstractFixedQueue {
 	public boolean getLast() {
 		if(isEmpty())
 			throw new NoSuchElementException();
-		return elements[tail];
+		return elements[decced(tail)];
 	}
 	
-	public double trues() {
+	public int trues() {
 		return trues;
 	}
 	
-	public double falses() {
+	public int falses() {
 		return size() - trues;
 	}
 	
@@ -82,9 +81,9 @@ public class FixedBooleanQueue extends AbstractFixedQueue {
 	
 	@Override
 	public String toString() {
-		StringJoiner j = new StringJoiner(", ", "[", "]");
+		StringJoiner j = new StringJoiner(",", "[", "]");
 		for(int h = head, i = 0; i < size; i++, h = ((h + 1) % capacity))
-			j.add(String.valueOf(elements[h]));
+			j.add(elements[h] ? "T" : "F");
 		return j.toString();
 	}
 }

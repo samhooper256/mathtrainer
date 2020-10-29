@@ -19,14 +19,14 @@ public class MainPane extends StackPane {
 	private static final double SETTINGS_SCREEN_PERCENT = 0.25;
 	private final ProblemPane problemPane;
 	private final Pane settingsLayer;
-	private final VBox settingsPane;
+	private final SettingsPane settingsPane;
 	private final Animation settingsAnimation;
 	private final Button settingsButton;
 	
 	public MainPane() {
 		super();
 		this.problemPane = new ProblemPane(CompositeProblemSupplier.of(new AdditionProblemSupplier(2, 2, 2, 2)));
-		this.settingsPane = new VBox();
+		this.settingsPane = new SettingsPane(this);
 		settingsPane.maxWidthProperty().bind(this.widthProperty().divide(4));
 		settingsPane.prefWidthProperty().bind(settingsPane.maxWidthProperty());
 		settingsPane.maxHeightProperty().bind(this.heightProperty());
@@ -56,5 +56,9 @@ public class MainPane extends StackPane {
 		this.settingsLayer = new Pane(settingsPane, settingsButton);
 		this.settingsLayer.setPickOnBounds(false);
 		getChildren().addAll(problemPane,settingsLayer);
+	}
+	
+	public ProblemPane getProblemPane() {
+		return problemPane;
 	}
 }
