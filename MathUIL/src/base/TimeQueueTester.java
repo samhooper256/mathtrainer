@@ -1,5 +1,7 @@
 package base;
 
+import utils.FixedDoubleQueue;
+
 /**
  * @author Sam Hooper
  *

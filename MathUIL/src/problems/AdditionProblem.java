@@ -1,4 +1,4 @@
-package base;
+package problems;
 
 import java.util.*;
 import java.util.stream.*;
@@ -19,14 +19,7 @@ public class AdditionProblem implements Problem {
 		terms = new ArrayList<>(termCount);
 		for(int i = 0; i < termCount; i++)
 			terms.add(Problem.intWithDigits((int) (Math.random() * (maxDigits + 1 - minDigits) + minDigits)));
-		result = sum(terms);
-	}
-	
-	private static int sum(List<Integer> terms) {
-		int sum = 0;
-		for(Integer i : terms)
-			sum += i.intValue();
-		return sum;
+		result = Problem.sum(terms);
 	}
 	
 	@Override

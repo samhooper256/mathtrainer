@@ -7,6 +7,8 @@ import org.controlsfx.control.RangeSlider;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import suppliers.ProblemSupplier;
+import suppliers.ProblemSuppliers;
 import utils.*;
 
 /**
@@ -30,7 +32,7 @@ public class SettingTitledPane extends TitledPane {
 	 */
 	private SettingTitledPane(ProblemSupplier supplier) {
 		Objects.requireNonNull(supplier);
-		String name = supplier instanceof NamedProblemSupplier ? ((NamedProblemSupplier) supplier).getName() : supplier.getClass().getSimpleName();
+		String name = ProblemSuppliers.nameOf(supplier.getClass());
 		this.setText(name);
 		VBox vBox = new VBox();
 		setContent(vBox);

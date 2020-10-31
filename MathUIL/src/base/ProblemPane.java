@@ -10,6 +10,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.*;
+import problems.*;
+import suppliers.*;
+import utils.*;
 
 /**
  * @author Sam Hooper
@@ -84,11 +87,15 @@ public class ProblemPane extends StackPane {
 	
 	public void updateAccuracies() {
 		accuracies.addFirst(wrongAnswers == 0);
-		averageAccuracyLabel.setText(String.format("Last %d Accuracy: %.1f%%", accuracies.size, accuracies.truthProportion() * 100));
+		averageAccuracyLabel.setText(String.format("Last %d Accuracy: %.1f%%", accuracies.size(), accuracies.truthProportion() * 100));
 	}
 
 	public CompositeProblemSupplier getSupplier() {
 		return problemSupplier;
+	}
+	
+	public void addSupplier(ProblemSupplier supplier) {
+		problemSupplier.addSupplier(supplier);
 	}
 
 	/**

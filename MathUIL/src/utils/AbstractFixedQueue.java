@@ -1,4 +1,4 @@
-package base;
+package utils;
 
 /**
  * @author Sam Hooper
@@ -41,6 +41,9 @@ public class AbstractFixedQueue {
 		return head;
 	}
 	
+	/**
+	 * Returns the decremented value of {@code num}, mod {@link #capacity}.
+	 */
 	protected int decced(int num) {
 		if(--num < 0)
 			num = capacity - 1;

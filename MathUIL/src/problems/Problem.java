@@ -1,5 +1,6 @@
-package base;
+package problems;
 
+import java.util.List;
 import java.util.function.IntSupplier;
 
 /**
@@ -29,6 +30,25 @@ public interface Problem {
 		return num;
 	}
 	
+	/**
+	 * Returns {@code 0} if the given {@link List} is empty.
+	 */
+	public static int sum(List<Integer> terms) {
+		int sum = 0;
+		for(Integer i : terms)
+			sum += i.intValue();
+		return sum;
+	}
+	
+	/**
+	 * Returns {@code 1} if the given {@link List} is empty.
+	 */
+	public static int product(List<Integer> terms) {
+		int product = 1;
+		for(Integer i : terms)
+			product *= i.intValue();
+		return product;
+	}
 	
 	String displayString();
 	

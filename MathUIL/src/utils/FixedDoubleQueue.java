@@ -1,4 +1,4 @@
-package base;
+package utils;
 
 import java.util.*;
 
@@ -14,16 +14,15 @@ public class FixedDoubleQueue extends AbstractFixedQueue {
 	
 	public FixedDoubleQueue(final int capacity) {
 		super(capacity);
-		this.elements = new double[this.capacity];
+		this.elements = new double[this.capacity + 1];
 	}
 	
 	/**
 	 * Adds the given {@code double} to the front (first) in this {@link FixedDoubleQueue}.
 	 */
 	public void addFirst(final double item) {
-		if(size == elements.length) {
+		if(size == capacity)
 			removeLast();
-		}
 		elements[decHead()] = item;
 		size++;
 		added(item);
@@ -60,7 +59,7 @@ public class FixedDoubleQueue extends AbstractFixedQueue {
 	public double getLast() {
 		if(isEmpty())
 			throw new NoSuchElementException();
-		return elements[tail];
+		return elements[decced(tail)];
 	}
 	
 	public double total() {

@@ -1,8 +1,9 @@
-package base;
+package suppliers;
 
 import java.util.*;
 import java.util.function.Supplier;
 
+import problems.Problem;
 import utils.Ref;
 
 /**
