@@ -18,7 +18,7 @@ public class AdditionProblem implements Problem {
 	public AdditionProblem(int termCount, int minDigits, int maxDigits) {
 		terms = new ArrayList<>(termCount);
 		for(int i = 0; i < termCount; i++)
-			terms.add(Problem.randomInt((int) (Math.random() * (maxDigits + 1 - minDigits) + minDigits)));
+			terms.add(Problem.intWithDigits((int) (Math.random() * (maxDigits + 1 - minDigits) + minDigits)));
 		result = sum(terms);
 	}
 	

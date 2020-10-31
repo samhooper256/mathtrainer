@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  * @author Sam Hooper
  *
  */
-public class ListRef<E> {
+public class ListRef<E> implements Ref, Iterable<E> {
 	
 	private List<E> list;
 	private ArrayList<SingleListener<E>> addListeners; //only constructed when a listener is actually added.
@@ -117,5 +117,10 @@ public class ListRef<E> {
 	
 	public int size() {
 		return list.size();
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return list.iterator();
 	}
 }

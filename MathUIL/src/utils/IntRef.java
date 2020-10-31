@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Sam Hooper
  *
  */
-public class IntRef {
+public class IntRef implements Ref {
 	private int value;
 	
 	private ArrayList<IntChangeListener> changeListeners; //only constructed when a listener is actually added.

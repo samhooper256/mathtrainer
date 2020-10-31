@@ -5,7 +5,7 @@ package utils;
  * @author Sam Hooper
  *
  */
-public class IntRange {
+public class IntRange implements Ref {
 	
 	private final int min, max;
 	private IntRef lowRef, highRef;
@@ -86,6 +86,14 @@ public class IntRange {
 
 	public IntRef highRef() {
 		return highRef;
+	}
+	
+	public void setHigh(final int newHigh) {
+		highRef().set(newHigh);
+	}
+	
+	public void setLow(final int newLow) {
+		lowRef().set(newLow);
 	}
 	
 	public int getHigh() {

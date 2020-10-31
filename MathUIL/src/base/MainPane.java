@@ -20,8 +20,10 @@ public class MainPane extends StackPane {
 	private final ProblemPane problemPane;
 	private final Pane settingsLayer;
 	private final SettingsPane settingsPane;
-	private final Animation settingsAnimation;
+	private final Animation settingsEnterAnimation ,settingsExitAnimation;
 	private final Button settingsButton;
+	
+	private boolean settingsAnimationPlaying, settingsShowing;
 	
 	public MainPane() {
 		super();
@@ -31,11 +33,14 @@ public class MainPane extends StackPane {
 		settingsPane.prefWidthProperty().bind(settingsPane.maxWidthProperty());
 		settingsPane.maxHeightProperty().bind(this.heightProperty());
 		settingsPane.prefHeightProperty().bind(settingsPane.maxHeightProperty());
-		settingsPane.setBorder(Borders.of(Color.BLUE));
 		settingsPane.setVisible(false);
-		settingsAnimation = new Transition() {
+		settingsEnterAnimation = new Transition() {
 			{
 				setCycleDuration(Duration.millis(1000));
+				setOnFinished(actionEvent -> {
+					settingsShowing = true;
+					settingsAnimationPlaying = false;
+				});
 			}
 			@Override
 			protected void interpolate(double frac) {
@@ -44,10 +49,37 @@ public class MainPane extends StackPane {
 			}
 		};
 		
+		settingsExitAnimation = new Transition() {
+			{
+				setCycleDuration(Duration.millis(1000));
+				setOnFinished(actionEvent -> {
+					settingsShowing = false;
+					settingsAnimationPlaying = false;
+					settingsPane.setVisible(false);
+				});
+			}
+			@Override
+			protected void interpolate(double frac) {
+				frac = 1 - frac;
+				double x = -(MainPane.this.getWidth() * SETTINGS_SCREEN_PERCENT * (1 - frac));
+				settingsPane.setLayoutX(x);
+			}
+		};
+		
 		settingsButton = Buttons.of("SET", () -> {
-			settingsPane.setVisible(true);
-			settingsPane.setLayoutX(-this.getWidth() * SETTINGS_SCREEN_PERCENT);
-			settingsAnimation.play();
+			if(settingsAnimationPlaying)
+				return;
+			if(!settingsShowing) {
+				settingsPane.setVisible(true);
+				settingsPane.setLayoutX(-this.getWidth() * SETTINGS_SCREEN_PERCENT);
+				settingsAnimationPlaying = true;
+				settingsEnterAnimation.play();
+			}
+			else{
+				settingsPane.setLayoutX(0);
+				settingsAnimationPlaying = true;
+				settingsExitAnimation.play();
+			}
 		});
 		settingsButton.setLayoutX(10);
 		settingsButton.setLayoutY(10);

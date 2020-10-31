@@ -43,4 +43,8 @@ public final class Borders {
 	public static Border of(Paint paint, BorderWidths width) {
 		return new Border(new BorderStroke(paint, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, width));
 	}
+	
+	public static Border of(Paint paint, CornerRadii radii) {
+		return new Border(new BorderStroke(paint, BorderStrokeStyle.SOLID, radii, BorderWidths.DEFAULT));
+	}
 }

@@ -22,7 +22,7 @@ public interface Problem {
 		return true;
 	}
 	
-	public static int randomInt(final int digits) {
+	public static int intWithDigits(final int digits) {
 		int num = 0;
 		for(int i = 0, add = 1; i < digits; i++, add *= 10)
 			num += DIGIT_SUPPLIER.getAsInt() * add;

@@ -20,13 +20,13 @@ public class ProblemPane extends StackPane {
 	/**
 	 * Number of the user's most recent problem attempts whose times will be kept in temporary storage.
 	 */
-	private static final int RESULTS_TRACKED = 6;
+	private static final int RESULTS_TRACKED = 100;
 
 	private static final Font DEFAULT_PROBLEM_FONT = Font.font("Times New Roman", FontWeight.BOLD, 16);
 	
 	private final FixedDoubleQueue times = new FixedDoubleQueue(RESULTS_TRACKED);
 	private final FixedBooleanQueue accuracies = new FixedBooleanQueue(RESULTS_TRACKED);
-	private final Supplier<? extends Problem> problemSupplier;
+	private final CompositeProblemSupplier problemSupplier;
 	private final Label problemLabel, answerLabel, lastTimeLabel, averageTimeLabel, averageAccuracyLabel;
 	private final TextField field;
 	private final HBox buttonBox;
@@ -36,7 +36,7 @@ public class ProblemPane extends StackPane {
 	private int wrongAnswers;
 	private Problem currentProblem;
 	
-	public ProblemPane(final Supplier<? extends Problem> problemSupplier) {
+	public ProblemPane(final CompositeProblemSupplier problemSupplier) {
 		this.problemSupplier = Objects.requireNonNull(problemSupplier);
 		problemLabel = Labels.of(DEFAULT_PROBLEM_FONT); //gets text in the generateProblem method
 		answerLabel = new Label();
@@ -82,6 +82,15 @@ public class ProblemPane extends StackPane {
 		startTime = System.nanoTime();
 	}
 	
+	public void updateAccuracies() {
+		accuracies.addFirst(wrongAnswers == 0);
+		averageAccuracyLabel.setText(String.format("Last %d Accuracy: %.1f%%", accuracies.size, accuracies.truthProportion() * 100));
+	}
+
+	public CompositeProblemSupplier getSupplier() {
+		return problemSupplier;
+	}
+
 	/**
 	 * Does nothing if the input {@link String#isBlank() is blank}.
 	 */
@@ -141,11 +150,6 @@ public class ProblemPane extends StackPane {
 		averageTimeLabel.setText(String.format("Last %d Average: %s", times.size(), secString(times.average())));
 	}
 	
-	public void updateAccuracies() {
-		accuracies.addFirst(wrongAnswers == 0);
-		averageAccuracyLabel.setText(String.format("Last %d Accuracy: %.1f%%", accuracies.size, accuracies.truthProportion() * 100));
-	}
-
 	private void clearInputField() {
 		field.clear();
 	}
@@ -177,10 +181,6 @@ public class ProblemPane extends StackPane {
 	
 	private void clearAnswerLabel() {
 		answerLabel.setText("");
-	}
-	
-	public Supplier<? extends Problem> getSupplier() {
-		return problemSupplier;
 	}
 	
 	private void setLastTime(double timeInNanos) {
