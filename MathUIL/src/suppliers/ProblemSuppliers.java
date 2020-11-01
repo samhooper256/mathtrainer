@@ -1,5 +1,8 @@
 package suppliers;
 
+import java.io.*;
+import java.lang.reflect.*;
+import java.net.*;
 import java.util.*;
 import java.util.function.*;
 
@@ -7,7 +10,7 @@ import java.util.function.*;
  * @author Sam Hooper
  *
  */
-public class ProblemSuppliers {
+public final class ProblemSuppliers {
 	
 	public static final class Info {
 		
@@ -38,14 +41,72 @@ public class ProblemSuppliers {
 		}
 		
 	}
+	private static final Set<String> EXCLUDED_SUPPLIER_NAMES = Set.of("CompositeProblemSupplier");
 	private static final Map<Class<? extends ProblemSupplier>, Info> REGISTERED_SUPPLIERS;
 	
 	static {
 		REGISTERED_SUPPLIERS = new HashMap<>();
-		addInfos(
-			info(AdditionProblemSupplier.class, AdditionProblemSupplier::new, "Addition Problem"),
-			info(MultiplicationProblemSupplier.class, MultiplicationProblemSupplier::new, "Multiplication Problem")
-		);
+		try {
+			detectSuppliers();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("\nUnable to detect ProblemSuppliers. Exiting program.");
+			System.exit(-1);
+		}
+	}
+	
+	private static void detectSuppliers() throws URISyntaxException, ClassNotFoundException {
+		ProblemSuppliers instance = new ProblemSuppliers();
+		URL res = instance.getClass().getResource(instance.getClass().getSimpleName() + ".class");
+		File f = new File(res.toURI());
+		File pkgFile = f.getParentFile();
+		for(File classFile : pkgFile.listFiles()) {
+			final String fileName = classFile.getName();
+			if(fileName.endsWith("Supplier.class")) {
+				final String clazzName = fileName.substring(0, fileName.lastIndexOf('.'));
+				if(EXCLUDED_SUPPLIER_NAMES.contains(clazzName))
+					continue;
+				Class<? extends ProblemSupplier> clazz = (Class<? extends ProblemSupplier>)
+						Class.forName("suppliers." + clazzName);
+				if(clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers()))
+					continue;
+				Constructor<?> noArgConstructor = getNoArgConstructorOrThrow(clazz.getConstructors());
+				Supplier<? extends ProblemSupplier> supplier = getSupplierFromNoArgConstructor(noArgConstructor);
+				String name = getDisplayNameFromSupplierClass(clazz);
+				addInfos(info(clazz, supplier, name));
+			}
+		}
+	}
+	
+	private static String getDisplayNameFromSupplierClass(Class<?> clazz) {
+		final String simpleName = clazz.getSimpleName();
+		int endIndex = simpleName.lastIndexOf("Supplier");
+		return simpleName.substring(0, endIndex).replaceAll("(?=[A-Z])", " ");
+	}
+	
+	private static Supplier<? extends ProblemSupplier> getSupplierFromNoArgConstructor(final Constructor<?> constructor) {
+		return () -> {
+			try {
+				return (ProblemSupplier) constructor.newInstance();
+			}
+			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
+		};
+	}
+	
+	private static Constructor<?> getNoArgConstructorOrThrow(Constructor<?>[] constructors) {
+		for(Constructor<?> constructor : constructors) {
+			if(constructor.getParameterCount() == 0) {
+				return constructor;
+			}
+		}
+		throw new IllegalArgumentException("There is no no-arg constructor in the given array of constructors.\n\tThe given array contained: " + Arrays.toString(constructors));
+	}
+	
+	private ProblemSuppliers() {
+		
 	}
 	
 	private static Info info(final Class<? extends ProblemSupplier> supplierClass, final Supplier<? extends ProblemSupplier> factory, final String displayName) {
@@ -67,7 +128,7 @@ public class ProblemSuppliers {
 	}
 	private static void checkRegistered(Class<? extends ProblemSupplier> problemSupplier) {
 		if(!isRegistered(problemSupplier))
-			throw new IllegalArgumentException(problemSupplier.getClass() + " is not registered.");
+			throw new IllegalArgumentException(problemSupplier.getClass().getSimpleName() + " is not registered.");
 	}
 
 	/**

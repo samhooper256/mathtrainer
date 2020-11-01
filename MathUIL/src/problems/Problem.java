@@ -3,7 +3,12 @@ package problems;
 import java.util.List;
 import java.util.function.IntSupplier;
 
+import suppliers.ProblemSupplier;
+
 /**
+ * A problem that the user can attempt to solve. Any {@link Problem} that will be displayed to the user must have a
+ * {@link ProblemSupplier} that supplies it.
+ * 
  * @author Sam Hooper
  *
  */

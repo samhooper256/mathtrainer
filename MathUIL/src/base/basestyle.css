@@ -1,0 +1,47 @@
+.root {
+	
+}
+
+.settings-pane {
+	
+}
+
+.supplier-chooser {
+	-fx-padding: 5;
+	
+	-fx-border-style: solid;
+	-fx-border-color: black;
+	-fx-border-radius: 4;
+	-fx-borer-width: 1;
+	
+	-fx-background-color: lightgray;
+	-fx-background-radius: 4;
+	
+}
+
+.supplier-chooser .title {
+	-fx-font-size: 18;
+	-fx-text-alignment: center;
+}
+
+.supplier-chooser .button{
+	-fx-padding: 5;
+	
+	-fx-border-insets: 0;
+	-fx-border-width: 1;
+	-fx-border-style: solid;
+	-fx-border-color: black;
+	-fx-border-radius: 4;
+	
+	-fx-background-insets: 0;
+	-fx-background-color: transparent;
+	-fx-background-radius: 4;
+}
+
+.supplier-chooser .button:hover {
+	-fx-background-color: orange;
+}
+
+.supplier-chooser .button:disabled {
+	-fx-border-color: gray;
+}

@@ -5,7 +5,7 @@ package utils;
  *
  */
 @FunctionalInterface
-public interface IntChangeListener {
+public interface IntChangeListener extends Listener {
 	
 	void changed(int oldValue, int newValue);
 	

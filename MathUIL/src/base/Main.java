@@ -25,6 +25,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		Main.primaryStage = primaryStage;
 		Scene scene = MainScene.create(600, 400);
+		scene.getStylesheets().add("base/basestyle.css");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

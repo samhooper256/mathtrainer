@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
- * A reference to a {@link List}. Allows for {@link SingleListener}s to be run when an element is added or removed.
+ * A reference to a {@link List}. Allows for {@link SingleListener SingleListeners} to be run when an element is added or removed.
  * Note that the listeners are run <i>after</i> the element is added or removed, and the object passed to the listener
  * is the element that was added/removed.
  * @author Sam Hooper
@@ -122,5 +122,10 @@ public class ListRef<E> implements Ref, Iterable<E> {
 	@Override
 	public Iterator<E> iterator() {
 		return list.iterator();
+	}
+	
+	@Override
+	public String toString() {
+		return "ListRef" + list.toString();
 	}
 }

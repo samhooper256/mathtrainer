@@ -7,8 +7,10 @@ import problems.Problem;
 import utils.ListRef;
 
 /**
- * A {@link ProblemSupplier} that is composed of several other {@code Suppliers}. The {@link #get()} method
- * returns a {@link Problem} from a randomly chosen one of the {@link CompositeProblemSupplier CompositeProblemSupplier's} {@link Suppliers}.
+ * A {@link ProblemSupplier} that is composed of several other {@link ProblemSupplier ProblemSuppliers}. The {@link #get()} method
+ * returns a {@link Problem} from a randomly chosen one of the {@link CompositeProblemSupplier CompositeProblemSupplier's}
+ * {@link #suppliers() suppliers}.
+ * 
  * @author Sam Hooper
  *
  */
@@ -47,4 +49,5 @@ public class CompositeProblemSupplier implements ProblemSupplier {
 	public ListRef<ProblemSupplier> suppliers() {
 		return suppliers;
 	}
+	
 }
