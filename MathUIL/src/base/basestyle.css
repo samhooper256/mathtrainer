@@ -62,9 +62,8 @@
 	
 }
 
-.supplier-chooser .flow-pane {
-	-fx-hgap: 5;
-	-fx-vgap: 5;
+.supplier-chooser > .vbox {
+	-fx-spacing: 10;
 }
 
 .supplier-chooser .title {
@@ -72,7 +71,18 @@
 	-fx-text-alignment: center;
 }
 
-.supplier-chooser .button{
+.supplier-chooser .scroll-pane {
+	-fx-fit-to-width: true;
+}
+
+.supplier-chooser .scroll-pane .flow-pane {
+	-fx-hgap: 4;
+	-fx-vgap: 4;
+	
+	-fx-padding: 5;
+}
+
+.supplier-button{
 	-fx-padding: 5;
 	
 	-fx-border-insets: 0;
@@ -86,10 +96,10 @@
 	-fx-background-radius: 4;
 }
 
-.supplier-chooser .button:hover {
+.supplier-button:hover {
 	-fx-background-color: orange;
 }
 
-.supplier-chooser .button:disabled {
+.supplier-button:disabled {
 	-fx-border-color: gray;
 }

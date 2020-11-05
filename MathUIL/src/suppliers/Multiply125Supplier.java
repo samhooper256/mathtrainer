@@ -2,7 +2,6 @@ package suppliers;
 
 import java.util.List;
 
-import base.NamedSetting;
 import problems.IntegerMultiplication;
 import problems.Problem;
 import utils.*;

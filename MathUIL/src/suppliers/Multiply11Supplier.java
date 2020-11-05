@@ -2,7 +2,6 @@ package suppliers;
 
 import java.util.*;
 
-import base.NamedSetting;
 import problems.*;
 import utils.*;
 

@@ -8,6 +8,7 @@ import fxutils.Buttons;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import suppliers.NamedSetting;
 import suppliers.ProblemSupplier;
 import suppliers.ProblemSuppliers;
 import utils.*;
@@ -56,6 +57,7 @@ public class SettingTitledPane extends TitledPane {
 	 * </p>
 	 */
 	public static Node displayNodeForRef(Ref ref) {
+//		System.out.printf("Building display node for ref=%s%n", ref);
 		VBox vBox = new VBox(2);
 		String name = "";
 		if(ref instanceof NamedSetting<?>) {
@@ -89,8 +91,9 @@ public class SettingTitledPane extends TitledPane {
 			this.range = range;
 			this.setMin(range.getMin());
 			this.setMax(range.getMax());
-			this.setLowValue(range.getLow());
 			this.setHighValue(range.getHigh());
+			this.setLowValue(range.getLow());
+			this.setHighValue(range.getHigh()); //this line is intentional. 
 			this.lowValueProperty().addListener((ov, oldV, newV) -> {
 				final double val = newV.doubleValue();
 				if(isInt(val)) {
@@ -110,6 +113,13 @@ public class SettingTitledPane extends TitledPane {
 			this.setMajorTickUnit(1);
 			this.setMinorTickCount(0);
 			this.setSnapToTicks(true);
+			
+			range.lowRef().addChangeListener((ov, nv) -> {
+				this.setLowValue(nv);
+			});
+			range.highRef().addChangeListener((ov, nv) -> {
+				this.setHighValue(nv);
+			});
 		}
 	}
 	

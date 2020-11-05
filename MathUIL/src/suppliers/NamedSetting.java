@@ -1,4 +1,4 @@
-package base;
+package suppliers;
 
 import utils.Ref;
 
@@ -25,6 +25,10 @@ public interface NamedSetting<T extends Ref> extends Ref {
 				return ref;
 			}
 			
+			@Override
+			public String toString() {
+				return String.format("NamedSetting[name=%s, ref=%s]", name, ref);
+			}
 		};
 	}
 }

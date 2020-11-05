@@ -17,7 +17,9 @@ import utils.*;
 public interface Problem {
 	
 	public static final IntSupplier DIGIT_SUPPLIER = () -> (int) (Math.random() * 10);
-
+	
+	public static final Random RAND = new Random();
+	
 	public static boolean isInteger(final String s) {
 		if(s.length() == 0)
 			return false;

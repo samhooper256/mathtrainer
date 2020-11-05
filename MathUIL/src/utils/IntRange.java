@@ -56,13 +56,15 @@ public class IntRange implements Ref {
 	 * @param low
 	 * @param high
 	 */
-	public IntRange(int min, int max, int low, int high) {
+	public IntRange(final int min, final int max, final int low, final int high) {
 		super();
+//		System.out.printf("(enter) IntRange constructor with args=(min=%d, max=%d, low=%d, high=%d)%n", min, max, low, high);
 		verify(min, max, low, high);
 		this.min = min;
 		this.max = max;
 		this.lowRef = new LowRef(low);
 		this.highRef = new HighRef(high);
+//		System.out.printf("new IntRange created: %s%n", this);
 	}
 	
 	private static void verify(final int min, final int max, final int low, final int high) {
@@ -103,4 +105,11 @@ public class IntRange implements Ref {
 	public int getLow() {
 		return lowRef().get();
 	}
+
+	@Override
+	public String toString() {
+		return "IntRange[min=" + min + ", max=" + max + ", lowRef=" + lowRef + ", highRef=" + highRef + "]";
+	}
+	
+	
 }

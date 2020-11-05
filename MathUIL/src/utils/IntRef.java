@@ -62,4 +62,11 @@ public class IntRef implements Ref {
 	public boolean removeChangeListener(IntChangeListener listener) {
 		return changeListeners != null && changeListeners.remove(listener);
 	}
+
+	@Override
+	public String toString() {
+		return "IntRef[" + value + "]";
+	}
+	
+	
 }

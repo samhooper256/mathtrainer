@@ -17,13 +17,14 @@ import suppliers.*;
  */
 public class SupplierChooser extends StackPane {
 	
-	private static final String TITLE_STYLE_CLASS = "title";
+	private static final String TITLE_STYLE = "title", VBOX_STYLE = "vbox", SCROLL_PANE_STYLE = "scroll-pane", FLOW_PANE_STYLE = "flow-pane";
 	/**
 	 * CSS Style class name
 	 */
 	private static final String STYLE_CLASS_NAME = "supplier-chooser";
 	
 	private final VBox vBox;
+	private final ScrollPane scroll;
 	private final FlowPane flowPane;
 	private final HBox bottomBox;
 	private final Button addSelectedButton;
@@ -37,6 +38,7 @@ public class SupplierChooser extends StackPane {
 		SupplierButton(final ProblemSuppliers.Info info) {
 			this.info = info;
 			this.desired = false;
+			this.getStyleClass().add("supplier-button");
 			this.setText(info.getDisplayName());
 			this.setOnAction(actionEvent -> toggleDesire());
 		}
@@ -72,11 +74,14 @@ public class SupplierChooser extends StackPane {
 		this.mainPane = mainPane;
 		this.getStyleClass().add(STYLE_CLASS_NAME);
 		title = new Label("Add Problem Type");
-		title.getStyleClass().add(TITLE_STYLE_CLASS);
+		title.getStyleClass().add(TITLE_STYLE);
 		
-		vBox = new VBox(10);
+		vBox = new VBox();
+		vBox.getStyleClass().add(VBOX_STYLE);
 		flowPane = new FlowPane();
-		flowPane.setPadding(new Insets(5));
+		flowPane.getStyleClass().add(FLOW_PANE_STYLE);
+		scroll = new ScrollPane(flowPane);
+		scroll.getStyleClass().add(SCROLL_PANE_STYLE);
 		for(ProblemSuppliers.Info info : ProblemSuppliers.getRegisteredInfos()) {
 			final Button b = new SupplierButton(info);
 			flowPane.getChildren().add(b);
@@ -85,7 +90,7 @@ public class SupplierChooser extends StackPane {
 		addSelectedButton = Buttons.of("Add Selected", this::addDesired);
 		bottomBox = new HBox(addSelectedButton);
 		
-		vBox.getChildren().addAll(title, flowPane, bottomBox);
+		vBox.getChildren().addAll(title, scroll, bottomBox);
 		getChildren().add(vBox);
 	}
 	
