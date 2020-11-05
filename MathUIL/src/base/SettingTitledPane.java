@@ -57,15 +57,23 @@ public class SettingTitledPane extends TitledPane {
 	 */
 	public static Node displayNodeForRef(Ref ref) {
 		VBox vBox = new VBox(2);
+		String name = "";
 		if(ref instanceof NamedSetting<?>) {
 			NamedSetting<?> ns = (NamedSetting<?>) ref;
-			vBox.getChildren().add(new Label(((NamedSetting<?>) ref).getName()));
+			name = ((NamedSetting<?>) ref).getName();
 			ref = ns.ref();
 		}
 		if(ref instanceof IntRange) {
+			vBox.getChildren().add(new Label(name));
+			
 			IntRange ir = (IntRange) ref;
 			final RangeSlider rangeSlider = new IntRangeSlider(ir);
 			vBox.getChildren().add(rangeSlider);
+		}
+		else if(ref instanceof BooleanRef) {
+			BooleanRef br = (BooleanRef) ref;
+			vBox.getChildren().add(new BoolBox(br, name));
+			
 		}
 		else {
 			throw new UnsupportedOperationException("Unsupported setting type: " + ref.getClass());
@@ -85,13 +93,17 @@ public class SettingTitledPane extends TitledPane {
 			this.setHighValue(range.getHigh());
 			this.lowValueProperty().addListener((ov, oldV, newV) -> {
 				final double val = newV.doubleValue();
-				if(isInt(val))
+				if(isInt(val)) {
+//					System.out.printf("setting low: %d%n", (int) val);
 					range.setLow((int) val);
+				}
 			});
 			this.highValueProperty().addListener((ov, oldV, newV) -> {
 				final double val = newV.doubleValue();
-				if(isInt(val))
+				if(isInt(val)) {
+//					System.out.printf("setting high: %d%n", (int) val);
 					range.setHigh((int) val);
+				}
 			});
 			
 			this.setShowTickLabels(true);
@@ -101,8 +113,25 @@ public class SettingTitledPane extends TitledPane {
 		}
 	}
 	
+	private static class BoolBox extends Label {
+		
+		private final BooleanRef ref;
+		
+		public BoolBox(final BooleanRef ref, final String text) {
+			super(text);
+			this.ref = ref;
+			CheckBox checkBox = new CheckBox();
+			checkBox.setSelected(ref.get());
+			checkBox.selectedProperty().addListener((obs, ov, nv) -> {
+				ref.set(nv);
+			});
+			this.setGraphic(checkBox);
+			this.setContentDisplay(ContentDisplay.LEFT);
+		}
+	}
+	
 	private static boolean isInt(final double d) {
-		return d % 1 != 0;
+		return d % 1 == 0;
 	}
 	
 	public ProblemSupplier getSupplier() {

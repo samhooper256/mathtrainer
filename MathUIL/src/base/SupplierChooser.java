@@ -24,25 +24,48 @@ public class SupplierChooser extends StackPane {
 	private static final String STYLE_CLASS_NAME = "supplier-chooser";
 	
 	private final VBox vBox;
-	private final HBox hBox;
+	private final FlowPane flowPane;
+	private final HBox bottomBox;
+	private final Button addSelectedButton;
 	private final Label title;
 	private final MainPane mainPane;
 	
 	private class SupplierButton extends Button {
 		
 		private final ProblemSuppliers.Info info;
-		
+		private boolean desired;
 		SupplierButton(final ProblemSuppliers.Info info) {
 			this.info = info;
+			this.desired = false;
 			this.setText(info.getDisplayName());
-			this.setOnAction(actionEvent -> {
-				mainPane.chooseSupplier(info.getFactory().get());
-			});
+			this.setOnAction(actionEvent -> toggleDesire());
+		}
+		
+		void toggleDesire() {
+			if(desired) {
+				desired = false;
+				this.setStyle("");				
+			}
+			else {
+				desired = true;
+				this.setStyle("-fx-border-color: green; -fx-border-width: 3;");
+			}
 		}
 		
 		ProblemSuppliers.Info getInfo() {
 			return info;
 		}
+		
+		boolean isDesired() {
+			return desired;
+		}
+
+		@Override
+		public String toString() {
+			return "SupplierButton[info=" + info + ", desired=" + desired + "]";
+		}
+		
+		
 	}
 	public SupplierChooser(MainPane mainPane) {
 		Objects.requireNonNull(mainPane);
@@ -52,15 +75,29 @@ public class SupplierChooser extends StackPane {
 		title.getStyleClass().add(TITLE_STYLE_CLASS);
 		
 		vBox = new VBox(10);
-		hBox = new HBox(5);
-		hBox.setPadding(new Insets(5));
+		flowPane = new FlowPane();
+		flowPane.setPadding(new Insets(5));
 		for(ProblemSuppliers.Info info : ProblemSuppliers.getRegisteredInfos()) {
 			final Button b = new SupplierButton(info);
-			hBox.getChildren().add(b);
+			flowPane.getChildren().add(b);
 		}
 		
-		vBox.getChildren().addAll(title, hBox);
+		addSelectedButton = Buttons.of("Add Selected", this::addDesired);
+		bottomBox = new HBox(addSelectedButton);
+		
+		vBox.getChildren().addAll(title, flowPane, bottomBox);
 		getChildren().add(vBox);
+	}
+	
+	private void addDesired() {
+		mainPane.hideChooser();
+		for(Node n : flowPane.getChildren()) {
+			SupplierButton sb = (SupplierButton) n;
+			if(sb.isDesired()) {
+				mainPane.addSupplierOrThrow(sb.getInfo().getFactory().get());
+				sb.toggleDesire();
+			}
+		}
 	}
 
 	/**
@@ -69,7 +106,7 @@ public class SupplierChooser extends StackPane {
 	public void show() {
 		System.out.printf("SupplierChooser => show()%n");
 		System.out.printf("\t%s%n", mainPane.getProblemPane().getSupplier().suppliers());
-		for(final Node n : hBox.getChildren()) {
+		for(final Node n : flowPane.getChildren()) {
 			SupplierButton b = (SupplierButton) n;
 			if(mainPane.getProblemPane().hasSupplierOfClass(b.getInfo().getSupplierClass())) {
 				b.setDisable(true);

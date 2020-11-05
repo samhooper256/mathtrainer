@@ -10,6 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.*;
+import javafx.scene.web.WebView;
 import problems.*;
 import suppliers.*;
 import utils.*;
@@ -20,6 +21,7 @@ import utils.*;
  */
 public class ProblemPane extends StackPane {
 	
+	private static final String PROBLEM_VIEW_CSS_FILENAME = "problemview.css";
 	/**
 	 * Number of the user's most recent problem attempts whose times and accuracies will be kept
 	 * in temporary storage (and displayed to the user).
@@ -30,7 +32,8 @@ public class ProblemPane extends StackPane {
 	private final FixedDoubleQueue times;
 	private final FixedBooleanQueue accuracies;
 	private final CompositeProblemSupplier problemSupplier;
-	private final Label problemLabel, answerLabel, lastTimeLabel, averageTimeLabel, averageAccuracyLabel;
+	private final WebView problemView;
+	private final Label answerLabel, lastTimeLabel, averageTimeLabel, averageAccuracyLabel;
 	/**
 	 * The {@link TextField} where the user will type their answer.
 	 */
@@ -52,7 +55,7 @@ public class ProblemPane extends StackPane {
 		this.times = new FixedDoubleQueue(RESULTS_TRACKED);
 		this.accuracies = new FixedBooleanQueue(RESULTS_TRACKED);
 		
-		problemLabel = Labels.of(DEFAULT_PROBLEM_FONT); //gets text in the generateProblem method
+		
 		answerLabel = new Label();
 		this.lastTimeLabel = new Label();
 		this.averageTimeLabel = new Label();
@@ -71,6 +74,10 @@ public class ProblemPane extends StackPane {
 				}
 			}
 		});
+		problemView = new WebView();
+		problemView.getEngine().setUserStyleSheetLocation(getClass().getResource(PROBLEM_VIEW_CSS_FILENAME).toString());
+		problemView.prefWidthProperty().bind(field.widthProperty());
+		problemView.prefHeightProperty().bind(field.heightProperty().multiply(1.2));
 		setOnKeyPressed(keyEvent -> {
 			switch(keyEvent.getCode()) {
 				case ENTER -> acceptInput();
@@ -78,7 +85,7 @@ public class ProblemPane extends StackPane {
 		});
 		deleteText = new CheckBox("Can delete text");
 		deleteText.setSelected(true);
-		VBox vBox = new VBox(10, problemLabel, field, buttonBox, deleteText, clearOnWrongAnswer = new CheckBox("Clear on wrong answer"));
+		VBox vBox = new VBox(10, problemView, field, buttonBox, deleteText, clearOnWrongAnswer = new CheckBox("Clear on wrong answer"));
 		vBox.setAlignment(Pos.CENTER);
 		
 		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel);
@@ -168,7 +175,6 @@ public class ProblemPane extends StackPane {
 			setupNextProblem();
 		else
 			wrongAnswer();
-		
 	}
 	/**
 	 * Called when a wrong answer was submitted
@@ -227,7 +233,8 @@ public class ProblemPane extends StackPane {
 	}
 
 	private void updateLabel() {
-		problemLabel.setText(currentProblem.displayString());
+		assert currentProblem.displayString() != null;
+		problemView.getEngine().loadContent(currentProblem.displayString());
 	}
 	
 	private boolean isClearOnWrongAnswer() {

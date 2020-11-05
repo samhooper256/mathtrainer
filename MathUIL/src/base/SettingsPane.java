@@ -17,34 +17,34 @@ import suppliers.ProblemSupplier;
  * @author Sam Hooper
  *
  */
-public class SettingsPane extends VBox {
+public class SettingsPane extends StackPane {
 	
 	private static final String REMOVE_SUPPLIER_BUTTON_TEXT = "- Remove Problem Type";
-	/**
-	 * CSS Style class name
-	 */
+	
 	private static final String STYLE_CLASS_NAME = "settings-pane";
-	private static final int DEFAULT_PADDING = 5;
-	private static final int DEFAULT_SPACING = 5;
-	private static final Font SETTINGS_TITLE_FONT = Font.font(16);
-	private static final Insets TITLE_PADDING = new Insets(0, 0, 0, 1);
+	private static final String VBOX_STYLE_CLASS_NAME = "settings-pane-vbox";
+	private static final String SETTINGS_BOX_STYLE_CLASS_NAME = "settings-box";
+	private static final String TITLE_STYLE_CLASS_NAME = "settings-pane-title";
+	private static final String SCROLL_PANE_STYLE_CLASS_NAME = "settings-scroll-pane";
 	private final MainPane mainPane;
 	private final VBox settingsBox;
 	private final Label title;
 	private final Button removeSupplierButton;
 	
+	private final VBox vBox;
+	private final ScrollPane scrollPane;
+	
 	private boolean allowingRemoval;
 	public SettingsPane(MainPane mainPane) {
-		super(DEFAULT_SPACING);
-		this.getStyleClass().add(STYLE_CLASS_NAME);
+//		this.getStyleClass().add(STYLE_CLASS_NAME);
+		vBox = new VBox();
+//		vBox.getStyleClass().add(VBOX_STYLE_CLASS_NAME);
 		Objects.requireNonNull(mainPane);
 		this.mainPane = mainPane;
 		this.title = new Label("Settings");
-		title.setFont(SETTINGS_TITLE_FONT);
-		title.setPadding(TITLE_PADDING);
-		this.settingsBox = new VBox(DEFAULT_SPACING);
-		setPadding(new Insets(DEFAULT_PADDING));
-		setBorder(Borders.of(Color.LIGHTGRAY, new CornerRadii(5)));
+//		title.getStyleClass().add(TITLE_STYLE_CLASS_NAME);
+		this.settingsBox = new VBox();
+//		this.settingsBox.getStyleClass().add(SETTINGS_BOX_STYLE_CLASS_NAME);
 		ProblemPane problemPane = mainPane.getProblemPane();
 		CompositeProblemSupplier supplier = problemPane.getSupplier();
 		for(ProblemSupplier ps : supplier.suppliers())
@@ -53,11 +53,10 @@ public class SettingsPane extends VBox {
 		supplier.suppliers().addRemoveListener(this::supplierRemoved);
 		
 		this.removeSupplierButton = Buttons.of(REMOVE_SUPPLIER_BUTTON_TEXT, this::removeSupplierButtonAction);
-		getChildren().addAll(title, settingsBox, createAddSupplierButton(), removeSupplierButton);
-		
-//		settingsBox.setBorder(Borders.of(Color.PINK));
-//		this.setBorder(Borders.of(Color.ORANGE));
-//		title.setBorder(Borders.of(Color.BLUE));
+		vBox.getChildren().addAll(title, settingsBox, createAddSupplierButton(), removeSupplierButton);
+		this.scrollPane = new ScrollPane(vBox);
+//		this.scrollPane.getStyleClass().add(SCROLL_PANE_STYLE_CLASS_NAME);
+		getChildren().add(scrollPane);
 	}
 	
 	private void supplierAdded(final ProblemSupplier ps) {
@@ -88,6 +87,8 @@ public class SettingsPane extends VBox {
 			allowForRemoval();
 	}
 	private void allowForRemoval() {
+		if(this.allowingRemoval)
+			return;
 		this.allowingRemoval = true;
 		removeSupplierButton.setText("Done");
 		for(Node node : settingsBox.getChildren()) {
@@ -97,6 +98,8 @@ public class SettingsPane extends VBox {
 	}
 	
 	private void disallowRemoval() {
+		if(!this.allowingRemoval)
+			return;
 		this.allowingRemoval = false;
 		removeSupplierButton.setText(REMOVE_SUPPLIER_BUTTON_TEXT);
 		for(Node node : settingsBox.getChildren()) {
@@ -110,6 +113,7 @@ public class SettingsPane extends VBox {
 	}
 	
 	private void showChooser() {
+		disallowRemoval();
 		mainPane.showChooser();
 	}
 	

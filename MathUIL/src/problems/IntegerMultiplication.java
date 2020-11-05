@@ -1,31 +1,40 @@
 package problems;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
+
+import utils.*;
 
 /**
  * @author Sam Hooper
  *
  */
-public class MultiplicationProblem implements Problem {
+public class IntegerMultiplication implements Problem {
 	
-	private final List<Integer> terms;
-	private final int result;
+	private final IntList terms;
+	private final long result;
 	
 	/**
 	 * max and min digit counts are inclusive bounds.
 	 */
-	public MultiplicationProblem(int termCount, int minDigits, int maxDigits) {
-		terms = new ArrayList<>(termCount);
+	public IntegerMultiplication(int termCount, int minDigits, int maxDigits) {
+		terms = new IntList(termCount);
 		for(int i = 0; i < termCount; i++)
 			terms.add(Problem.intWithDigits((int) (Math.random() * (maxDigits + 1 - minDigits) + minDigits)));
 		result = Problem.product(terms);
 	}
 	
+	private IntegerMultiplication(int[] termsArr) {
+		this.terms = new IntList(termsArr);
+		this.result = Problem.product(this.terms);
+	}
+	
+	public static IntegerMultiplication fromTerms(int... terms) {
+		return new IntegerMultiplication(terms);
+	}
+	
 	@Override
 	public String displayString() {
-		return terms.stream().map(String::valueOf).collect(Collectors.joining(" × "));
+		return terms.stream().mapToObj(String::valueOf).collect(Collectors.joining(" × "));
 	}
 	
 	@Override

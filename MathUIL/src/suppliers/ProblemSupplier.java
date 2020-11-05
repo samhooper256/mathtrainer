@@ -12,7 +12,7 @@ import utils.Ref;
  * to be displayed to the user.</p>
  * 
  * <p>{@link ProblemSupplier ProblemSuppliers} may optionally have {@link #settings() settings}. These settings can be
- * adjusted by the user. An example of a setting would be the amount of terms in an {@link AdditionProblem}. A
+ * adjusted by the user. An example of a setting would be the amount of terms in an {@link IntAddSubtract}. A
  * {@link ProblemSupplier ProblemSupplier's} settings are returned as a {@link Collection} of {@link Ref Refs}.</p>
  * 
  * <p><b>Implementation note:</b> In order for a setting to be displayed to and adjusted by the user, it must be of a

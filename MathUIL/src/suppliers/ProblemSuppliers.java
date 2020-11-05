@@ -15,8 +15,9 @@ public final class ProblemSuppliers {
 	public static final class Info {
 		
 		private final Class<? extends ProblemSupplier> supplierClass;
-		private final String displayName;
 		private final Supplier<? extends ProblemSupplier> factory;
+		
+		private String displayName; //name can be changed, so not final
 		
 		private Info(Class<? extends ProblemSupplier> supplierClass, Supplier<? extends ProblemSupplier> factory, String displayName) {
 			this.supplierClass = supplierClass;
@@ -41,7 +42,7 @@ public final class ProblemSuppliers {
 		}
 		
 	}
-	private static final Set<String> EXCLUDED_SUPPLIER_NAMES = Set.of("CompositeProblemSupplier");
+	private static final Set<String> EXCLUDED_SUPPLIER_NAMES = Set.of(CompositeProblemSupplier.class.getSimpleName(), SettingsProblemSupplier.class.getSimpleName());
 	private static final Map<Class<? extends ProblemSupplier>, Info> REGISTERED_SUPPLIERS;
 	
 	static {
@@ -54,6 +55,17 @@ public final class ProblemSuppliers {
 			System.err.println("\nUnable to detect ProblemSuppliers. Exiting program.");
 			System.exit(-1);
 		}
+		customName(IntAddSubtractSupplier.class, "Integer Addition & Subtraction");
+		customName(PEMDASApproximationSupplier.class, "PEMDAS Approximation");
+		customName(Multiply11Supplier.class, "Multiply by 11 and like");
+		customName(Multiply25Supplier.class, "Multiply by 25");
+		customName(Multiply125Supplier.class, "Multiply by 125 and like");
+		customName(Multiply5EndSupplier.class, "Multiply ending in 5");
+		customName(Multiply101Supplier.class, "Multiply by 101 and like");
+	}
+	
+	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {
+		REGISTERED_SUPPLIERS.get(clazz).displayName = name;
 	}
 	
 	private static void detectSuppliers() throws URISyntaxException, ClassNotFoundException {

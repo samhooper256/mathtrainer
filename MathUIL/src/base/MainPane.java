@@ -40,7 +40,7 @@ public class MainPane extends StackPane {
 	
 	public MainPane() {
 		super();
-		this.problemPane = new ProblemPane(CompositeProblemSupplier.of(new AdditionProblemSupplier(2, 2, 2, 2)));
+		this.problemPane = new ProblemPane(CompositeProblemSupplier.of(new IntAddSubtractSupplier(2, 2, 2, 2)));
 		this.settingsPane = new SettingsPane(this);
 		this.settingsEnterAnimation = createSettingsEnterAnimation();
 		this.settingsExitAnimation = createSettingsExitAnimation();
@@ -58,7 +58,7 @@ public class MainPane extends StackPane {
 	private void initSettings() {
 		settingsPane.maxWidthProperty().bind(this.widthProperty().divide(4));
 		settingsPane.prefWidthProperty().bind(settingsPane.maxWidthProperty());
-		settingsPane.maxHeightProperty().bind(this.heightProperty());
+		settingsPane.maxHeightProperty().bind(this.heightProperty().subtract(settingsPane.layoutYProperty()));
 		settingsPane.prefHeightProperty().bind(settingsPane.maxHeightProperty());
 		settingsPane.setVisible(false);
 		
@@ -161,11 +161,6 @@ public class MainPane extends StackPane {
 		settingsLayer.setMouseTransparent(false);
 		chooserLayer.setMouseTransparent(true);
 		supplierChooser.hide();
-	}
-	
-	public void chooseSupplier(final ProblemSupplier supplier) {
-		hideChooser();
-		addSupplierOrThrow(supplier);
 	}
 	
 	public void addSupplierOrThrow(ProblemSupplier supplier) {

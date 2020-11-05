@@ -16,8 +16,22 @@ public class Main extends Application {
 	private static final String RESOURCES_PREFIX = "/resources/";
 	private static Stage primaryStage;
 	
+	/**
+	 * @throws AssertionError if assertions are not enabled.
+	 */
+	private static void ensureAssertionsAreEnabled() {
+		boolean enabled = false;
+		assert (enabled = true) == true;
+		if(!enabled)
+			throw new AssertionError(String.format(
+					"%n%nAssertions are not enabled. The program currently requires assertons to be enabled.%n"
+					+ "Enable them by adding the '-ea' JVM argument.%n"
+					+ "In Eclipse, this can be done by clicking Run > Run Configurations > Arguments tab. Then, enter "
+					+ "'-ea' into the 'VM Arguments' box.%n"
+			));
+	}
 	public static void main(String[] args) {
-		primaryStage = null;
+		ensureAssertionsAreEnabled();
 		launch(args);
 	}
 	

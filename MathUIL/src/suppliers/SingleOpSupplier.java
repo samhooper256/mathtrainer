@@ -17,7 +17,7 @@ public abstract class SingleOpSupplier implements ProblemSupplier {
 	public SingleOpSupplier(int minTerms, int maxTerms, int lowTerms, int highTerms, int minDigits, int maxDigits, int lowDigits, int highDigits) {
 		termRange = NamedSetting.of(new IntRange(minTerms, maxTerms, lowTerms, highTerms), "Terms");
 		digitRange = NamedSetting.of(new IntRange(minDigits, maxDigits, lowDigits, highDigits), "Digits");
-		this.settings = new ArrayList<>();
+		this.settings = new ArrayList<>(2);
 		Collections.addAll(settings, termRange, digitRange);
 	}
 	

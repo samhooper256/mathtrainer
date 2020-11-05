@@ -1,9 +1,52 @@
 .root {
-	
+	-fx-background-color: #ebf5ff;
 }
 
 .settings-pane {
+	-fx-padding: 0;
+	-fx-background-insets: 0;
+	-fx-border-color: transparent;
+	-fx-background-color: transparent;
+}
+
+.settings-pane-vbox {
+	-fx-padding: 5;
+	-fx-spacing: 4;
 	
+	-fx-border-width: 1;
+	-fx-border-color: #dcb3ff;
+	-fx-border-radius: 10;
+	
+	-fx-background-radius: 10;
+	-fx-background-color: #ebdff5;
+}
+
+.settings-pane-title {
+	-fx-font-size: 16;
+	-fx-padding: 0 0 0 1;
+	
+	-fx-border-color: transparent;
+	-fx-background-color: transparent;
+}
+
+.settings-box {
+	-fx-padding: 5;
+	-fx-spacing: 5;
+	
+	-fx-border-color: transparent;
+	-fx-background-color: transparent;
+}
+
+.settings-scroll-pane {
+	-fx-fit-to-width: true;
+	
+	-fx-border-color: transparent;
+	-fx-background-color: transparent;
+}
+
+.settings-scroll-pane > .viewport{
+	-fx-border-color: transparent;
+	-fx-background-color: transparent;
 }
 
 .supplier-chooser {
@@ -17,6 +60,11 @@
 	-fx-background-color: lightgray;
 	-fx-background-radius: 4;
 	
+}
+
+.supplier-chooser .flow-pane {
+	-fx-hgap: 5;
+	-fx-vgap: 5;
 }
 
 .supplier-chooser .title {
