@@ -5,6 +5,7 @@ import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 import java.util.function.*;
+import java.util.regex.Pattern;
 
 /**
  * @author Sam Hooper
@@ -44,7 +45,7 @@ public final class ProblemSuppliers {
 	}
 	private static final Set<String> EXCLUDED_SUPPLIER_NAMES = Set.of(CompositeProblemSupplier.class.getSimpleName(), SettingsProblemSupplier.class.getSimpleName());
 	private static final Map<Class<? extends ProblemSupplier>, Info> REGISTERED_SUPPLIERS;
-	
+	private static final Pattern NAME_SPACE_LOCATIONS = Pattern.compile("(?=[A-Z])|(?<!\\d)(?=\\d)");
 	static {
 		REGISTERED_SUPPLIERS = new HashMap<>();
 		try {
@@ -94,7 +95,7 @@ public final class ProblemSuppliers {
 	private static String getDisplayNameFromSupplierClass(Class<?> clazz) {
 		final String simpleName = clazz.getSimpleName();
 		int endIndex = simpleName.lastIndexOf("Supplier");
-		return simpleName.substring(0, endIndex).replaceAll("(?=[A-Z])", " ");
+		return NAME_SPACE_LOCATIONS.matcher(simpleName.substring(0, endIndex)).replaceAll(" ");
 	}
 	
 	private static Supplier<? extends ProblemSupplier> getSupplierFromNoArgConstructor(final Constructor<?> constructor) {

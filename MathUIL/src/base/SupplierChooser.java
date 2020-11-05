@@ -100,12 +100,9 @@ public class SupplierChooser extends StackPane {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	public void show() {
-		System.out.printf("SupplierChooser => show()%n");
-		System.out.printf("\t%s%n", mainPane.getProblemPane().getSupplier().suppliers());
+//		System.out.printf("SupplierChooser => show()%n");
+//		System.out.printf("\t%s%n", mainPane.getProblemPane().getSupplier().suppliers());
 		for(final Node n : flowPane.getChildren()) {
 			SupplierButton b = (SupplierButton) n;
 			if(mainPane.getProblemPane().hasSupplierOfClass(b.getInfo().getSupplierClass())) {
