@@ -45,7 +45,7 @@ public final class ProblemSuppliers {
 	}
 	private static final Set<String> EXCLUDED_SUPPLIER_NAMES = Set.of(CompositeProblemSupplier.class.getSimpleName(), SettingsProblemSupplier.class.getSimpleName());
 	private static final Map<Class<? extends ProblemSupplier>, Info> REGISTERED_SUPPLIERS;
-	private static final Pattern NAME_SPACE_LOCATIONS = Pattern.compile("(?=[A-Z])|(?<!\\d)(?=\\d)");
+	private static final Pattern NAME_SPACE_LOCATIONS = Pattern.compile("(?<![A-Z])(?=[A-Z])|(?<!\\d)(?=\\d)");
 	static {
 		REGISTERED_SUPPLIERS = new HashMap<>();
 		try {
@@ -63,6 +63,7 @@ public final class ProblemSuppliers {
 		customName(Multiply125Supplier.class, "Multiply by 125 and like");
 		customName(Multiply5EndSupplier.class, "Multiply ending in 5");
 		customName(Multiply101Supplier.class, "Multiply by 101 and like");
+		customName(MultiplySame10sOnesAddTo10Supplier.class, "Multiply 2 numbers with same tens digit and ones digits that add to 10");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {
