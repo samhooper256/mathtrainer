@@ -1,11 +1,22 @@
 package utils;
 
+import suppliers.*;
+
 /**
  * the low value must be >= the min, and the high value must be <= the max.
  * @author Sam Hooper
  *
  */
 public class IntRange implements Ref {
+	
+	public static NamedIntRange named(final int min, final int max, final int low, final int high, String name) {
+		return NamedIntRange.of(new IntRange(min, max, low, high), name);
+	}
+	
+	public static NamedIntRange from(final RangeStore store, final String name) {
+		return NamedIntRange.of(store.min(), store.max(), store.low(), store.high(), name);
+	}
+	
 	
 	private final int min, max;
 	private IntRef lowRef, highRef;

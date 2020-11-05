@@ -3,6 +3,7 @@ package problems;
 import java.math.*;
 import java.util.*;
 import java.util.function.*;
+import java.util.regex.Pattern;
 
 import suppliers.ProblemSupplier;
 import utils.*;
@@ -143,9 +144,10 @@ public interface Problem {
 		return result.toString();
 	}
 	
+	Pattern WHITESPACE = Pattern.compile("\\s+");
+	
 	public static String prettyExpression(final String expression) {
-		String pretty = expression.replaceAll("[-^*/+]", " $0 ").replace('*', '×').replace('/', '÷');
-		return pretty;
+		return ExpressionPrettifier.pretty(expression);
 	}
 	
 	/**
