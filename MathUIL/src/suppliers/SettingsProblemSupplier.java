@@ -13,7 +13,7 @@ public abstract class SettingsProblemSupplier implements ProblemSupplier {
 	protected List<Ref> settings;
 
 	@Override
-	public Collection<Ref> settings() {
+	public List<Ref> settings() {
 		return settings;
 	}
 	

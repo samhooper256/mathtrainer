@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
-import suppliers.ProblemSupplier;
+import suppliers.*;
 import utils.*;
 
 /**
@@ -43,6 +43,8 @@ public interface Problem {
 		if(s.isBlank())
 			return false;
 		final int start = s.charAt(0) == '-' ?  1 : 0;
+		if(start == s.length())
+			return false;
 		int point = -1;
 		if(s.charAt(start) == '.') {
 			if(s.length() == start + 1)
@@ -69,9 +71,9 @@ public interface Problem {
 	
 	public static boolean within5(final BigDecimal target, final BigDecimal guess) {
 		final BigDecimal fivePercent = target.multiply(new BigDecimal("0.05")).abs();
-		System.out.printf("\tfivePercent=%f%n", fivePercent);
+//		System.out.printf("\tfivePercent=%f%n", fivePercent);
 		final BigDecimal diff = target.subtract(guess).abs();
-		System.out.printf("\tdiff=%f%n", diff);
+//		System.out.printf("\tdiff=%f%n", diff);
 		return diff.compareTo(fivePercent) <= 0;
 	}
 	
@@ -79,6 +81,14 @@ public interface Problem {
 		if(min > max)
 			throw new IllegalArgumentException(String.format("min > max (%d < %d)", min, max));
 		return (int) (Math.random() * (max - min + 1)  + min);
+	}
+	
+	public static int intInclusive(IntRange range) {
+		return intInclusive(range.getLow(), range.getHigh());
+	}
+	
+	public static int intInclusive(NamedSetting<IntRange>range) {
+		return intInclusive(range.ref().getLow(), range.ref().getHigh());
 	}
 	
 	public static int intWithDigits(int minDigitsInclusive, int maxDigitsInclusive) {
@@ -148,6 +158,10 @@ public interface Problem {
 	
 	public static String prettyExpression(final String expression) {
 		return ExpressionPrettifier.pretty(expression);
+	}
+	
+	public static String prettyBigDecimal(final BigDecimal decimal) {
+		return decimal.toPlainString();
 	}
 	
 	/**

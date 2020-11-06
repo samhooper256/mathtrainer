@@ -30,7 +30,7 @@ public class AnyExpression implements Problem {
 
 	@Override
 	public String answerAsString() {
-		return result.setScale(2, RoundingMode.HALF_UP).toPlainString();
+		return Problem.prettyBigDecimal(result);
 	}
 	
 	

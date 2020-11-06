@@ -36,7 +36,7 @@ public class PEMDASApproximationSupplier extends SettingsProblemSupplier {
 
 	@Override
 	public Problem get() {
-		return new PEMDASApproximation(Problem.intInclusive(minTerms(), maxTerms()), minDigits(), maxDigits(), operators);
+		return new AnyExpressionApproximation(Problem.intInclusive(minTerms(), maxTerms()), minDigits(), maxDigits(), operators);
 	}
 	
 	public int minTerms() {

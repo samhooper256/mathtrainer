@@ -9,17 +9,17 @@ import math.Evaluator;
  * @author Sam Hooper
  *
  */
-public class PEMDASApproximation implements Problem {
+public class AnyExpressionApproximation implements Problem {
 	
 	private final BigDecimal result;
 	private final String display;
 	
-	public PEMDASApproximation(String expression) {
+	public AnyExpressionApproximation(String expression) {
 		result = Evaluator.evaluateAsBigDecimal(expression);
 		display = Problem.prettyExpression(expression);
 	}
 	
-	public PEMDASApproximation(final int terms, final int minDigits, final int maxDigits, final List<String> operators) {
+	public AnyExpressionApproximation(final int terms, final int minDigits, final int maxDigits, final List<String> operators) {
 		this(Problem.makeExpr(terms, minDigits, maxDigits, operators));
 	}
 
@@ -35,7 +35,7 @@ public class PEMDASApproximation implements Problem {
 
 	@Override
 	public String answerAsString() {
-		return result.setScale(2, RoundingMode.HALF_UP).toPlainString();
+		return Problem.prettyBigDecimal(result);
 	}
 	
 }

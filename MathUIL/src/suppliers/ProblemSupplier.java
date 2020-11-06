@@ -22,8 +22,8 @@ import utils.Ref;
 @FunctionalInterface
 public interface ProblemSupplier extends Supplier<Problem> {
 	
-	default Collection<Ref> settings() {
-		return Collections.emptySet();
+	default List<Ref> settings() {
+		return Collections.emptyList();
 	}
 	
 	/**

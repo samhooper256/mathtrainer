@@ -64,6 +64,9 @@ public final class ProblemSuppliers {
 		customName(Multiply5EndSupplier.class, "Multiply ending in 5");
 		customName(Multiply101Supplier.class, "Multiply by 101 and like");
 		customName(MultiplySame10sOnesAddTo10Supplier.class, "Multiply 2 numbers with same tens digit and ones digits that add to 10");
+		customName(SumOfSquaresX3XSupplier.class, "Sum of squares with bases x and 3x");
+		customName(SumConsecutiveSquaresSupplier.class, "Sum of two consecutive squares");
+		customName(SumOfSquaresOuterAddsTo10Inner1ApartSupplier.class, "Sum of squares when outer digits add to 10 and inner digits are 1 apart");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {

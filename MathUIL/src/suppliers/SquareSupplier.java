@@ -12,7 +12,7 @@ import utils.*;
  */
 public class SquareSupplier implements ProblemSupplier {
 	
-	private static final int MIN_BASE = 0, MAX_BASE = 100;
+	private static final int MIN_BASE = 0, MAX_BASE = 200;
 	public static final int DEFAULT_MIN_BASE = 1, DEFAULT_MAX_BASE = 30;
 	
 	private final NamedSetting<IntRange> baseRange;
