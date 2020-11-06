@@ -3,6 +3,7 @@ package base;
 import java.util.Objects;
 
 import fxutils.*;
+import javafx.collections.ObservableList;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.*;
@@ -27,7 +28,7 @@ public class SupplierChooser extends StackPane {
 	private final ScrollPane scroll;
 	private final FlowPane flowPane;
 	private final HBox bottomBox;
-	private final Button addSelectedButton;
+	private final Button addSelectedButton, selectAllButton;
 	private final Label title;
 	private final MainPane mainPane;
 	
@@ -67,6 +68,20 @@ public class SupplierChooser extends StackPane {
 			return "SupplierButton[info=" + info + ", desired=" + desired + "]";
 		}
 		
+		public void setDesired(boolean b) {
+			if(b ^ desired)
+				toggleDesire();
+		}
+		
+		/**
+		 * Sets the {@link #isDesired() desired} status of this {@link SupplierButton} to the given value <b>only</b> if this {@link SupplierButton} is not
+		 * {@link #isDisabled() disabled}. If this {@link SupplierButton} is disabled, does nothing.
+		 */
+		public void setDesiredIfEnabled(boolean b) {
+			if(!isDisabled())
+				setDesired(b);
+		}
+		
 		
 	}
 	public SupplierChooser(MainPane mainPane) {
@@ -88,7 +103,8 @@ public class SupplierChooser extends StackPane {
 		}
 		
 		addSelectedButton = Buttons.of("Add Selected", this::addDesired);
-		bottomBox = new HBox(addSelectedButton);
+		selectAllButton = Buttons.of("Select all", this::desireAll);
+		bottomBox = new HBox(addSelectedButton, selectAllButton);
 		
 		vBox.getChildren().addAll(title, scroll, bottomBox);
 		getChildren().add(vBox);
@@ -108,7 +124,7 @@ public class SupplierChooser extends StackPane {
 	public void show() {
 //		System.out.printf("SupplierChooser => show()%n");
 //		System.out.printf("\t%s%n", mainPane.getProblemPane().getSupplier().suppliers());
-		for(final Node n : flowPane.getChildren()) {
+		for(final Node n : buttonList()) {
 			SupplierButton b = (SupplierButton) n;
 			if(mainPane.getProblemPane().hasSupplierOfClass(b.getInfo().getSupplierClass())) {
 				b.setDisable(true);
@@ -118,6 +134,17 @@ public class SupplierChooser extends StackPane {
 			}
 		}
 		this.setVisible(true);
+	}
+	
+	private void desireAll() {
+		for(Node n : buttonList()) {
+			SupplierButton b = (SupplierButton) n;
+			b.setDesiredIfEnabled(true);
+		}
+	}
+	
+	private ObservableList<Node> buttonList() {
+		return flowPane.getChildren();
 	}
 	
 	public void hide() {
