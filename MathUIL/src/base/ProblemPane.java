@@ -41,14 +41,22 @@ public class ProblemPane extends StackPane {
 	private final TextField field;
 	private final HBox buttonBox;
 	private final Button submit, clear, showSkill, showAnswer;
-	private final CheckBox clearOnWrongAnswer, markWrongIfCleared, deleteText;
+	private final CheckBox deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer;
 	private final Set<Class<? extends ProblemSupplier>> supplierClasses;
 	
 	private double startTime;
 	/**
 	 * The number of wrong answers the user has submitted for the current {@link Problem}.
 	 */
-	private int wrongAnswers, clears;
+	private int wrongAnswers;
+	/**
+	 * {@code true} if text had been deleted (either by using the backspace or delete keys or by using the "clear" button).
+	 */
+	private boolean hasDeletedText;
+	/**
+	 * {@code true} if the user has shown the answer to the {@link #currentProblem} (using the {@link #showAnswer} Button.
+	 */
+	private boolean hasShownAnswer;
 	private Problem currentProblem;
 	private ProblemSupplier currentProblemSupplier;
 	
@@ -63,17 +71,20 @@ public class ProblemPane extends StackPane {
 		this.averageTimeLabel = new Label();
 		this.averageAccuracyLabel = new Label();
 		submit = Buttons.of("Submit", () -> acceptInput());
-		showAnswer = Buttons.of(SHOW_ANSWER_TEXT, this::toggleShowAnswer);
-		clear = Buttons.of(CLEAR_TEXT, this::clearInputField);
+		showAnswer = Buttons.of(SHOW_ANSWER_TEXT, this::showAnswerButtonAction);
+		clear = Buttons.of(CLEAR_TEXT, this::clearButtonAction);
 		this.showSkill = Buttons.of(SHOW_SKILL_TEXT, this::toggleSkillShowing);
 		buttonBox = new HBox(4, submit, clear, showSkill, showAnswer, answerLabel);
 		buttonBox.setAlignment(Pos.CENTER);
 		field = new TextField();
 		field.maxWidthProperty().bind(this.widthProperty().divide(2));
 		field.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-			if(!this.canDelete()) {
-				switch(keyEvent.getCode()) {
-					case BACK_SPACE, DELETE -> keyEvent.consume();
+			switch(keyEvent.getCode()) {
+				case BACK_SPACE, DELETE -> {
+					if(!this.canDelete())
+						keyEvent.consume();
+					else
+						hasDeletedText = true;
 				}
 			}
 		});
@@ -84,7 +95,7 @@ public class ProblemPane extends StackPane {
 			char c = keyEvent.getCharacter().charAt(0);
 			if(c == CLEAR_CHAR) {
 				keyEvent.consume();
-				clearInputField();
+				clearButtonAction();
 			}
 		});
 		problemView = new WebView();
@@ -98,10 +109,12 @@ public class ProblemPane extends StackPane {
 		skillLabel.setWrapText(true);
 		skillLabel.setVisible(false);
 		deleteText = new CheckBox("Can delete text");
-		deleteText.setSelected(true);
-		markWrongIfCleared = new CheckBox("Mark wrong if cleared at least once");
+		markWrongIfCleared = new CheckBox("Mark wrong if cleared or deleted");
 		markWrongIfCleared.setSelected(true);
-		VBox vBox = new VBox(10, problemView, field, buttonBox, deleteText, markWrongIfCleared, clearOnWrongAnswer = new CheckBox("Clear on wrong answer"), skillLabel);
+		markWrongIfShownAnswer = new CheckBox("Mark wrong if shown answer");
+		markWrongIfShownAnswer.setSelected(true);
+		clearOnWrongAnswer = new CheckBox("Clear on wrong answer");
+		VBox vBox = new VBox(10, problemView, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
 		vBox.setAlignment(Pos.CENTER);
 		
 		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel);
@@ -176,7 +189,7 @@ public class ProblemPane extends StackPane {
 	}
 
 	private void updateAccuracies() {
-		accuracies.addFirst(wrongAnswers == 0 && (clears == 0 || !isMarkWrongIfCleared()));
+		accuracies.addFirst(wrongAnswers == 0 && (!hasDeletedText || !isMarkWrongIfCleared()) && (!hasShownAnswer || !isMarkWrongIfShownAnswer()));
 		averageAccuracyLabel.setText(String.format("Last %d Accuracy: %.1f%%", accuracies.size(), accuracies.truthProportion() * 100));
 	}
 
@@ -228,7 +241,9 @@ public class ProblemPane extends StackPane {
 		hideAnswerIfShowing();
 		generateProblemAndUpdateLabel();
 		updateSkillText();
-		wrongAnswers = clears = 0;
+		wrongAnswers = 0;
+		hasDeletedText = false;
+		hasShownAnswer = false;
 		resetCurrentProblemTimer();
 	}
 	
@@ -248,8 +263,12 @@ public class ProblemPane extends StackPane {
 		averageTimeLabel.setText(String.format("Last %d Average: %s", times.size(), secString(times.average())));
 	}
 	
+	private void clearButtonAction() {
+		clearInputField();
+		hasDeletedText = true;
+	}
+	
 	private void clearInputField() {
-		clears++;
 		field.clear();
 	}
 	
@@ -283,7 +302,13 @@ public class ProblemPane extends StackPane {
 	private void updateSkillText() {
 		skillLabel.setText(ProblemSuppliers.nameOf(currentProblemSupplier));
 	}
-
+	
+	private void showAnswerButtonAction() {
+		toggleShowAnswer();
+		if(isAnswerShowing())
+			hasShownAnswer = true;
+	}
+	
 	private void toggleShowAnswer() {
 		if(isAnswerShowing()) {
 			clearAnswerLabel();
@@ -318,9 +343,13 @@ public class ProblemPane extends StackPane {
 	private boolean isClearOnWrongAnswer() {
 		return clearOnWrongAnswer.isSelected();
 	}
-
+	
 	private boolean isMarkWrongIfCleared() {
 		return markWrongIfCleared.isSelected(); 
+	}
+	
+	private boolean isMarkWrongIfShownAnswer() {
+		return markWrongIfShownAnswer.isSelected();
 	}
 
 	private boolean isSkillShowing() {

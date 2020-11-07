@@ -36,10 +36,10 @@ public class SettingsPane extends StackPane {
 	
 	private boolean allowingRemoval;
 	public SettingsPane(MainPane mainPane) {
-//		this.getStyleClass().add(STYLE_CLASS_NAME);
+		this.getStyleClass().add(STYLE_CLASS_NAME);
 		vBox = new VBox();
-//		vBox.getStyleClass().add(VBOX_STYLE_CLASS_NAME);
 		Objects.requireNonNull(mainPane);
+		vBox.getStyleClass().add(VBOX_STYLE_CLASS_NAME);
 		this.mainPane = mainPane;
 		this.title = new Label("Settings");
 //		title.getStyleClass().add(TITLE_STYLE_CLASS_NAME);
@@ -55,10 +55,21 @@ public class SettingsPane extends StackPane {
 		this.removeSupplierButton = Buttons.of(REMOVE_SUPPLIER_BUTTON_TEXT, this::removeSupplierButtonAction);
 		vBox.getChildren().addAll(title, settingsBox, createAddSupplierButton(), removeSupplierButton);
 		this.scrollPane = new ScrollPane(vBox);
-//		this.scrollPane.getStyleClass().add(SCROLL_PANE_STYLE_CLASS_NAME);
+		this.scrollPane.getStyleClass().add(SCROLL_PANE_STYLE_CLASS_NAME);
 		getChildren().add(scrollPane);
+		this.minWidthProperty().bind(vBox.minWidthProperty());
+		this.prefWidthProperty().bind(vBox.prefWidthProperty());
+		vBox.setBorder(Borders.of(Color.BLUE));
 	}
-	
+
+
+	@Override
+	protected double computePrefHeight(double width) {
+		// TODO Auto-generated method stub
+		return super.computePrefHeight(width);
+	}
+
+
 	private void supplierAdded(final ProblemSupplier ps) {
 		settingsBox.getChildren().add(SettingTitledPane.displayFor(ps, this));
 	}

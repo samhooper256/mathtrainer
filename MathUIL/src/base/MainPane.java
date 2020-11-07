@@ -26,7 +26,6 @@ public class MainPane extends StackPane {
 	private static final int SETTINGS_EXIT_DURATION = 800;
 	private static final int SETTINGS_WHEEL_INSET = 10;
 	private static final int SETTINGS_WHEEL_SIZE = 30;
-	private static final double SETTINGS_SCREEN_PERCENT = 0.25;
 	
 	private final ProblemPane problemPane;
 	private final Pane settingsLayer, chooserLayer;
@@ -56,10 +55,8 @@ public class MainPane extends StackPane {
 	}
 
 	private void initSettings() {
-		settingsPane.maxWidthProperty().bind(this.widthProperty().divide(4));
-		settingsPane.prefWidthProperty().bind(settingsPane.maxWidthProperty());
 		settingsPane.maxHeightProperty().bind(this.heightProperty().subtract(settingsPane.layoutYProperty()));
-		settingsPane.prefHeightProperty().bind(settingsPane.maxHeightProperty());
+//		settingsPane.prefHeightProperty().bind(settingsPane.maxHeightProperty());
 		settingsPane.setVisible(false);
 		
 		
@@ -70,7 +67,7 @@ public class MainPane extends StackPane {
 				return;
 			if(!settingsShowing) {
 				settingsPane.setVisible(true);
-				settingsPane.setLayoutX(-this.getWidth() * SETTINGS_SCREEN_PERCENT);
+				settingsPane.setLayoutX(-this.getWidth() * settingsPane.getWidth());
 				settingsAnimationPlaying = true;
 				settingsEnterAnimation.play();
 			}
@@ -107,7 +104,7 @@ public class MainPane extends StackPane {
 			protected void interpolate(double frac) {
 				frac = Math.sqrt(frac);
 				frac = 1 - frac;
-				double x = -(MainPane.this.getWidth() * SETTINGS_SCREEN_PERCENT * (1 - frac));
+				double x = -(settingsPane.getWidth() * (1 - frac));
 				settingsWheel.setRotate(frac * 100);
 				settingsPane.setLayoutX(x);
 			}
@@ -126,7 +123,7 @@ public class MainPane extends StackPane {
 			@Override
 			protected void interpolate(double frac) {
 				frac = Math.sqrt(frac);
-				double x = -(MainPane.this.getWidth() * SETTINGS_SCREEN_PERCENT * (1 - frac));
+				double x = -(settingsPane.getWidth() * (1 - frac));
 				settingsWheel.setRotate(frac * 100);
 				settingsPane.setLayoutX(x);
 			}

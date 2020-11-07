@@ -14,11 +14,11 @@
 	-fx-spacing: 4;
 	
 	-fx-border-width: 1;
-	-fx-border-color: #dcb3ff;
+	-fx-border-color: #a0d6f2;
 	-fx-border-radius: 10;
 	
 	-fx-background-radius: 10;
-	-fx-background-color: #ebdff5;
+	-fx-background-color: #bae7ff;
 }
 
 .settings-pane-title {
@@ -39,6 +39,7 @@
 
 .settings-scroll-pane {
 	-fx-fit-to-width: true;
+	-fx-hbar-policy: never;
 	
 	-fx-border-color: transparent;
 	-fx-background-color: transparent;
