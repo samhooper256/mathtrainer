@@ -41,9 +41,16 @@ public class CompositeProblemSupplier implements ProblemSupplier {
 		return suppliers.remove(suppler);
 	}
 	
+	/**
+	 * Equivalent to {@link #getRandomSupplier()}{@link ProblemSupplier#get() .get()}.
+	 */
 	@Override
 	public Problem get() {
-		return suppliers.get((int) (Math.random() * suppliers.size())).get();
+		return getRandomSupplier().get();
+	}
+	
+	public ProblemSupplier getRandomSupplier() {
+		return suppliers.get(Problem.intInclusive(0, suppliers.size() - 1));
 	}
 	
 	public ListRef<ProblemSupplier> suppliers() {

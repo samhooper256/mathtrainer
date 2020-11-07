@@ -25,7 +25,7 @@ public class Multiply125Supplier extends SettingsProblemSupplier {
 	public Multiply125Supplier(final int lowDigits, final int highDigits) {
 		digits = NamedSetting.of(new IntRange(MIN_DIGITS, MAX_DIGITS, lowDigits, highDigits), "Digits in non-125 term");
 		include375 = NamedSetting.of(new BooleanRef(DEFAULT_INCLUDE375), "Include 375");
-		settings = List.of(digits, include375);
+		settings = List.of(include375, digits);
 	}
 
 	@Override

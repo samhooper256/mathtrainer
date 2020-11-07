@@ -143,6 +143,13 @@ public final class ProblemSuppliers {
 		checkRegistered(clazz);
 		return REGISTERED_SUPPLIERS.get(clazz).getDisplayName();
 	}
+	
+	/**
+	 * @throws NullPointerException if the given {@link ProblemSupplier} is {@code null}.
+	 */
+	public static String nameOf(ProblemSupplier ps) {
+		return nameOf(ps.getClass());
+	}
 	private static void checkRegistered(Class<? extends ProblemSupplier> problemSupplier) {
 		if(!isRegistered(problemSupplier))
 			throw new IllegalArgumentException(problemSupplier.getClass().getSimpleName() + " is not registered.");

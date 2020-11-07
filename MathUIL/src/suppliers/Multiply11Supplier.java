@@ -27,7 +27,7 @@ public class Multiply11Supplier extends SettingsProblemSupplier {
 		this.onesRange = NamedSetting.of(new IntRange(MIN_ONES, MAX_ONES, lowOnes, highOnes), "Ones");
 		this.nonDigitRange = NamedSetting.of(new IntRange(MIN_NON_ONES_DIGITS, MAX_NON_ONES_DIGITS, lowNon, highNon), "Non-ones term digits");
 		include121 = NamedSetting.of(new BooleanRef(DEFAULT_INCLUDE_121), "Include 121");
-		settings = List.of(onesRange, nonDigitRange, include121);
+		settings = List.of(include121, onesRange, nonDigitRange);
 	}
 	
 	@Override
