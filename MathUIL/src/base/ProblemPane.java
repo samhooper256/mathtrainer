@@ -25,6 +25,8 @@ public class ProblemPane extends StackPane {
 	 * in temporary storage (and displayed to the user).
 	 */
 	private static final int RESULTS_TRACKED = 100;
+	private static final String DEFAULT_LAST_TIME_TEXT = "Last Time: N/A", DEFAULT_AVERAGE_TIME_TEXT = "Average Time: N/A",
+			DEFAULT_AVERAGE_ACCURACY_TEXT = "Average Accuracy: N/A";
 	private static final char CLEAR_CHAR = 'c', SHOW_SKILL_CHAR = 's', SHOW_ANSWER_CHAR = 'a';
 	private static final String SUBMIT_TEXT = "Submit",
 			CLEAR_TEXT = String.format("Clear (%C)", CLEAR_CHAR),
@@ -43,7 +45,7 @@ public class ProblemPane extends StackPane {
 	 */
 	private final TextField field;
 	private final HBox buttonBox;
-	private final Button submit, clear, showSkill, showAnswer;
+	private final Button submit, clear, showSkill, showAnswer, resetResults;
 	private final CheckBox deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer;
 	private final Set<Class<? extends ProblemSupplier>> supplierClasses;
 	
@@ -70,9 +72,10 @@ public class ProblemPane extends StackPane {
 		this.accuracies = new FixedBooleanQueue(RESULTS_TRACKED);
 		
 		this.answerLabel = new Label();
-		this.lastTimeLabel = new Label();
-		this.averageTimeLabel = new Label();
-		this.averageAccuracyLabel = new Label();
+		this.lastTimeLabel = new Label(DEFAULT_LAST_TIME_TEXT);
+		this.averageTimeLabel = new Label(DEFAULT_AVERAGE_TIME_TEXT);
+		this.averageAccuracyLabel = new Label(DEFAULT_AVERAGE_ACCURACY_TEXT);
+		this.resetResults = Buttons.of("Reset", this::resetResults);
 		this.submit = Buttons.of(SUBMIT_TEXT, () -> acceptInput());
 		this.showAnswer = Buttons.of(SHOW_ANSWER_TEXT, this::showAnswerButtonAction);
 		this.clear = Buttons.of(CLEAR_TEXT, this::clearButtonAction);
@@ -105,9 +108,9 @@ public class ProblemPane extends StackPane {
 	private void finishInit() {
 		VBox vBox = new VBox(10, problemView, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
 		vBox.setAlignment(Pos.CENTER);
-		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel);
+		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel, resetResults);
 		AnchorPane anchor = new AnchorPane(resultsBox);
-		anchor.setMouseTransparent(true);
+		anchor.setPickOnBounds(false);
 		AnchorPane.setBottomAnchor(resultsBox, 10d);
 		AnchorPane.setLeftAnchor(resultsBox, 10d);
 		AnchorPane.setRightAnchor(resultsBox, 10d);
@@ -358,7 +361,16 @@ public class ProblemPane extends StackPane {
 	private String secString(double timeInNanos) {
 		return String.format("%.3fs", timeInNanos / 1_000_000_000);
 	}
-
+	
+	private void resetResults() {
+		lastTimeLabel.setText(DEFAULT_LAST_TIME_TEXT);
+		averageAccuracyLabel.setText(DEFAULT_AVERAGE_ACCURACY_TEXT);
+		averageTimeLabel.setText(DEFAULT_AVERAGE_TIME_TEXT);
+		times.clear();
+		accuracies.clear();
+		resetCurrentProblemTimer();
+	}
+	
 	private boolean canDelete() {
 		return deleteText.isSelected();
 	}

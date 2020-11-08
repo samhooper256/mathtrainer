@@ -59,6 +59,8 @@ public class Complex {
 
 	@Override
 	public String toString() {
+		if(b.compareTo(BigDecimal.ZERO) == 0)
+			return String.format("%f", a);
 		return String.format("%f+%fi", a, b);
 	}
 	

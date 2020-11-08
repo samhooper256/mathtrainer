@@ -4,7 +4,7 @@ package utils;
  * @author Sam Hooper
  *
  */
-public class AbstractFixedQueue {
+public abstract class AbstractFixedQueue {
 	
 	protected final int capacity;
 	protected int size, head, tail;
@@ -56,5 +56,10 @@ public class AbstractFixedQueue {
 		if(--tail < 0)
 			tail = capacity - 1;
 		return tail;
+	}
+	
+	public void clear() {
+		head = tail;
+		size = 0;
 	}
 }

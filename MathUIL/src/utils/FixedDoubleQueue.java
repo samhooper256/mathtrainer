@@ -71,6 +71,12 @@ public class FixedDoubleQueue extends AbstractFixedQueue {
 	}
 	
 	@Override
+	public void clear() {
+		super.clear();
+		total = 0;
+	}
+
+	@Override
 	public String toString() {
 		StringJoiner j = new StringJoiner(", ", "[", "]");
 		for(int h = head, i = 0; i < size; i++, h = ((h + 1) % capacity))

@@ -79,6 +79,13 @@ public class FixedBooleanQueue extends AbstractFixedQueue {
 		return 1.0 * trues / size;
 	}
 	
+	
+	@Override
+	public void clear() {
+		super.clear();
+		trues = 0;
+	}
+
 	@Override
 	public String toString() {
 		StringJoiner j = new StringJoiner(",", "[", "]");

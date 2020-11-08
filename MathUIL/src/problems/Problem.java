@@ -173,7 +173,12 @@ public interface Problem {
 	}
 	
 	public static String prettyComplex(final Complex c) {
-		return prettyBigDecimal(c.realPart()) + " + " + prettyBigDecimal(c.imaginaryPart());
+		StringBuilder sb = new StringBuilder();
+		sb.append(prettyBigDecimal(c.realPart()));
+		if(c.imaginaryPart().compareTo(BigDecimal.ZERO) == 0)
+			return sb.toString();
+		sb.append(" + ").append(prettyBigDecimal(c.imaginaryPart()));
+		return sb.toString();
 	}
 	
 	public static String prettyBigDecimal(final BigDecimal decimal) {
