@@ -125,7 +125,7 @@ public class ProblemPane extends StackPane {
 	private void initProblemView() {
 		problemView.getEngine().setUserStyleSheetLocation(getClass().getResource(PROBLEM_VIEW_CSS_FILENAME).toString());
 		problemView.prefWidthProperty().bind(field.widthProperty());
-		problemView.prefHeightProperty().bind(field.heightProperty().multiply(1.2));
+		problemView.prefHeightProperty().bind(field.heightProperty().multiply(1.5));
 		setOnKeyPressed(this::paneKeyHandler);
 	}
 
