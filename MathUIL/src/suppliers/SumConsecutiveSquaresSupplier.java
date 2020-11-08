@@ -22,7 +22,7 @@ public class SumConsecutiveSquaresSupplier extends SettingsProblemSupplier {
 	@Override
 	public Problem get() {
 		int term = intInclusive(small.low(), small.high());
-		return new AnyExpression(String.format("%s^2+%d^2", term, term + 1));
+		return new SimpleExpression(String.format("%s^2+%d^2", term, term + 1));
 	}
 	
 	

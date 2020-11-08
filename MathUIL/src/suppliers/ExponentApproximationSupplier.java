@@ -29,7 +29,7 @@ public class ExponentApproximationSupplier extends SettingsProblemSupplier {
 		for(int i = 0; i < termCount; i++)
 			sb.append(getTerm()).append(getOp());
 		sb.append(getTerm());
-		return new AnyExpressionApproximation(sb.toString());
+		return new SimpleApproximation(sb.toString());
 	}
 	
 	private String getOp() {

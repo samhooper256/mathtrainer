@@ -56,7 +56,6 @@ public class MainPane extends StackPane {
 
 	private void initSettings() {
 		settingsPane.maxHeightProperty().bind(this.heightProperty().subtract(settingsPane.layoutYProperty()));
-//		settingsPane.prefHeightProperty().bind(settingsPane.maxHeightProperty());
 		settingsPane.setVisible(false);
 		
 		

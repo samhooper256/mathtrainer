@@ -27,6 +27,6 @@ public class SumOfSquaresX3XSupplier extends SettingsProblemSupplier {
 	public Problem get() {
 		int base1 = intInclusive(base.low(), base.high());
 		int base2 = 3 * base1;
-		return new AnyExpression(String.format("%d^2+%d^2", base1, base2));
+		return new SimpleExpression(String.format("%d^2+%d^2", base1, base2));
 	}
 }

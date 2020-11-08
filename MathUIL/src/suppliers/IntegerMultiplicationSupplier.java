@@ -1,27 +1,28 @@
 package suppliers;
 
-import problems.IntegerMultiplication;
+import static suppliers.NamedIntRange.*;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
+import problems.*;
 /**
  * @author Sam Hooper
  *
  */
-public class IntegerMultiplicationSupplier extends SingleOpSupplier {
+public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 	
-	public static final int MIN_DIGITS = 1, MAX_DIGITS = 5, MIN_TERMS = 2, MAX_TERMS = 5;
-	public static final int DEFAULT_MIN_TERMS = 2, DEFAULT_MAX_TERMS = 2, DEFAULT_MIN_DIGITS = 1, DEFAULT_MAX_DIGITS = 3;
+	private static final RangeStore DIGITS = RangeStore.of(1, 5, 1, 3), TERMS = RangeStore.of(2, 5, 2, 3);
+	private final NamedIntRange digits, terms;
 	
 	public IntegerMultiplicationSupplier() {
-		this(DEFAULT_MIN_TERMS, DEFAULT_MAX_TERMS, DEFAULT_MIN_DIGITS, DEFAULT_MAX_DIGITS);
-	}
-	
-	public IntegerMultiplicationSupplier(int lowTerms, int highTerms, int lowDigits, int highDigits) {
-		super(MIN_TERMS, MAX_TERMS, lowTerms, highTerms, MIN_DIGITS, MAX_DIGITS, lowDigits, highDigits);
+		settings = List.of(digits = of(DIGITS, "Digits"), terms = of(TERMS, "Terms"));
 	}
 	
 	@Override
-	public IntegerMultiplication get() {
-		return new IntegerMultiplication((int) (Math.random() * (maxTerms() + 1 - minTerms()) + minTerms()), minDigits(), maxDigits());
+	public SimpleExpression get() {
+		int[] termsArr = IntStream.generate(() -> Problem.intWithDigits(Problem.intInclusive(digits))).limit(Problem.intInclusive(terms)).toArray();
+		return SimpleExpression.multiplyTerms(termsArr);
 	}
 	
 }

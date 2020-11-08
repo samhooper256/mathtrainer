@@ -46,7 +46,7 @@ public class SettingsPane extends StackPane {
 		this.settingsBox = new VBox();
 //		this.settingsBox.getStyleClass().add(SETTINGS_BOX_STYLE_CLASS_NAME);
 		ProblemPane problemPane = mainPane.getProblemPane();
-		CompositeProblemSupplier supplier = problemPane.getSupplier();
+		CompositeProblemSupplier supplier = problemPane.getCompositeSupplier();
 		for(ProblemSupplier ps : supplier.suppliers())
 			settingsBox.getChildren().add(SettingTitledPane.displayFor(ps, this));
 		supplier.suppliers().addAddListener(this::supplierAdded);

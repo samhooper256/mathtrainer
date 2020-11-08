@@ -24,7 +24,7 @@ public class Multiply5EndSupplier extends SettingsProblemSupplier {
 	public Problem get() {
 		int term5 = 10 * Problem.intWithDigits(lowDigits5() - 1, highDigits5() - 1) + 5;
 		int term = Problem.intWithDigits(lowDigitsN(), highDigitsN());
-		return IntegerMultiplication.fromTerms(Problem.shuffled(term, term5));
+		return SimpleExpression.multiplyTerms(Problem.shuffled(term, term5));
 	}
 	
 	public int lowDigits5() {

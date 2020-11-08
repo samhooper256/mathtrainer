@@ -1,7 +1,6 @@
 package base;
 
 import java.util.*;
-import java.util.function.*;
 
 import fxutils.*;
 import javafx.geometry.Pos;
@@ -9,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
-import javafx.scene.text.*;
 import javafx.scene.web.WebView;
 import problems.*;
 import suppliers.*;
@@ -27,9 +25,14 @@ public class ProblemPane extends StackPane {
 	 * in temporary storage (and displayed to the user).
 	 */
 	private static final int RESULTS_TRACKED = 100;
-	private static final String SHOW_SKILL_TEXT = "Show Skill", HIDE_SKILL_TEXT = "Hide Skill", SHOW_ANSWER_TEXT = "Show Answer", HIDE_ANSWER_TEXT = "Hide Answer",
-			CLEAR_TEXT = "Clear (C)";
-	private static final char CLEAR_CHAR = 'c';
+	private static final char CLEAR_CHAR = 'c', SHOW_SKILL_CHAR = 's', SHOW_ANSWER_CHAR = 'a';
+	private static final String SUBMIT_TEXT = "Submit",
+			CLEAR_TEXT = String.format("Clear (%C)", CLEAR_CHAR),
+			SHOW_SKILL_TEXT = String.format("Show Skill (%C)", SHOW_SKILL_CHAR),
+			HIDE_SKILL_TEXT = String.format("Hide Skill (%C)", SHOW_SKILL_CHAR),
+			SHOW_ANSWER_TEXT = String.format("Show Answer (%C)", SHOW_ANSWER_CHAR),
+			HIDE_ANSWER_TEXT = String.format("Hide Answer (%C)", SHOW_ANSWER_CHAR);
+	
 	private final FixedDoubleQueue times;
 	private final FixedBooleanQueue accuracies;
 	private final CompositeProblemSupplier compositeSupplier;
@@ -43,6 +46,7 @@ public class ProblemPane extends StackPane {
 	private final Button submit, clear, showSkill, showAnswer;
 	private final CheckBox deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer;
 	private final Set<Class<? extends ProblemSupplier>> supplierClasses;
+	
 	
 	private double startTime;
 	/**
@@ -65,18 +69,67 @@ public class ProblemPane extends StackPane {
 		this.times = new FixedDoubleQueue(RESULTS_TRACKED);
 		this.accuracies = new FixedBooleanQueue(RESULTS_TRACKED);
 		
-		
-		answerLabel = new Label();
+		this.answerLabel = new Label();
 		this.lastTimeLabel = new Label();
 		this.averageTimeLabel = new Label();
 		this.averageAccuracyLabel = new Label();
-		submit = Buttons.of("Submit", () -> acceptInput());
-		showAnswer = Buttons.of(SHOW_ANSWER_TEXT, this::showAnswerButtonAction);
-		clear = Buttons.of(CLEAR_TEXT, this::clearButtonAction);
-		this.showSkill = Buttons.of(SHOW_SKILL_TEXT, this::toggleSkillShowing);
-		buttonBox = new HBox(4, submit, clear, showSkill, showAnswer, answerLabel);
+		this.submit = Buttons.of(SUBMIT_TEXT, () -> acceptInput());
+		this.showAnswer = Buttons.of(SHOW_ANSWER_TEXT, this::showAnswerButtonAction);
+		this.clear = Buttons.of(CLEAR_TEXT, this::clearButtonAction);
+		this.showSkill = Buttons.of(SHOW_SKILL_TEXT, this::showSkillButtonAction);
+		this.buttonBox = new HBox(4, submit, clear, showSkill, showAnswer, answerLabel);
+		this.field = new TextField();
+		this.problemView = new WebView();
+		this.skillLabel = new Label();
+		this.deleteText = new CheckBox("Can delete text");
+		this.markWrongIfCleared = new CheckBox("Mark wrong if cleared or deleted");
+		this.markWrongIfShownAnswer = new CheckBox("Mark wrong if shown answer");
+		this.clearOnWrongAnswer = new CheckBox("Clear on wrong answer");
+		this.supplierClasses = new HashSet<>();
 		buttonBox.setAlignment(Pos.CENTER);
-		field = new TextField();
+		initInputField();
+		initProblemView();
+		initCompositeSupplier();
+		initOptions();
+		finishInit();
+		freshProblem();
+	}
+
+	private void initOptions() {
+		skillLabel.setWrapText(true);
+		skillLabel.setVisible(false);
+		markWrongIfCleared.setSelected(true);
+		markWrongIfShownAnswer.setSelected(true);
+	}
+
+	private void finishInit() {
+		VBox vBox = new VBox(10, problemView, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
+		vBox.setAlignment(Pos.CENTER);
+		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel);
+		AnchorPane anchor = new AnchorPane(resultsBox);
+		anchor.setMouseTransparent(true);
+		AnchorPane.setBottomAnchor(resultsBox, 10d);
+		AnchorPane.setLeftAnchor(resultsBox, 10d);
+		AnchorPane.setRightAnchor(resultsBox, 10d);
+		
+		getChildren().addAll(vBox, anchor);
+	}
+
+	private void initCompositeSupplier() {
+		for(ProblemSupplier ps : compositeSupplier.suppliers())
+			this.supplierClasses.add(ps.getClass());
+		this.compositeSupplier.suppliers().addAddListener(ps -> supplierClasses.add(ps.getClass()));
+		this.compositeSupplier.suppliers().addRemoveListener(ps -> supplierClasses.remove(ps.getClass()));
+	}
+
+	private void initProblemView() {
+		problemView.getEngine().setUserStyleSheetLocation(getClass().getResource(PROBLEM_VIEW_CSS_FILENAME).toString());
+		problemView.prefWidthProperty().bind(field.widthProperty());
+		problemView.prefHeightProperty().bind(field.heightProperty().multiply(1.2));
+		setOnKeyPressed(this::paneKeyHandler);
+	}
+
+	private void initInputField() {
 		field.maxWidthProperty().bind(this.widthProperty().divide(2));
 		field.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
 			switch(keyEvent.getCode()) {
@@ -93,55 +146,15 @@ public class ProblemPane extends StackPane {
 				keyEvent.consume(); return;
 			}
 			char c = keyEvent.getCharacter().charAt(0);
-			if(c == CLEAR_CHAR) {
+			if(c >= 'a' && c <= 'z')
 				keyEvent.consume();
+			if(c == CLEAR_CHAR)
 				clearButtonAction();
-			}
+			else if(c == SHOW_ANSWER_CHAR)
+				showAnswerButtonAction();
+			else if(c == SHOW_SKILL_CHAR)
+				showSkillButtonAction();
 		});
-		problemView = new WebView();
-		problemView.getEngine().setUserStyleSheetLocation(getClass().getResource(PROBLEM_VIEW_CSS_FILENAME).toString());
-		problemView.prefWidthProperty().bind(field.widthProperty());
-		problemView.prefHeightProperty().bind(field.heightProperty().multiply(1.2));
-		setOnKeyPressed(keyEvent -> {
-			paneKeyHandler(keyEvent);
-		});
-		skillLabel = new Label();
-		skillLabel.setWrapText(true);
-		skillLabel.setVisible(false);
-		deleteText = new CheckBox("Can delete text");
-		markWrongIfCleared = new CheckBox("Mark wrong if cleared or deleted");
-		markWrongIfCleared.setSelected(true);
-		markWrongIfShownAnswer = new CheckBox("Mark wrong if shown answer");
-		markWrongIfShownAnswer.setSelected(true);
-		clearOnWrongAnswer = new CheckBox("Clear on wrong answer");
-		VBox vBox = new VBox(10, problemView, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
-		vBox.setAlignment(Pos.CENTER);
-		
-		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel);
-		AnchorPane anchor = new AnchorPane(resultsBox);
-		anchor.setMouseTransparent(true);
-		AnchorPane.setBottomAnchor(resultsBox, 10d);
-		AnchorPane.setLeftAnchor(resultsBox, 10d);
-		AnchorPane.setRightAnchor(resultsBox, 10d);
-		
-		getChildren().addAll(vBox, anchor);
-		
-		this.supplierClasses = new HashSet<>();
-		for(ProblemSupplier ps : problemSupplier.suppliers()) {
-			this.supplierClasses.add(ps.getClass());
-		}
-		
-		problemSupplier.suppliers().addAddListener(ps -> {
-			this.supplierClasses.add(ps.getClass());
-		});
-		problemSupplier.suppliers().addRemoveListener(ps -> {
-			this.supplierClasses.remove(ps.getClass());
-		});
-		generateProblemAndUpdateLabel();
-		this.wrongAnswers = 0;
-		updateSkillText();
-		
-		startTime = System.nanoTime();
 	}
 
 	/**
@@ -151,14 +164,13 @@ public class ProblemPane extends StackPane {
 		startTime = System.nanoTime();
 	}
 	
-	public CompositeProblemSupplier getSupplier() {
+	public CompositeProblemSupplier getCompositeSupplier() {
 		return compositeSupplier;
 	}
 
 	/**
-	 * Adds the given {@link ProblemSupplier} to this {@link ProblemPane ProblemPane's} list of {@link ProblemSupplier ProblemSuppliers}
-	 * that will generate its {@link Problem Problems}. Throws an exception if it cannot be added because a {@link ProblemSupplier} of
-	 * the given supplier's class is already present.
+	 * Adds the given {@link ProblemSupplier} to this {@link ProblemPane ProblemPane's} {@link #getCompositeSupplier() composite supplier}.
+	 * Throws an exception if it cannot be added because a {@link ProblemSupplier} of the given supplier's class is already present.
 	 * @throws IllegalStateException if the given {@link ProblemSupplier} cannot be added.
 	 */
 	public void addSupplierOrThrow(ProblemSupplier supplier) {
@@ -205,18 +217,18 @@ public class ProblemPane extends StackPane {
 	
 	/**
 	 * Accepts the given input, {@link #setupNextProblem() setting up the next problem} if the input is a correct answer 
-	 * or {@link #wrongAnswer() processing it as a wrong answer} otherwise.
+	 * or {@link #wrongAnswerSubmitted() processing it as a wrong answer} otherwise.
 	 */
 	private void acceptInput(final String inputString) {
-		if(validate(inputString))
+		if(isCorrectAnswerToCurrentProblem(inputString))
 			setupNextProblem();
 		else
-			wrongAnswer();
+			wrongAnswerSubmitted();
 	}
 	/**
 	 * Called when a wrong answer was submitted
 	 */
-	private void wrongAnswer() {
+	private void wrongAnswerSubmitted() {
 		field.setBorder(Borders.of(Color.RED));
 		if(isClearOnWrongAnswer())
 			clearInputField();
@@ -226,7 +238,7 @@ public class ProblemPane extends StackPane {
 	/**
 	 * Returns {@code true} if the given string is a correct answer to the {@link #currentProblem}, {@code false} otherwise.
 	 */
-	private boolean validate(final String inputString) {
+	private boolean isCorrectAnswerToCurrentProblem(final String inputString) {
 		return currentProblem.isCorrect(inputString);
 	}
 	
@@ -239,6 +251,13 @@ public class ProblemPane extends StackPane {
 		clearInputField();
 		field.setBorder(null);
 		hideAnswerIfShowing();
+		freshProblem();
+	}
+	
+	/**
+	 * Generates and displays a new {@link Problem}. Does not {@link #updateResults() update results} from a previous problem (if there has been one).
+	 */
+	private void freshProblem() {
 		generateProblemAndUpdateLabel();
 		updateSkillText();
 		wrongAnswers = 0;
@@ -251,6 +270,7 @@ public class ProblemPane extends StackPane {
 		if(isAnswerShowing())
 			toggleShowAnswer();
 	}
+	
 	private void updateResults() {
 		updateTimes();
 		updateAccuracies();
@@ -287,6 +307,10 @@ public class ProblemPane extends StackPane {
 		problemView.getEngine().loadContent(currentProblem.displayString());
 	}
 	
+	private void showSkillButtonAction() {
+		toggleSkillShowing();
+	}
+	
 	private void toggleSkillShowing() {
 		if(isSkillShowing()) {
 			skillLabel.setVisible(false);
@@ -303,6 +327,9 @@ public class ProblemPane extends StackPane {
 		skillLabel.setText(ProblemSuppliers.nameOf(currentProblemSupplier));
 	}
 	
+	/**
+	 * This is the method called for the {@link #showAnswer} button, whether or not it is currently display {@link #SHOW_ANSWER_TEXT} or {@link #HIDE_ANSWER_TEXT}.
+	 */
 	private void showAnswerButtonAction() {
 		toggleShowAnswer();
 		if(isAnswerShowing())

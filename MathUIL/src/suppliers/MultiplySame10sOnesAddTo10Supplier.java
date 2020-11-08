@@ -2,8 +2,7 @@ package suppliers;
 
 import java.util.List;
 
-import problems.IntegerMultiplication;
-import problems.Problem;
+import problems.*;
 import utils.*;
 
 /**
@@ -28,7 +27,7 @@ public class MultiplySame10sOnesAddTo10Supplier extends SettingsProblemSupplier 
 	public Problem get() {
 		int tens = 10 * Problem.intInclusive(lowTens(), highTens());
 		int diff = Problem.intInclusive(0, 10);
-		return IntegerMultiplication.fromTerms(Problem.shuffled(tens + diff, tens + (10 - diff)));
+		return SimpleExpression.multiplyTerms(Problem.shuffled(tens + diff, tens + (10 - diff)));
 	}
 	
 	public int lowTens() {

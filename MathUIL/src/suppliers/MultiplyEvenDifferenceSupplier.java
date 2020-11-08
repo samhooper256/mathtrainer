@@ -2,8 +2,7 @@ package suppliers;
 
 import java.util.List;
 
-import problems.IntegerMultiplication;
-import problems.Problem;
+import problems.*;
 import utils.*;
 
 /**
@@ -49,7 +48,7 @@ public class MultiplyEvenDifferenceSupplier extends SettingsProblemSupplier {
 		int highDist = Math.min(highDist(), center);
 		int realDist = Problem.intInclusive(lowDist(), highDist);
 		
-		return IntegerMultiplication.fromTerms(Problem.shuffled(center - realDist, center + realDist));
+		return SimpleExpression.multiplyTerms(Problem.shuffled(center - realDist, center + realDist));
 	}
 	
 	public int lowDist() {

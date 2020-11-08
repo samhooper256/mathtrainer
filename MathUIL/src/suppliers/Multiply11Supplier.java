@@ -43,7 +43,7 @@ public class Multiply11Supplier extends SettingsProblemSupplier {
 			first = non; second = ones;
 		}
 		
-		return IntegerMultiplication.fromTerms(first, second);
+		return SimpleExpression.multiplyTerms(first, second);
 	}
 	
 	public int lowOnes() {

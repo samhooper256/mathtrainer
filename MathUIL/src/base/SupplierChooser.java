@@ -18,7 +18,8 @@ import suppliers.*;
  */
 public class SupplierChooser extends StackPane {
 	
-	private static final String TITLE_STYLE = "title", VBOX_STYLE = "vbox", SCROLL_PANE_STYLE = "scroll-pane", FLOW_PANE_STYLE = "flow-pane";
+	private static final String TITLE_STYLE = "title", VBOX_STYLE = "vbox", SCROLL_PANE_STYLE = "scroll-pane", FLOW_PANE_STYLE = "flow-pane",
+			UI_BUTTON_STYLE = "ui-button", BOTTOM_BOX_STYLE = "bottom-box";
 	/**
 	 * CSS Style class name
 	 */
@@ -103,9 +104,11 @@ public class SupplierChooser extends StackPane {
 		}
 		
 		addSelectedButton = Buttons.of("Add Selected", this::addDesired);
+		addSelectedButton.getStyleClass().add(UI_BUTTON_STYLE);
 		selectAllButton = Buttons.of("Select all", this::desireAll);
+		addSelectedButton.getStyleClass().add(UI_BUTTON_STYLE);
 		bottomBox = new HBox(addSelectedButton, selectAllButton);
-		
+		bottomBox.getStyleClass().add(BOTTOM_BOX_STYLE);
 		vBox.getChildren().addAll(title, scroll, bottomBox);
 		getChildren().add(vBox);
 	}

@@ -2,8 +2,7 @@ package suppliers;
 
 import java.util.List;
 
-import problems.IntegerMultiplication;
-import problems.Problem;
+import problems.*;
 import utils.IntRange;
 
 /**
@@ -30,7 +29,7 @@ public class Multiply101Supplier extends SettingsProblemSupplier {
 	public Problem get() {
 		int term101 = Integer.parseInt("1" + "0".repeat(Problem.intInclusive(lowDigits101() - 2, highDigits101() - 2)) + "1");
 		int term = Problem.intWithDigits(lowDigitsN(), highDigitsN());
-		return IntegerMultiplication.fromTerms(Problem.shuffled(term, term101));
+		return SimpleExpression.multiplyTerms(Problem.shuffled(term, term101));
 	}
 
 	public int lowDigits101() {

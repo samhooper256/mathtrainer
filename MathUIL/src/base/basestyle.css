@@ -45,20 +45,20 @@
 	-fx-background-color: transparent;
 }
 
-.settings-scroll-pane > .viewport{
+.settings-scroll-pane > .viewport {
 	-fx-border-color: transparent;
 	-fx-background-color: transparent;
 }
 
 .supplier-chooser {
-	-fx-padding: 5;
+	-fx-padding: 5 10 10 10;
 	
 	-fx-border-style: solid;
-	-fx-border-color: black;
+	-fx-border-color: #62555e;
 	-fx-border-radius: 4;
-	-fx-borer-width: 1;
+	-fx-border-width: 1;
 	
-	-fx-background-color: lightgray;
+	-fx-background-color: #ffe787;
 	-fx-background-radius: 4;
 	
 }
@@ -74,6 +74,16 @@
 
 .supplier-chooser .scroll-pane {
 	-fx-fit-to-width: true;
+	
+	-fx-background-insets: 0;
+	-fx-padding: 0;
+	
+	-fx-border-color: #7c6c77;
+}
+
+.supplier-chooser .scroll-pane > .viewport {
+	-fx-background-color: #ebf8b8;
+	-fx-border-color: transparent;
 }
 
 .supplier-chooser .scroll-pane .flow-pane {
@@ -81,26 +91,55 @@
 	-fx-vgap: 4;
 	
 	-fx-padding: 5;
+	
+	-fx-border-color: transparent;
+	-fx-background-color: transparent; /* uses the color of the scroll pane's viewport */
 }
 
-.supplier-button{
+.supplier-chooser .bottom-box {
+	-fx-padding: 5 0 0 0;
+	-fx-spacing: 10;
+}
+
+.supplier-chooser .bottom-box > .button {
+	
+	-fx-background-insets: 0;
+	-fx-background-radius: 2;
+	-fx-background-color: #f6aa65;
+	
+	-fx-border-insets: 0;
+	-fx-border-width: 1;
+	-fx-border-style: solid;
+	-fx-border-radius: 2;
+	-fx-border-color: #7c6c77;
+	
+}
+
+.supplier-chooser .bottom-box > .button:hover {
+
+	-fx-background-color: #f29559;
+	
+}
+
+.supplier-button {
 	-fx-padding: 5;
 	
 	-fx-border-insets: 0;
 	-fx-border-width: 1;
 	-fx-border-style: solid;
-	-fx-border-color: black;
+	-fx-border-color: #f29559;
 	-fx-border-radius: 4;
 	
 	-fx-background-insets: 0;
-	-fx-background-color: transparent;
+	-fx-background-color: #f9be70;
 	-fx-background-radius: 4;
 }
 
 .supplier-button:hover {
-	-fx-background-color: orange;
+	-fx-background-color: #f6aa65;
+	-fx-border-color: #f08842;
 }
 
 .supplier-button:disabled {
-	-fx-border-color: gray;
+	-fx-border-color: #f6aa65;
 }

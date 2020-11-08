@@ -22,7 +22,7 @@ public class SquaresEndingIn5Supplier extends SettingsProblemSupplier {
 	}
 
 	@Override
-	public Problem get() {
-		return new SinglePower(10 * intInclusive(tens.low(), tens.high()) + 5, 2);
+	public SimpleExpression get() {
+		return new SimpleExpression(String.format("%d^2", 10 * intInclusive(tens.low(), tens.high()) + 5));
 	}
 }

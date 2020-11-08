@@ -71,9 +71,7 @@ public interface Problem {
 	
 	public static boolean within5(final BigDecimal target, final BigDecimal guess) {
 		final BigDecimal fivePercent = target.multiply(new BigDecimal("0.05")).abs();
-//		System.out.printf("\tfivePercent=%f%n", fivePercent);
 		final BigDecimal diff = target.subtract(guess).abs();
-//		System.out.printf("\tdiff=%f%n", diff);
 		return diff.compareTo(fivePercent) <= 0;
 	}
 	

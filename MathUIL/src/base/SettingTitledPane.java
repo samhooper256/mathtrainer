@@ -156,7 +156,7 @@ public class SettingTitledPane extends TitledPane {
 	}
 	
 	public void removeSelf() {
-		boolean removed = settingsPane.getMainPane().getProblemPane().getSupplier().removeSupplier(problemSupplier);
+		boolean removed = settingsPane.getMainPane().getProblemPane().getCompositeSupplier().removeSupplier(problemSupplier);
 		if(!removed)
 			throw new IllegalStateException("Unable to remove this SettingTitledPane");
 	}

@@ -29,8 +29,8 @@ public class SquareSupplier implements ProblemSupplier {
 	}
 
 	@Override
-	public SinglePower get() {
-		return new SinglePower((int) (Math.random() * (maxBase() + 1 - minBase()) + minBase()), 2);
+	public SimpleExpression get() {
+		return new SimpleExpression(String.format("%d^2", Problem.intInclusive(minBase(), maxBase())));
 	}
 	
 	@Override

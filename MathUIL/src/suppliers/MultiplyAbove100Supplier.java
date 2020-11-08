@@ -28,7 +28,7 @@ public class MultiplyAbove100Supplier extends SettingsProblemSupplier {
 	public Problem get() {
 		int mult = 100 * Problem.intInclusive(lowMultiple(), highMultiple());
 		int term1 = mult + Problem.intInclusive(lowDist(), highDist()), term2 = mult + Problem.intInclusive(lowDist(), highDist());
-		return IntegerMultiplication.fromTerms(Problem.shuffled(term1, term2));
+		return SimpleExpression.multiplyTerms(Problem.shuffled(term1, term2));
 	}
 	
 	public int lowDist() {

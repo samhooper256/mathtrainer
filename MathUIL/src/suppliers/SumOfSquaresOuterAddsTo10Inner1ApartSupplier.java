@@ -21,7 +21,7 @@ public class SumOfSquaresOuterAddsTo10Inner1ApartSupplier implements ProblemSupp
 		int inner1 = Problem.intInclusive(1, 9);
 		int inner2 = inner1 - 1;
 		final int[] arr = Problem.shuffled(outer1 * 10 + inner1, inner2 * 10 + outer2);
-		return new AnyExpression(String.format("%d^2+%d^2", arr[0], arr[1]));
+		return new SimpleExpression(String.format("%d^2+%d^2", arr[0], arr[1]));
 	}
 	
 }

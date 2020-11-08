@@ -21,15 +21,14 @@ public class IntAddSubtractSupplier extends SettingsProblemSupplier {
 	}
 	
 	public IntAddSubtractSupplier(int lowTerms, int highTerms, int lowDigits, int highDigits) {
-//		System.out.printf("(enter) IntAddSubtractSupplier constructor with args=(lowTerms=%d, highTerms=%d, lowDigits=%d, highDigits=%d)%n", lowTerms, highTerms, lowDigits, highDigits);
 		this.termRange = NamedSetting.of(new IntRange(MIN_TERMS, MAX_TERMS, lowTerms, highTerms), "Terms");
 		this.digitRange = NamedSetting.of(new IntRange(MIN_DIGITS, MAX_DIGITS, lowDigits, highDigits), "Digits");
 		settings = List.of(termRange, digitRange);
 	}
 	
 	@Override
-	public IntAddSubtract get() {
-		return new IntAddSubtract((int) (Math.random() * (highTerms() + 1 - lowTerms()) + lowTerms()), lowDigits(), highDigits());
+	public SimpleExpression get() {
+		return SimpleExpression.of(termRange, lowDigits(), highDigits(), "+", "-");
 	}
 
 	public int lowTerms() {

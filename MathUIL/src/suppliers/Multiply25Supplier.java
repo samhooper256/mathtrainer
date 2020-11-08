@@ -3,8 +3,7 @@ package suppliers;
 import java.util.List;
 
 import base.*;
-import problems.IntegerMultiplication;
-import problems.Problem;
+import problems.*;
 import utils.*;
 
 /**
@@ -28,7 +27,7 @@ public class Multiply25Supplier extends SettingsProblemSupplier {
 	@Override
 	public Problem get() {
 		int term = Problem.intWithDigits(lowDigits(), highDigits());
-		return IntegerMultiplication.fromTerms(Problem.shuffled(term, 25));
+		return SimpleExpression.multiplyTerms(Problem.shuffled(term, 25));
 	}
 	
 	public int lowDigits() {

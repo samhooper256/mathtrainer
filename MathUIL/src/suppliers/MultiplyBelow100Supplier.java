@@ -2,8 +2,7 @@ package suppliers;
 
 import java.util.List;
 
-import problems.IntegerMultiplication;
-import problems.Problem;
+import problems.*;
 import utils.IntRange;
 
 /**
@@ -29,7 +28,7 @@ public class MultiplyBelow100Supplier extends SettingsProblemSupplier {
 	public Problem get() {
 		int term1 = 100 - Problem.intInclusive(lowDist(), highDist());
 		int term2 = 100 - Problem.intInclusive(lowDist(), highDist());
-		return IntegerMultiplication.fromTerms(Problem.shuffled(term1, term2));
+		return SimpleExpression.multiplyTerms(Problem.shuffled(term1, term2));
 	}
 	
 	public int lowDist() {

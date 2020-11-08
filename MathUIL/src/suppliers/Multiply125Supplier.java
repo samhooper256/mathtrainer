@@ -2,8 +2,7 @@ package suppliers;
 
 import java.util.List;
 
-import problems.IntegerMultiplication;
-import problems.Problem;
+import problems.*;
 import utils.*;
 
 /**
@@ -32,7 +31,7 @@ public class Multiply125Supplier extends SettingsProblemSupplier {
 	public Problem get() {
 		int term = Problem.intWithDigits(lowDigits(), highDigits());
 		int x = include375() && Math.random() < CHANCE_375 ? 375 : 125;
-		return IntegerMultiplication.fromTerms(Problem.shuffled(x, term));
+		return SimpleExpression.multiplyTerms(Problem.shuffled(x, term));
 	}
 	
 	public int lowDigits() {
