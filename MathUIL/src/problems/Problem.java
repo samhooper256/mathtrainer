@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
+import math.Complex;
 import suppliers.*;
 import utils.*;
 
@@ -67,6 +68,19 @@ public interface Problem {
 				return false;
 		
 		return true;
+	}
+	
+	public static boolean isComplexInRectangularForm(final String s) {
+		if(s.length() == 0)
+			return false;
+		int pIndex = s.indexOf('+');
+		if(pIndex < 0)
+			return isBigDecimal(s);
+		if(pIndex == 0)
+			return false;
+		if(!s.endsWith("i"))
+			return false;
+		return isBigDecimal(s.substring(0, pIndex)) && isBigDecimal(s.substring(pIndex + 1, s.length() - 1));
 	}
 	
 	public static boolean within5(final BigDecimal target, final BigDecimal guess) {
@@ -156,6 +170,10 @@ public interface Problem {
 	
 	public static String prettyExpression(final String expression) {
 		return ExpressionPrettifier.pretty(expression);
+	}
+	
+	public static String prettyComplex(final Complex c) {
+		return prettyBigDecimal(c.realPart()) + " + " + prettyBigDecimal(c.imaginaryPart());
 	}
 	
 	public static String prettyBigDecimal(final BigDecimal decimal) {

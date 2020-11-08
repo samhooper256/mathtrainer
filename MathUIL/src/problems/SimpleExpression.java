@@ -3,13 +3,13 @@ package problems;
 import java.math.*;
 import java.util.*;
 
-import math.Evaluator;
+import math.*;
 import suppliers.*;
 import utils.IntRange;
 
 /**
  * <p>A {@link Problem} where the user must evaluate a simple mathematical expression. This class is capable of representing expressions
- * containing addition (+), subtraction (-), negation/negative numbers (-), multiplication(*), division(/), exponentiation (^), and fractions <b>only</b>. The
+ * containing addition (+), subtraction (-), negation/negative numbers (-), multiplication(*), division(/), exponentiation (^), <b>only</b>. The
  * expression may not have variables. It cannot contain more complicated things like derivatives, integrals, matrices, vectors, etc.</p>
  * @author Sam Hooper
  *
@@ -22,6 +22,7 @@ public class SimpleExpression implements Problem {
 			j.add(String.valueOf(term));
 		return new SimpleExpression(j.toString());
 	}
+	
 	public static SimpleExpression of(int minTerms, int maxTerms, int minDigits, int maxDigits, String... ops) {
 		if(ops.length == 0)
 			throw new IllegalArgumentException("Must have at least one operator. ops.length == 0");
@@ -41,19 +42,27 @@ public class SimpleExpression implements Problem {
 		return of(termRange.ref(), minDigits, maxDigits, ops);
 	}
 	
-	private final BigDecimal result;
+	private final Complex result;
 	private final String display;
 	
 	/**
 	 * Creates a new {@link SimpleExpression} where the user must evaluate the given expression.
 	 * @param expression the expression that this {@link SimpleExpression} must represent. The expression must use +,-,*,/, and ^ symbols
-	 * to represent mathematical operators, and can use the syntax {@code frac(x,y)} to display a fraction with a numerator of x and a denominator of
-	 * y. (This is different from {@code x/y} because {@code frac(x,y)} will actually be displayed as a vulgar fraction, where as {@code x/y} will just be
-	 * displayed as x ÷ y).
+	 * to represent mathematical operators.
 	 */
 	public SimpleExpression(String expression) {
-		result = Evaluator.evaluateAsBigDecimal(expression);
+		result = new Complex(Evaluator.evaluateAsBigDecimal(expression));
 		display = Problem.prettyExpression(expression);
+	}
+	
+	/**
+	 * Creates a new {@link SimpleExpression} that will be displayed as the given formatted html text directly. The result is the given {@link Complex} value.
+	 * @param htmlFormattedExpression
+	 * @param result
+	 */
+	public SimpleExpression(String htmlFormattedExpression, final Complex result) {
+		this.result = result;
+		this.display = htmlFormattedExpression;
 	}
 
 	@Override
@@ -63,12 +72,13 @@ public class SimpleExpression implements Problem {
 
 	@Override
 	public boolean isCorrect(String input) {
-		return Problem.isBigDecimal(input) && new BigDecimal(input).compareTo(result) == 0;
+		return Problem.isComplexInRectangularForm(input) && new Complex(input).equals(result);
 	}
-
+	
+	
 	@Override
 	public String answerAsString() {
-		return Problem.prettyBigDecimal(result);
+		return Problem.prettyComplex(result);
 	}
 	
 	
