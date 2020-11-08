@@ -13,6 +13,7 @@ import javafx.stage.*;
  */
 public class Main extends Application {
 	
+	private static final String SCENE_STYLESHEET_FILENAME = "base/basestyle.css";
 	private static final String RESOURCES_PREFIX = "/resources/";
 	private static Stage primaryStage;
 	
@@ -39,7 +40,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		Main.primaryStage = primaryStage;
 		Scene scene = MainScene.create(600, 400);
-		scene.getStylesheets().add("base/basestyle.css");
+		scene.getStylesheets().add(SCENE_STYLESHEET_FILENAME);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

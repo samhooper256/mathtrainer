@@ -1,12 +1,9 @@
 package base;
 
-import fxutils.*;
 import javafx.animation.*;
-import javafx.scene.*;
-import javafx.scene.control.*;
+import javafx.animation.Animation.Status;
 import javafx.scene.layout.*;
-import javafx.scene.paint.*;
-import javafx.util.*;
+import javafx.util.Duration;
 import suppliers.*;
 import utils.*;
 
@@ -15,7 +12,7 @@ import utils.*;
  *
  */
 public class MainPane extends StackPane {
-	
+
 	/**
 	 * in milliseconds
 	 */
@@ -26,7 +23,7 @@ public class MainPane extends StackPane {
 	private static final int SETTINGS_EXIT_DURATION = 800;
 	private static final int SETTINGS_WHEEL_INSET = 10;
 	private static final int SETTINGS_WHEEL_SIZE = 30;
-	
+
 	private final ProblemPane problemPane;
 	private final Pane settingsLayer, chooserLayer;
 	private final SettingsPane settingsPane;
@@ -34,22 +31,20 @@ public class MainPane extends StackPane {
 	private final Animation settingsEnterAnimation, settingsExitAnimation;
 	private final ImageWrap settingsWheel;
 	private final StackPane settingsWheelStackPane;
-	
-	private boolean settingsAnimationPlaying, settingsShowing;
-	
+
 	public MainPane() {
 		super();
-		this.problemPane = new ProblemPane(CompositeProblemSupplier.of(new IntAddSubtractSupplier(2, 2, 2, 2)));
-		this.settingsPane = new SettingsPane(this);
-		this.settingsEnterAnimation = createSettingsEnterAnimation();
-		this.settingsExitAnimation = createSettingsExitAnimation();
-		this.settingsWheel = new ImageWrap(Images.getImage("SettingsWheel.png"), 10, 10);
-		this.settingsWheelStackPane = new StackPane(settingsWheel);
-		this.settingsLayer = new Pane(settingsPane, settingsWheelStackPane);
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new IntAddSubtractSupplier(2, 2, 2, 2)));
+		settingsPane = new SettingsPane(this);
+		settingsEnterAnimation = createSettingsEnterAnimation();
+		settingsExitAnimation = createSettingsExitAnimation();
+		settingsWheel = new ImageWrap(Images.getImage("SettingsWheel.png"), 10, 10);
+		settingsWheelStackPane = new StackPane(settingsWheel);
+		settingsLayer = new Pane(settingsPane, settingsWheelStackPane);
 		initSettings();
-		
-		this.supplierChooser = new SupplierChooser(this);
-		this.chooserLayer = new StackPane();
+
+		supplierChooser = new SupplierChooser(this);
+		chooserLayer = new StackPane();
 		initChooser();
 		getChildren().addAll(problemPane, settingsLayer, chooserLayer);
 	}
@@ -57,48 +52,47 @@ public class MainPane extends StackPane {
 	private void initSettings() {
 		settingsPane.maxHeightProperty().bind(this.heightProperty().subtract(settingsPane.layoutYProperty()));
 		settingsPane.setVisible(false);
-		
-		
-		settingsWheel.setPickOnBounds(true); //we want the user to still be able to open the settings even
-		//if they click on one of the transparent parts of the settings wheel image.
+
+		settingsWheel.setPickOnBounds(true); // we want the user to still be able to open the settings even
+		// if they click on one of the transparent parts of the settings wheel image.
 		settingsWheel.setOnMouseClicked(mouseEvent -> {
-			if(settingsAnimationPlaying)
+			if(settingsAnimationPlaying())
 				return;
-			if(!settingsShowing) {
-				settingsPane.setVisible(true);
+			if(!settingsPane.isVisible()) {
 				settingsPane.setLayoutX(-this.getWidth() * settingsPane.getWidth());
-				settingsAnimationPlaying = true;
+				settingsPane.setVisible(true);
 				settingsEnterAnimation.play();
 			}
-			else{
+			else {
 				settingsPane.setLayoutX(0);
-				settingsAnimationPlaying = true;
 				settingsExitAnimation.play();
 			}
 		});
-		
-		
-		settingsWheelStackPane.setPrefSize(30,SETTINGS_WHEEL_SIZE);
-		
-		settingsWheelStackPane.setLayoutX(SETTINGS_WHEEL_INSET);
-		settingsWheelStackPane.setLayoutY(10);
-		
-		
-		settingsPane.layoutYProperty().bind(settingsWheelStackPane.layoutYProperty().add(settingsWheelStackPane.heightProperty()).add(10));
-		
-		this.settingsLayer.setPickOnBounds(false);
-	}
 
+		settingsWheelStackPane.setPrefSize(SETTINGS_WHEEL_SIZE, SETTINGS_WHEEL_SIZE);
+
+		settingsWheelStackPane.setLayoutX(SETTINGS_WHEEL_INSET);
+		settingsWheelStackPane.setLayoutY(SETTINGS_WHEEL_INSET);
+
+		settingsPane.layoutYProperty()
+				.bind(settingsWheelStackPane.layoutYProperty().add(settingsWheelStackPane.heightProperty()).add(SETTINGS_WHEEL_INSET));
+
+		settingsLayer.setPickOnBounds(false);
+	}
+	
+	private boolean settingsAnimationPlaying() {
+		return settingsEnterAnimation.getStatus() == Status.RUNNING || settingsExitAnimation.getStatus() == Status.RUNNING;
+	}
+	
 	private Transition createSettingsExitAnimation() {
 		return new Transition() {
 			{
 				setCycleDuration(Duration.millis(SETTINGS_EXIT_DURATION));
 				setOnFinished(actionEvent -> {
-					settingsShowing = false;
-					settingsAnimationPlaying = false;
 					settingsPane.setVisible(false);
 				});
 			}
+
 			@Override
 			protected void interpolate(double frac) {
 				frac = Math.sqrt(frac);
@@ -114,11 +108,8 @@ public class MainPane extends StackPane {
 		return new Transition() {
 			{
 				setCycleDuration(Duration.millis(SETTINGS_ENTER_DURATION));
-				setOnFinished(actionEvent -> {
-					settingsShowing = true;
-					settingsAnimationPlaying = false;
-				});
 			}
+
 			@Override
 			protected void interpolate(double frac) {
 				frac = Math.sqrt(frac);
@@ -130,20 +121,20 @@ public class MainPane extends StackPane {
 	}
 
 	private void initChooser() {
-		chooserLayer.getChildren().add(supplierChooser);
 		hideChooser();
+		chooserLayer.getChildren().add(supplierChooser);
 		supplierChooser.maxWidthProperty().bind(this.widthProperty().divide(2));
 		supplierChooser.maxHeightProperty().bind(this.heightProperty().divide(2));
 	}
-	
+
 	public ProblemPane getProblemPane() {
 		return problemPane;
 	}
-	
+
 	public SettingsPane getSettingsPane() {
 		return settingsPane;
 	}
-	
+
 	public void showChooser() {
 		problemPane.setMouseTransparent(true);
 		settingsLayer.setMouseTransparent(true);
@@ -151,14 +142,14 @@ public class MainPane extends StackPane {
 		chooserLayer.setPickOnBounds(true);
 		supplierChooser.show();
 	}
-	
+
 	public void hideChooser() {
 		problemPane.setMouseTransparent(false);
 		settingsLayer.setMouseTransparent(false);
 		chooserLayer.setMouseTransparent(true);
 		supplierChooser.hide();
 	}
-	
+
 	public void addSupplierOrThrow(ProblemSupplier supplier) {
 		problemPane.addSupplierOrThrow(supplier);
 	}

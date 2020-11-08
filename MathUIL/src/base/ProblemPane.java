@@ -20,10 +20,8 @@ import utils.*;
 public class ProblemPane extends StackPane {
 	
 	private static final String PROBLEM_VIEW_CSS_FILENAME = "problemview.css";
-	/**
-	 * Number of the user's most recent problem attempts whose times and accuracies will be kept
-	 * in temporary storage (and displayed to the user).
-	 */
+	
+	/** Number of the user's most recent problem attempts whose times and accuracies will be kept in temporary storage (and displayed to the user). */
 	private static final int RESULTS_TRACKED = 100;
 	private static final String DEFAULT_LAST_TIME_TEXT = "Last Time: N/A", DEFAULT_AVERAGE_TIME_TEXT = "Average Time: N/A",
 			DEFAULT_AVERAGE_ACCURACY_TEXT = "Average Accuracy: N/A";
@@ -40,9 +38,7 @@ public class ProblemPane extends StackPane {
 	private final CompositeProblemSupplier compositeSupplier;
 	private final WebView problemView;
 	private final Label answerLabel, lastTimeLabel, averageTimeLabel, averageAccuracyLabel, skillLabel;
-	/**
-	 * The {@link TextField} where the user will type their answer.
-	 */
+	/** The {@link TextField} where the user will type their answer. */
 	private final TextField field;
 	private final HBox buttonBox;
 	private final Button submit, clear, showSkill, showAnswer, resetResults;
@@ -67,29 +63,28 @@ public class ProblemPane extends StackPane {
 	private ProblemSupplier currentProblemSupplier;
 	
 	public ProblemPane(final CompositeProblemSupplier problemSupplier) {
-		this.compositeSupplier = Objects.requireNonNull(problemSupplier);
-		this.times = new FixedDoubleQueue(RESULTS_TRACKED);
-		this.accuracies = new FixedBooleanQueue(RESULTS_TRACKED);
+		compositeSupplier = Objects.requireNonNull(problemSupplier);
+		times = new FixedDoubleQueue(RESULTS_TRACKED);
+		accuracies = new FixedBooleanQueue(RESULTS_TRACKED);
 		
-		this.answerLabel = new Label();
-		this.lastTimeLabel = new Label(DEFAULT_LAST_TIME_TEXT);
-		this.averageTimeLabel = new Label(DEFAULT_AVERAGE_TIME_TEXT);
-		this.averageAccuracyLabel = new Label(DEFAULT_AVERAGE_ACCURACY_TEXT);
-		this.resetResults = Buttons.of("Reset", this::resetResults);
-		this.submit = Buttons.of(SUBMIT_TEXT, () -> acceptInput());
-		this.showAnswer = Buttons.of(SHOW_ANSWER_TEXT, this::showAnswerButtonAction);
-		this.clear = Buttons.of(CLEAR_TEXT, this::clearButtonAction);
-		this.showSkill = Buttons.of(SHOW_SKILL_TEXT, this::showSkillButtonAction);
-		this.buttonBox = new HBox(4, submit, clear, showSkill, showAnswer, answerLabel);
-		this.field = new TextField();
-		this.problemView = new WebView();
-		this.skillLabel = new Label();
-		this.deleteText = new CheckBox("Can delete text");
-		this.markWrongIfCleared = new CheckBox("Mark wrong if cleared or deleted");
-		this.markWrongIfShownAnswer = new CheckBox("Mark wrong if shown answer");
-		this.clearOnWrongAnswer = new CheckBox("Clear on wrong answer");
-		this.supplierClasses = new HashSet<>();
-		buttonBox.setAlignment(Pos.CENTER);
+		answerLabel = new Label();
+		lastTimeLabel = new Label(DEFAULT_LAST_TIME_TEXT);
+		averageTimeLabel = new Label(DEFAULT_AVERAGE_TIME_TEXT);
+		averageAccuracyLabel = new Label(DEFAULT_AVERAGE_ACCURACY_TEXT);
+		resetResults = Buttons.of("Reset", this::resetResults);
+		submit = Buttons.of(SUBMIT_TEXT, () -> acceptInput());
+		showAnswer = Buttons.of(SHOW_ANSWER_TEXT, this::showAnswerButtonAction);
+		clear = Buttons.of(CLEAR_TEXT, this::clearButtonAction);
+		showSkill = Buttons.of(SHOW_SKILL_TEXT, this::showSkillButtonAction);
+		buttonBox = new HBox(4, submit, clear, showSkill, showAnswer, answerLabel);
+		field = new TextField();
+		problemView = new WebView();
+		skillLabel = new Label();
+		deleteText = new CheckBox("Can delete text");
+		markWrongIfCleared = new CheckBox("Mark wrong if cleared or deleted");
+		markWrongIfShownAnswer = new CheckBox("Mark wrong if shown answer");
+		clearOnWrongAnswer = new CheckBox("Clear on wrong answer");
+		supplierClasses = new HashSet<>();
 		initInputField();
 		initProblemView();
 		initCompositeSupplier();
@@ -101,11 +96,13 @@ public class ProblemPane extends StackPane {
 	private void initOptions() {
 		skillLabel.setWrapText(true);
 		skillLabel.setVisible(false);
+		deleteText.setSelected(true);
 		markWrongIfCleared.setSelected(true);
 		markWrongIfShownAnswer.setSelected(true);
 	}
 
 	private void finishInit() {
+		buttonBox.setAlignment(Pos.CENTER);
 		VBox vBox = new VBox(10, problemView, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
 		vBox.setAlignment(Pos.CENTER);
 		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel, resetResults);
@@ -120,9 +117,9 @@ public class ProblemPane extends StackPane {
 
 	private void initCompositeSupplier() {
 		for(ProblemSupplier ps : compositeSupplier.suppliers())
-			this.supplierClasses.add(ps.getClass());
-		this.compositeSupplier.suppliers().addAddListener(ps -> supplierClasses.add(ps.getClass()));
-		this.compositeSupplier.suppliers().addRemoveListener(ps -> supplierClasses.remove(ps.getClass()));
+			supplierClasses.add(ps.getClass());
+		compositeSupplier.suppliers().addAddListener(ps -> supplierClasses.add(ps.getClass()));
+		compositeSupplier.suppliers().addRemoveListener(ps -> supplierClasses.remove(ps.getClass()));
 	}
 
 	private void initProblemView() {

@@ -31,20 +31,23 @@ public class SettingTitledPane extends TitledPane {
 	
 	/**
 	 * The given {@link ProblemSupplier} must not be {@code null}.
-	 * @throws NullPointerException if {@code supplier} is {@code null}.
+	 * @throws NullPointerException if {@code supplier} or {@code settingsPane} is {@code null}.
 	 */
-	private SettingTitledPane(ProblemSupplier supplier, final SettingsPane settingsPane) {
-		Objects.requireNonNull(supplier);
-		this.problemSupplier = supplier;
-		this.settingsPane = settingsPane;
+	private SettingTitledPane(final ProblemSupplier supplier, final SettingsPane settingsPane) {
+		this.problemSupplier = Objects.requireNonNull(supplier);
+		this.settingsPane = Objects.requireNonNull(settingsPane);
 		this.removeButton = Buttons.of("X", this::removeSelf);
-		String name = ProblemSuppliers.nameOf(supplier.getClass());
-		this.setText(name);
+		this.setText(ProblemSuppliers.nameOf(supplier.getClass()));
 		VBox vBox = new VBox();
 		setContent(vBox);
-		for(Ref ref : supplier.settings()) {
-			vBox.getChildren().add(displayNodeForRef(ref)); 
+		if(supplier.settings().isEmpty()) {
+			setExpanded(false);
+			setCollapsible(false);
 		}
+		else
+			for(Ref ref : supplier.settings())
+				vBox.getChildren().add(displayNodeForRef(ref));
+		
 	}
 	
 	/**
@@ -53,6 +56,7 @@ public class SettingTitledPane extends TitledPane {
 	 * <p>This method supports the following types and their subtypes:
 	 * <ul>
 	 * <li>{@link IntRange}</li>
+	 * <li>{@link BooleanRef}</li>
 	 * </ul>
 	 * </p>
 	 */
