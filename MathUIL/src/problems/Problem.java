@@ -71,6 +71,7 @@ public interface Problem {
 	}
 	
 	public static boolean isComplexInRectangularForm(final String s) {
+//		System.out.printf("entered isComplexInRectangularForm%n");
 		if(s.length() == 0)
 			return false;
 		int pIndex = s.indexOf('+');
@@ -99,12 +100,16 @@ public interface Problem {
 		return intInclusive(range.getLow(), range.getHigh());
 	}
 	
-	public static int intInclusive(NamedSetting<IntRange>range) {
+	public static int intInclusive(NamedSetting<IntRange> range) {
 		return intInclusive(range.ref().getLow(), range.ref().getHigh());
 	}
 	
 	public static int intWithDigits(int minDigitsInclusive, int maxDigitsInclusive) {
 		return intWithDigits(Problem.intInclusive(minDigitsInclusive, maxDigitsInclusive));
+	}
+	
+	public static int intWithDigits(NamedSetting<IntRange> range) {
+		return intWithDigits(range.ref().getLow(), range.ref().getHigh());
 	}
 	
 	public static int intWithDigits(final int digits) {

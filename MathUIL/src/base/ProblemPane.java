@@ -220,10 +220,12 @@ public class ProblemPane extends StackPane {
 	 * or {@link #wrongAnswerSubmitted() processing it as a wrong answer} otherwise.
 	 */
 	private void acceptInput(final String inputString) {
+//		System.out.printf("entered acceptInput(inputString=%s)%n", inputString);
 		if(isCorrectAnswerToCurrentProblem(inputString))
 			setupNextProblem();
 		else
 			wrongAnswerSubmitted();
+//		System.out.printf("]exit acceptInput%n");
 	}
 	/**
 	 * Called when a wrong answer was submitted
@@ -247,23 +249,27 @@ public class ProblemPane extends StackPane {
 	 * and clearing the input field. Updates {@link #startTime}.
 	 */
 	private void setupNextProblem() {
+//		System.out.printf("enter setupNextProblem()%n");
 		updateResults();
 		clearInputField();
 		field.setBorder(null);
 		hideAnswerIfShowing();
 		freshProblem();
+//		System.out.printf("exit setupNextProblem()%n");
 	}
 	
 	/**
 	 * Generates and displays a new {@link Problem}. Does not {@link #updateResults() update results} from a previous problem (if there has been one).
 	 */
 	private void freshProblem() {
+//		System.out.printf("enter freshProblem()%n");
 		generateProblemAndUpdateLabel();
 		updateSkillText();
 		wrongAnswers = 0;
 		hasDeletedText = false;
 		hasShownAnswer = false;
 		resetCurrentProblemTimer();
+//		System.out.printf("]exit freshProblem()%n");
 	}
 	
 	private void hideAnswerIfShowing() {
@@ -293,8 +299,10 @@ public class ProblemPane extends StackPane {
 	}
 	
 	private void generateProblemAndUpdateLabel() {
+//		System.out.printf("enter generateProblemAndUpdateLabel%n");
 		generateProblem();
 		updateLabel();
+//		System.out.printf("]exit generateProblemAndUpdateLabel%n");
 	}
 
 	private void generateProblem() {

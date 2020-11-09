@@ -14,7 +14,7 @@ import utils.IntRange;
  * @author Sam Hooper
  *
  */
-public class SimpleExpression implements Problem {
+public class SimpleExpression extends ComplexValued {
 	
 	public static SimpleExpression multiplyTerms(int... terms) {
 		StringJoiner j = new StringJoiner("*");
@@ -42,7 +42,6 @@ public class SimpleExpression implements Problem {
 		return of(termRange.ref(), minDigits, maxDigits, ops);
 	}
 	
-	private final Complex result;
 	private final String display;
 	
 	/**
@@ -51,35 +50,13 @@ public class SimpleExpression implements Problem {
 	 * to represent mathematical operators.
 	 */
 	public SimpleExpression(String expression) {
-		result = new Complex(Evaluator.evaluateAsBigDecimal(expression));
+		super(new Complex(Evaluator.evaluateAsBigDecimal(expression)));
 		display = Problem.prettyExpression(expression);
-	}
-	
-	/**
-	 * Creates a new {@link SimpleExpression} that will be displayed as the given formatted html text directly. The result is the given {@link Complex} value.
-	 * @param htmlFormattedExpression
-	 * @param result
-	 */
-	public SimpleExpression(String htmlFormattedExpression, final Complex result) {
-		this.result = result;
-		this.display = htmlFormattedExpression;
 	}
 
 	@Override
 	public String displayString() {
 		return display;
 	}
-
-	@Override
-	public boolean isCorrect(String input) {
-		return Problem.isComplexInRectangularForm(input) && new Complex(input).equals(result);
-	}
-	
-	
-	@Override
-	public String answerAsString() {
-		return Problem.prettyComplex(result);
-	}
-	
 	
 }

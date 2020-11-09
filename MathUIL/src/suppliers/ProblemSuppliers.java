@@ -67,6 +67,7 @@ public final class ProblemSuppliers {
 		customName(SumOfSquaresX3XSupplier.class, "Sum of squares with bases x and 3x");
 		customName(SumConsecutiveSquaresSupplier.class, "Sum of two consecutive squares");
 		customName(SumOfSquaresOuterAddsTo10Inner1ApartSupplier.class, "Sum of squares when outer digits add to 10 and inner digits are 1 apart");
+		customName(BackwardsGCDLCMSupplier.class, "Find term given GCD and LCM");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {

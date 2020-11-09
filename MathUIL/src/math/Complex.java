@@ -41,11 +41,19 @@ public class Complex {
 	}
 	
 	/**
+	 * The "a" parameter is the one in the rectangular form "a + bi". The imaginary part is {@code 0}.
+	 */
+	public Complex(final double a) {
+		this(a, 0);
+	}
+	
+	/**
 	 * Takes a {@link String} either of the form "a+bi" (where a and b are valid {@link BigDecimal BigDecimals}) or "a" where
 	 * a is a valid {@link BigDecimal}.
 	 * @param abi
 	 */
 	public Complex(final String abi) {
+//		System.out.printf("entered Complex(abi=%s)%n", abi);
 		int p = abi.indexOf('+');
 		if(p >= 0) {
 			a = new BigDecimal(abi.substring(0, p));
