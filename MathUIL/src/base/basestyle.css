@@ -30,7 +30,7 @@
 }
 
 .settings-box {
-	-fx-padding: 5;
+	-fx-padding: 0;
 	-fx-spacing: 5;
 	
 	-fx-border-color: transparent;

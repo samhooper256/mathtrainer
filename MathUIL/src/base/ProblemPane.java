@@ -220,12 +220,10 @@ public class ProblemPane extends StackPane {
 	 * or {@link #wrongAnswerSubmitted() processing it as a wrong answer} otherwise.
 	 */
 	private void acceptInput(final String inputString) {
-//		System.out.printf("entered acceptInput(inputString=%s)%n", inputString);
 		if(isCorrectAnswerToCurrentProblem(inputString))
 			setupNextProblem();
 		else
 			wrongAnswerSubmitted();
-//		System.out.printf("]exit acceptInput%n");
 	}
 	/**
 	 * Called when a wrong answer was submitted
