@@ -4,10 +4,13 @@ import java.util.Objects;
 
 import org.controlsfx.control.RangeSlider;
 
-import fxutils.Buttons;
+import fxutils.*;
+import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import problems.Problem;
 import suppliers.NamedSetting;
 import suppliers.ProblemSupplier;
 import suppliers.ProblemSuppliers;
@@ -73,7 +76,7 @@ public class SettingTitledPane extends TitledPane {
 			vBox.getChildren().add(new Label(name));
 			
 			IntRange ir = (IntRange) ref;
-			final RangeSlider rangeSlider = new IntRangeSlider(ir);
+			final Pane rangeSlider = new IntRangeBox(ir);
 			vBox.getChildren().add(rangeSlider);
 		}
 		else if(ref instanceof BooleanRef) {
@@ -87,43 +90,88 @@ public class SettingTitledPane extends TitledPane {
 		return vBox;
 	}
 	
-	private static class IntRangeSlider extends RangeSlider {
+	private static class IntRangeBox extends HBox {
 		
 		private final IntRange range;
+		private final RangeSlider slider;
+		private final TextField low, high;
 		
-		IntRangeSlider(final IntRange range) {
+		IntRangeBox(final IntRange range) {
+			super();			
 			this.range = range;
-			this.setMin(range.getMin());
-			this.setMax(range.getMax());
-			this.setHighValue(range.getHigh());
-			this.setLowValue(range.getLow());
-			this.setHighValue(range.getHigh()); //this line is intentional. 
-			this.lowValueProperty().addListener((ov, oldV, newV) -> {
-				final double val = newV.doubleValue();
-				if(isInt(val)) {
-//					System.out.printf("setting low: %d%n", (int) val);
-					range.setLow((int) val);
+			this.slider = new RangeSlider();
+			HBox.setHgrow(slider, Priority.ALWAYS);
+			setAlignment(Pos.CENTER);
+			setBorder(Borders.of(Color.BLUE));
+			low = new TextField(Integer.toString(range.getLow()));
+			low.setMinWidth(10);
+			low.setPrefWidth(25);
+			low.setMaxWidth(80);
+			high = new TextField(Integer.toString(range.getHigh()));
+			high.setMinWidth(10);
+			high.setPrefWidth(25);
+			high.setMaxWidth(80);
+			slider.setMin(range.getMin());
+			slider.setMax(range.getMax());
+			slider.setHighValue(range.getHigh());
+			slider.setLowValue(range.getLow());
+			slider.setHighValue(range.getHigh()); //this line is intentional. 
+			slider.lowValueProperty().addListener((ov, oldV, newV) -> {
+				final double doubleValue = newV.doubleValue();
+				if(isInt(doubleValue)) {
+					final int actualValue = (int) doubleValue;
+					range.setLow(actualValue);
+					low.setText(Integer.toString(actualValue));
 				}
 			});
-			this.highValueProperty().addListener((ov, oldV, newV) -> {
-				final double val = newV.doubleValue();
-				if(isInt(val)) {
-//					System.out.printf("setting high: %d%n", (int) val);
-					range.setHigh((int) val);
+			slider.highValueProperty().addListener((ov, oldV, newV) -> {
+				final double doubleValue = newV.doubleValue();
+				if(isInt(doubleValue)) {
+					final int actualValue = (int) doubleValue;
+					range.setHigh(actualValue);
+					high.setText(Integer.toString(actualValue));
 				}
+			});
+			low.textProperty().addListener((ov, oldText, newText) -> {
+				try {
+					if(Problem.isInteger(newText)) {
+						int val = Integer.parseInt(newText);
+						if(val <= range.getHigh())
+							slider.setLowValue(val);
+						else {
+							slider.setLowValue(slider.getHighValue());
+						}
+					}
+				}
+				catch(Exception e) {}
+			});
+			high.textProperty().addListener((ov, oldText, newText) -> {
+				try {
+					if(Problem.isInteger(newText)) {
+						int val = Integer.parseInt(newText);
+						if(val >= range.getLow())
+							slider.setHighValue(val);
+						else {
+							slider.setHighValue(slider.getLowValue());
+						}
+					}
+				}
+				catch(Exception e) {}
 			});
 			
-			this.setShowTickLabels(true);
-			this.setMajorTickUnit(1);
-			this.setMinorTickCount(0);
-			this.setSnapToTicks(true);
+			slider.setShowTickLabels(true);
+			slider.setMajorTickUnit(1);
+			slider.setMinorTickCount(0);
+			slider.setSnapToTicks(true);
 			
 			range.lowRef().addChangeListener((ov, nv) -> {
-				this.setLowValue(nv);
+				slider.setLowValue(nv);
 			});
 			range.highRef().addChangeListener((ov, nv) -> {
-				this.setHighValue(nv);
+				slider.setHighValue(nv);
 			});
+			
+			getChildren().addAll(low, slider, high);
 		}
 	}
 	
