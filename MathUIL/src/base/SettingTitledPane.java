@@ -102,7 +102,6 @@ public class SettingTitledPane extends TitledPane {
 			this.slider = new RangeSlider();
 			HBox.setHgrow(slider, Priority.ALWAYS);
 			setAlignment(Pos.CENTER);
-			setBorder(Borders.of(Color.BLUE));
 			low = new TextField(Integer.toString(range.getLow()));
 			low.setMinWidth(10);
 			low.setPrefWidth(25);
