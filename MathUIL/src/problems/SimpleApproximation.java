@@ -37,5 +37,12 @@ public class SimpleApproximation implements Problem {
 	public String answerAsString() {
 		return Problem.prettyBigDecimal(result);
 	}
+
+	@Override
+	public boolean isApproximateResult() {
+		return true;
+	}
+	
+	
 	
 }

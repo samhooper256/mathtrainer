@@ -39,6 +39,7 @@ public class PEMDASApproximationSupplier extends SettingsProblemSupplier {
 		return new SimpleApproximation(Problem.intInclusive(minTerms(), maxTerms()), minDigits(), maxDigits(), operators);
 	}
 	
+	
 	public int minTerms() {
 		return termRange.ref().getLow();
 	}

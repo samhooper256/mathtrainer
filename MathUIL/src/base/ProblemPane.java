@@ -5,6 +5,7 @@ import java.util.*;
 import fxutils.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
@@ -17,7 +18,7 @@ import utils.*;
  * @author Sam Hooper
  *
  */
-public class ProblemPane extends StackPane {
+public class ProblemPane extends Pane {
 	
 	private static final String PROBLEM_VIEW_CSS_FILENAME = "problemview.css";
 	
@@ -32,7 +33,7 @@ public class ProblemPane extends StackPane {
 			HIDE_SKILL_TEXT = String.format("Hide Skill (%C)", SHOW_SKILL_CHAR),
 			SHOW_ANSWER_TEXT = String.format("Show Answer (%C)", SHOW_ANSWER_CHAR),
 			HIDE_ANSWER_TEXT = String.format("Hide Answer (%C)", SHOW_ANSWER_CHAR);
-	
+	private static final Image APPROX_IMAGE = Images.getImage("approx.png");
 	private final FixedDoubleQueue times;
 	private final FixedBooleanQueue accuracies;
 	private final CompositeProblemSupplier compositeSupplier;
@@ -43,6 +44,8 @@ public class ProblemPane extends StackPane {
 	private final HBox buttonBox;
 	private final Button submit, clear, showSkill, showAnswer, resetResults;
 	private final CheckBox deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer;
+	private final ImageWrap approxWrap;
+	private final StackPane root;
 	private final Set<Class<? extends ProblemSupplier>> supplierClasses;
 	
 	
@@ -67,6 +70,7 @@ public class ProblemPane extends StackPane {
 		times = new FixedDoubleQueue(RESULTS_TRACKED);
 		accuracies = new FixedBooleanQueue(RESULTS_TRACKED);
 		
+		root = new StackPane();
 		answerLabel = new Label();
 		lastTimeLabel = new Label(DEFAULT_LAST_TIME_TEXT);
 		averageTimeLabel = new Label(DEFAULT_AVERAGE_TIME_TEXT);
@@ -85,6 +89,7 @@ public class ProblemPane extends StackPane {
 		markWrongIfShownAnswer = new CheckBox("Mark wrong if shown answer");
 		clearOnWrongAnswer = new CheckBox("Clear on wrong answer");
 		supplierClasses = new HashSet<>();
+		approxWrap = new ImageWrap(APPROX_IMAGE, 0, 0);
 		initInputField();
 		initProblemView();
 		initCompositeSupplier();
@@ -112,7 +117,18 @@ public class ProblemPane extends StackPane {
 		AnchorPane.setLeftAnchor(resultsBox, 10d);
 		AnchorPane.setRightAnchor(resultsBox, 10d);
 		
-		getChildren().addAll(vBox, anchor);
+		root.getChildren().addAll(vBox, anchor);
+		root.prefWidthProperty().bind(this.widthProperty());
+		root.prefHeightProperty().bind(this.heightProperty());
+		getChildren().add(root);
+		
+		StackPane approxStack = new StackPane(approxWrap);
+		approxStack.prefHeightProperty().bind(field.heightProperty());
+		approxStack.prefWidthProperty().bind(approxStack.prefHeightProperty());
+		approxStack.layoutXProperty().bind(field.layoutXProperty().subtract(approxStack.widthProperty()));
+		approxStack.layoutYProperty().bind(field.layoutYProperty());
+		approxWrap.setVisible(false);
+		getChildren().add(approxStack);
 	}
 
 	private void initCompositeSupplier() {
@@ -130,7 +146,7 @@ public class ProblemPane extends StackPane {
 	}
 
 	private void initInputField() {
-		field.maxWidthProperty().bind(this.widthProperty().divide(2));
+		field.maxWidthProperty().bind(root.widthProperty().divide(2));
 		field.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
 			switch(keyEvent.getCode()) {
 				case BACK_SPACE, DELETE -> {
@@ -266,6 +282,7 @@ public class ProblemPane extends StackPane {
 		wrongAnswers = 0;
 		hasDeletedText = false;
 		hasShownAnswer = false;
+		approxWrap.setVisible(currentProblem.isApproximateResult());
 		resetCurrentProblemTimer();
 //		System.out.printf("]exit freshProblem()%n");
 	}
