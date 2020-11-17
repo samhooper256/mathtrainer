@@ -22,6 +22,19 @@ public interface Problem {
 	
 	public static final Random RAND = new Random();
 	
+	public static int magnitude(final int n) {
+		int abs = Math.abs(n);
+		if(abs >= 1_000_000_000) return 10;
+		if(abs >= 100_000_000) return 9;
+		if(abs >= 10_000_000) return 8;
+		if(abs >= 1_000_000) return 7;
+		if(abs >= 100_000) return 6;
+		if(abs >= 10_000) return 5;
+		if(abs >= 1_000) return 4;
+		if(abs >= 100) return 3;
+		if(abs >= 10) return 2;
+		return 1;
+	}
 	public static boolean isInteger(final String s) {
 		if(s.length() == 0)
 			return false;

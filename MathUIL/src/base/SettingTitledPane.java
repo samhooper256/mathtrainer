@@ -92,26 +92,26 @@ public class SettingTitledPane extends TitledPane {
 	
 	private static class IntRangeBox extends HBox {
 		
-		private final IntRange range;
 		private final RangeSlider slider;
 		private final TextField low, high;
 		
 		IntRangeBox(final IntRange range) {
 			super();			
-			this.range = range;
 			this.slider = new RangeSlider();
 			HBox.setHgrow(slider, Priority.ALWAYS);
 			setAlignment(Pos.CENTER);
+			final int rangeMax = range.getMax();
+			final int textFieldWidth = 10 + 15 * Problem.magnitude(rangeMax);
 			low = new TextField(Integer.toString(range.getLow()));
 			low.setMinWidth(10);
-			low.setPrefWidth(25);
+			low.setPrefWidth(textFieldWidth);
 			low.setMaxWidth(80);
 			high = new TextField(Integer.toString(range.getHigh()));
 			high.setMinWidth(10);
-			high.setPrefWidth(25);
+			high.setPrefWidth(textFieldWidth);
 			high.setMaxWidth(80);
 			slider.setMin(range.getMin());
-			slider.setMax(range.getMax());
+			slider.setMax(rangeMax);
 			slider.setHighValue(range.getHigh());
 			slider.setLowValue(range.getLow());
 			slider.setHighValue(range.getHigh()); //this line is intentional. 
@@ -159,7 +159,7 @@ public class SettingTitledPane extends TitledPane {
 			});
 			
 			slider.setShowTickLabels(true);
-			slider.setMajorTickUnit(1);
+			slider.setMajorTickUnit(rangeMax <= 10 ? 1 : rangeMax <= 100 ? 10 : 100);
 			slider.setMinorTickCount(0);
 			slider.setSnapToTicks(true);
 			
