@@ -52,6 +52,7 @@ public class MainPane extends StackPane {
 	private void initSettings() {
 		settingsPane.maxHeightProperty().bind(this.heightProperty().subtract(settingsPane.layoutYProperty()));
 		settingsPane.setVisible(false);
+//		settingsPane.prefWidthProperty().bind(this.widthProperty());
 
 		settingsWheel.setPickOnBounds(true); // we want the user to still be able to open the settings even
 		// if they click on one of the transparent parts of the settings wheel image.

@@ -20,6 +20,9 @@ import utils.*;
  */
 public class ProblemPane extends Pane {
 	
+	private static final Border FIELD_RED_BORDER = Borders.of(Color.RED);
+	private static final Border FIELD_EMPTY_BORDER = Borders.of(Color.TRANSPARENT);
+
 	private static final String PROBLEM_VIEW_CSS_FILENAME = "problemview.css";
 	
 	/** Number of the user's most recent problem attempts whose times and accuracies will be kept in temporary storage (and displayed to the user). */
@@ -146,6 +149,7 @@ public class ProblemPane extends Pane {
 	}
 
 	private void initInputField() {
+		field.setBorder(FIELD_EMPTY_BORDER);
 		field.maxWidthProperty().bind(root.widthProperty().divide(2));
 		field.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
 			switch(keyEvent.getCode()) {
@@ -245,7 +249,7 @@ public class ProblemPane extends Pane {
 	 * Called when a wrong answer was submitted
 	 */
 	private void wrongAnswerSubmitted() {
-		field.setBorder(Borders.of(Color.RED));
+		field.setBorder(FIELD_RED_BORDER);
 		if(isClearOnWrongAnswer())
 			clearInputField();
 		wrongAnswers++;
@@ -266,7 +270,7 @@ public class ProblemPane extends Pane {
 //		System.out.printf("enter setupNextProblem()%n");
 		updateResults();
 		clearInputField();
-		field.setBorder(null);
+		field.setBorder(FIELD_EMPTY_BORDER);
 		hideAnswerIfShowing();
 		freshProblem();
 //		System.out.printf("exit setupNextProblem()%n");
