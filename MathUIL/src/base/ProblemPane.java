@@ -25,8 +25,7 @@ public class ProblemPane extends Pane {
 
 	private static final String PROBLEM_VIEW_CSS_FILENAME = "problemview.css";
 	
-	/** Number of the user's most recent problem attempts whose times and accuracies will be kept in temporary storage (and displayed to the user). */
-	private static final int RESULTS_TRACKED = 100;
+	
 	private static final String DEFAULT_LAST_TIME_TEXT = "Last Time: N/A", DEFAULT_AVERAGE_TIME_TEXT = "Average Time: N/A",
 			DEFAULT_AVERAGE_ACCURACY_TEXT = "Average Accuracy: N/A";
 	private static final char CLEAR_CHAR = 'c', SHOW_SKILL_CHAR = 's', SHOW_ANSWER_CHAR = 'a';
@@ -37,6 +36,8 @@ public class ProblemPane extends Pane {
 			SHOW_ANSWER_TEXT = String.format("Show Answer (%C)", SHOW_ANSWER_CHAR),
 			HIDE_ANSWER_TEXT = String.format("Hide Answer (%C)", SHOW_ANSWER_CHAR);
 	private static final Image APPROX_IMAGE = Images.getImage("approx.png");
+	
+	
 	private final FixedDoubleQueue times;
 	private final FixedBooleanQueue accuracies;
 	private final CompositeProblemSupplier compositeSupplier;
@@ -64,14 +65,16 @@ public class ProblemPane extends Pane {
 	/**
 	 * {@code true} if the user has shown the answer to the {@link #currentProblem} (using the {@link #showAnswer} Button.
 	 */
+	/** Number of the user's most recent problem attempts whose times and accuracies will be kept in temporary storage (and displayed to the user). */
+	private int resultsTracked = 100;
 	private boolean hasShownAnswer;
 	private Problem currentProblem;
 	private ProblemSupplier currentProblemSupplier;
 	
 	public ProblemPane(final CompositeProblemSupplier problemSupplier) {
 		compositeSupplier = Objects.requireNonNull(problemSupplier);
-		times = new FixedDoubleQueue(RESULTS_TRACKED);
-		accuracies = new FixedBooleanQueue(RESULTS_TRACKED);
+		times = new FixedDoubleQueue(resultsTracked);
+		accuracies = new FixedBooleanQueue(resultsTracked);
 		
 		root = new StackPane();
 		answerLabel = new Label();
@@ -417,6 +420,19 @@ public class ProblemPane extends Pane {
 
 	private boolean isSkillShowing() {
 		return !showSkill.getText().equals(SHOW_SKILL_TEXT);
+	}
+	
+	/** Returns the number of the user's most resent results this {@link ProblemPane} is tracking. */
+	public int resultsTracked() {
+		return resultsTracked;
+	}
+	
+	public void setResultsTracked(final int tracked) {
+		if(tracked == resultsTracked)
+			return;
+		if(tracked < resultsTracked) {
+			
+		}
 	}
 }
 

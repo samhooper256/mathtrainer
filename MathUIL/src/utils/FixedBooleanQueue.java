@@ -88,9 +88,29 @@ public class FixedBooleanQueue extends AbstractFixedQueue {
 
 	@Override
 	public String toString() {
-		StringJoiner j = new StringJoiner(",", "[", "]");
-		for(int h = head, i = 0; i < size; i++, h = ((h + 1) % capacity))
-			j.add(elements[h] ? "T" : "F");
+		StringJoiner j = new StringJoiner(", ", "[", "]");
+		for(BooleanIterator itr = primitiveIterator(); itr.hasNext();)
+			j.add(String.valueOf(itr.nextBoolean()));
 		return j.toString();
+	}
+	
+	public BooleanIterator primitiveIterator() {
+		return new BooleanIterator() {
+			int i = 0;
+			int h = head;
+			
+			@Override
+			public boolean hasNext() {
+				return i < size;
+			}
+			
+			@Override
+			public boolean nextBoolean() {
+				boolean result = elements[h];
+				i++;
+				h = ((h + 1) % capacity);
+				return result;
+			}
+		};
 	}
 }

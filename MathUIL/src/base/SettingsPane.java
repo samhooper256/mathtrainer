@@ -26,25 +26,29 @@ public class SettingsPane extends StackPane {
 	private static final String SETTINGS_BOX_STYLE_CLASS_NAME = "settings-box";
 	private static final String TITLE_STYLE_CLASS_NAME = "settings-pane-title";
 	private static final String SCROLL_PANE_STYLE_CLASS_NAME = "settings-scroll-pane";
-	private final MainPane mainPane;
-	private final VBox settingsBox;
-	private final Label title;
-	private final Button addSupplier, removeSupplier, removeAllSuppliers;
 	
-	private final VBox vBox;
+	private final MainPane mainPane;
+	private final VBox settingsBox, rootVBox;
+	private final HBox resultsTrackedHBox;
+	private final Label title, resultsTrackedLabel;
+	private final Button addSupplier, removeSupplier, removeAllSuppliers;
 	private final ScrollPane scrollPane;
+	private final TextField resultsTrackedField;
 	
 	private boolean allowingRemoval;
 	
 	public SettingsPane(final MainPane mainPane) {
 		this.mainPane = Objects.requireNonNull(mainPane);
 		title = new Label("Settings");
+		resultsTrackedLabel = new Label("Results Tracked: ");
+		resultsTrackedField = new TextField();
+		resultsTrackedHBox = new HBox(resultsTrackedLabel, resultsTrackedField);
 		settingsBox = new VBox();
 		removeSupplier = Buttons.of(REMOVE_SUPPLIER_BUTTON_TEXT, this::removeSupplierButtonAction);
 		removeAllSuppliers = Buttons.of(REMOVE_ALL_SUPPLIERS_BUTTON_TEXT, this::removeAllSuppliersButtonAction);
 		addSupplier = Buttons.of(ADD_SKILL_BUTTON_TEXT, this::showChooser);
-		vBox = new VBox(title, addSupplier, removeSupplier, settingsBox);
-		scrollPane = new ScrollPane(vBox);
+		rootVBox = new VBox(title, resultsTrackedHBox, addSupplier, removeSupplier, settingsBox);
+		scrollPane = new ScrollPane(rootVBox);
 		initSettings();
 		initStyle();
 		finishInit();
@@ -62,14 +66,14 @@ public class SettingsPane extends StackPane {
 
 	private void finishInit() {
 		getChildren().add(scrollPane);
-		minWidthProperty().bind(vBox.minWidthProperty());
-		prefWidthProperty().bind(vBox.prefWidthProperty());
+		minWidthProperty().bind(rootVBox.minWidthProperty());
+		prefWidthProperty().bind(rootVBox.prefWidthProperty());
 	}
 
 
 	private void initStyle() {
 		getStyleClass().add(STYLE_CLASS_NAME);
-		vBox.getStyleClass().add(VBOX_STYLE_CLASS_NAME);
+		rootVBox.getStyleClass().add(VBOX_STYLE_CLASS_NAME);
 		title.getStyleClass().add(TITLE_STYLE_CLASS_NAME);
 		settingsBox.getStyleClass().add(SETTINGS_BOX_STYLE_CLASS_NAME);
 		scrollPane.getStyleClass().add(SCROLL_PANE_STYLE_CLASS_NAME);
@@ -112,8 +116,8 @@ public class SettingsPane extends StackPane {
 		removeSupplier.setText("Done");
 		for(Node node : settingsBox.getChildren())
 			((SettingTitledPane) node).allowForRemoval();
-		int addSupplierIndex = vBox.getChildren().indexOf(addSupplier);
-		vBox.getChildren().set(addSupplierIndex, removeAllSuppliers);
+		int addSupplierIndex = rootVBox.getChildren().indexOf(addSupplier);
+		rootVBox.getChildren().set(addSupplierIndex, removeAllSuppliers);
 	}
 	
 	private void disallowRemoval() {
@@ -123,8 +127,8 @@ public class SettingsPane extends StackPane {
 		removeSupplier.setText(REMOVE_SUPPLIER_BUTTON_TEXT);
 		for(Node node : settingsBox.getChildren())
 			((SettingTitledPane) node).disallowRemoval();
-		int removeAllSuppliersIndex = vBox.getChildren().indexOf(removeAllSuppliers);
-		vBox.getChildren().set(removeAllSuppliersIndex, addSupplier);
+		int removeAllSuppliersIndex = rootVBox.getChildren().indexOf(removeAllSuppliers);
+		rootVBox.getChildren().set(removeAllSuppliersIndex, addSupplier);
 	}
 	
 	public boolean isAllowingRemoval() {

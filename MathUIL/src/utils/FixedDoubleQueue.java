@@ -79,8 +79,29 @@ public class FixedDoubleQueue extends AbstractFixedQueue {
 	@Override
 	public String toString() {
 		StringJoiner j = new StringJoiner(", ", "[", "]");
-		for(int h = head, i = 0; i < size; i++, h = ((h + 1) % capacity))
-			j.add(String.valueOf(elements[h]));
+		for(PrimitiveIterator.OfDouble itr = primitiveIterator(); itr.hasNext();)
+			j.add(String.valueOf(itr.nextDouble()));
+			
 		return j.toString();
+	}
+	
+	public PrimitiveIterator.OfDouble primitiveIterator() {
+		return new PrimitiveIterator.OfDouble() {
+			int i = 0;
+			int h = head;
+			
+			@Override
+			public boolean hasNext() {
+				return i < size;
+			}
+			
+			@Override
+			public double nextDouble() {
+				double result = elements[h];
+				i++;
+				h = ((h + 1) % capacity);
+				return result;
+			}
+		};
 	}
 }
