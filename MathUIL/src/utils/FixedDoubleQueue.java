@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class FixedDoubleQueue extends AbstractFixedQueue {
 	
-	private final double[] elements;
+	private double[] elements;
 	
 	private double total;
 	
@@ -83,6 +83,34 @@ public class FixedDoubleQueue extends AbstractFixedQueue {
 			j.add(String.valueOf(itr.nextDouble()));
 			
 		return j.toString();
+	}
+	
+	@Override
+	public void clearAndDecreaseCapacityTo(final int newCapacity) {
+		if(newCapacity >= getCapacity())
+			throw new IllegalArgumentException("New capacity must be strictly less than current capacity");
+		if(newCapacity <= 0)
+			throw new IllegalArgumentException("Capacity must be greater than zero");
+		clear();
+		elements = new double[newCapacity + 1];
+		capacity = newCapacity;
+		head = tail = 0;
+		
+	}
+	
+	@Override
+	public void increaseCapacityTo(final int newCapacity) {
+		if(newCapacity <= getCapacity())
+			throw new IllegalArgumentException("New capacity must be strictly greater than current capacity");
+		double[] newElements = new double[newCapacity + 1];
+		int index = 0;
+		for(PrimitiveIterator.OfDouble itr = primitiveIterator(); itr.hasNext(); ) {
+			newElements[index++] = itr.nextDouble();
+		}
+		head = 0;
+		tail = index;
+		capacity = newCapacity;
+		elements = newElements;
 	}
 	
 	public PrimitiveIterator.OfDouble primitiveIterator() {

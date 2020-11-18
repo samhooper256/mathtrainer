@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import problems.Problem;
 import suppliers.ProblemSupplier;
 import utils.ListRef;
 
@@ -31,7 +32,7 @@ public class SettingsPane extends StackPane {
 	private final VBox settingsBox, rootVBox;
 	private final HBox resultsTrackedHBox;
 	private final Label title, resultsTrackedLabel;
-	private final Button addSupplier, removeSupplier, removeAllSuppliers;
+	private final Button addSupplier, removeSupplier, removeAllSuppliers, resultsTrackedApplyButton;
 	private final ScrollPane scrollPane;
 	private final TextField resultsTrackedField;
 	
@@ -42,7 +43,8 @@ public class SettingsPane extends StackPane {
 		title = new Label("Settings");
 		resultsTrackedLabel = new Label("Results Tracked: ");
 		resultsTrackedField = new TextField();
-		resultsTrackedHBox = new HBox(resultsTrackedLabel, resultsTrackedField);
+		resultsTrackedApplyButton = Buttons.of("Apply", this::resultsTrackedApplyButtonAction);
+		resultsTrackedHBox = new HBox(resultsTrackedLabel, resultsTrackedField, resultsTrackedApplyButton);
 		settingsBox = new VBox();
 		removeSupplier = Buttons.of(REMOVE_SUPPLIER_BUTTON_TEXT, this::removeSupplierButtonAction);
 		removeAllSuppliers = Buttons.of(REMOVE_ALL_SUPPLIERS_BUTTON_TEXT, this::removeAllSuppliersButtonAction);
@@ -79,7 +81,14 @@ public class SettingsPane extends StackPane {
 		scrollPane.getStyleClass().add(SCROLL_PANE_STYLE_CLASS_NAME);
 	}
 
-
+	private void resultsTrackedApplyButtonAction() {
+		String text = resultsTrackedField.getText().strip();
+		if(!Problem.isInteger(text))
+			return;
+		int newResultsTracked = Integer.parseInt(text);
+		mainPane.getProblemPane().setResultsTracked(newResultsTracked);
+	}
+	
 	private void supplierAdded(final ProblemSupplier ps) {
 		settingsBox.getChildren().add(SettingTitledPane.displayFor(ps, this));
 	}

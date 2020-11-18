@@ -6,9 +6,12 @@ package utils;
  */
 public abstract class AbstractFixedQueue {
 	
-	protected final int capacity;
+	protected int capacity;
 	protected int size, head, tail;
 	
+	/**
+	 * @throws IllegalArgumentException if {@code capacity <= 0}.
+	 */
 	public AbstractFixedQueue(final int capacity) {
 		if(capacity <= 0)
 			throw new IllegalArgumentException("capacity must be positive");
@@ -61,5 +64,38 @@ public abstract class AbstractFixedQueue {
 	public void clear() {
 		head = tail;
 		size = 0;
+	}
+	
+	public int getCapacity() {
+		return capacity;
+	}
+	
+	/** Increases the {@link #getCapacity() capacity} of this {@link AbstractFixedQueue} to {@code newCapacity}.
+	 * @throws IllegalArgumentException if {@code newCapacity <= getCapacity()}.
+	 * */
+	public void increaseCapacityTo(int newCapacity) {
+		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * Decreases the {@link #getCapacity() capacity} of this {@link AbstractFixedQueue} to {@code newCapacity}.
+	 * @throws IllegalArgumentException if {@code newCapacity >= getCapacity()}.
+	 */
+	public void clearAndDecreaseCapacityTo(int newCapacity) {
+		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * Changes the {@link #getCapacity() capacity} of this {@link AbstractFixedQueue} to {@code newCapacity}, calling
+	 * either {@link #increaseCapacityTo(int)} or {@link #clearAndDecreaseCapacityTo(int)} as appropriate. {@code newCapacity}
+	 * must be strictly greater than {@code 0}.
+	 */
+	public void changeCapacityTo(final int newCapacity) {
+		if(newCapacity == getCapacity())
+			return;
+		else if(newCapacity > getCapacity())
+			increaseCapacityTo(newCapacity);
+		else
+			clearAndDecreaseCapacityTo(newCapacity);
 	}
 }

@@ -428,11 +428,12 @@ public class ProblemPane extends Pane {
 	}
 	
 	public void setResultsTracked(final int tracked) {
-		if(tracked == resultsTracked)
-			return;
-		if(tracked < resultsTracked) {
-			
-		}
+		times.changeCapacityTo(tracked);
+		accuracies.changeCapacityTo(tracked);
+		if(times.isEmpty())
+			averageTimeLabel.setText(DEFAULT_AVERAGE_TIME_TEXT);
+		if(accuracies.isEmpty())
+			averageAccuracyLabel.setText(DEFAULT_AVERAGE_ACCURACY_TEXT);
 	}
 }
 

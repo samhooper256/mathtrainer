@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class FixedBooleanQueue extends AbstractFixedQueue {
 	
-	private final boolean[] elements;
+	private boolean[] elements;
 	
 	private int trues;
 	
@@ -92,6 +92,34 @@ public class FixedBooleanQueue extends AbstractFixedQueue {
 		for(BooleanIterator itr = primitiveIterator(); itr.hasNext();)
 			j.add(String.valueOf(itr.nextBoolean()));
 		return j.toString();
+	}
+	
+	@Override
+	public void clearAndDecreaseCapacityTo(final int newCapacity) {
+		if(newCapacity >= getCapacity())
+			throw new IllegalArgumentException("New capacity must be strictly less than current capacity");
+		if(newCapacity <= 0)
+			throw new IllegalArgumentException("Capacity must be greater than zero");
+		clear();
+		elements = new boolean[newCapacity + 1];
+		capacity = newCapacity;
+		head = tail = 0;
+		
+	}
+	
+	@Override
+	public void increaseCapacityTo(final int newCapacity) {
+		if(newCapacity <= getCapacity())
+			throw new IllegalArgumentException("New capacity must be strictly greater than current capacity");
+		boolean[] newElements = new boolean[newCapacity + 1];
+		int index = 0;
+		for(BooleanIterator itr = primitiveIterator(); itr.hasNext(); ) {
+			newElements[index++] = itr.nextBoolean();
+		}
+		head = 0;
+		tail = index;
+		capacity = newCapacity;
+		elements = newElements;
 	}
 	
 	public BooleanIterator primitiveIterator() {
