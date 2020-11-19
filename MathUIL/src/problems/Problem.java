@@ -10,8 +10,10 @@ import suppliers.*;
 import utils.*;
 
 /**
- * A problem that the user can attempt to solve. Any {@link Problem} that will be displayed to the user must have a
- * {@link ProblemSupplier} that supplies it.
+ * <p>A problem that the user can attempt to solve. Any {@link Problem} that will be displayed to the user must have a
+ * {@link ProblemSupplier} that supplies it.</p>
+ * 
+ * <p><b>All {@code Problems} are immutable.</b></p>
  * 
  * @author Sam Hooper
  *

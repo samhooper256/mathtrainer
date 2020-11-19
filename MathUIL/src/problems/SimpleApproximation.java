@@ -14,6 +14,11 @@ public class SimpleApproximation implements Problem {
 	private final BigDecimal result;
 	private final String display;
 	
+	public SimpleApproximation(String htmlFormattedText, final BigDecimal result) {
+		this.result = result;
+		this.display = htmlFormattedText;
+	}
+	
 	public SimpleApproximation(String expression) {
 		result = Evaluator.evaluateAsBigDecimal(expression);
 		display = Problem.prettyExpression(expression);

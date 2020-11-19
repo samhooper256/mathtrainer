@@ -116,7 +116,13 @@ public class IntRange implements Ref {
 	public int getLow() {
 		return lowRef().get();
 	}
-
+	
+	/** Returns the total number of {@code int}s that would be allowed in this {@link IntRange}, equal to {@code (getHigh() - getLow() + 1)}.
+	 */
+	public int valueRange() {
+		return getHigh() - getLow() + 1;
+	}
+	
 	@Override
 	public String toString() {
 		return "IntRange[min=" + min + ", max=" + max + ", lowRef=" + lowRef + ", highRef=" + highRef + "]";

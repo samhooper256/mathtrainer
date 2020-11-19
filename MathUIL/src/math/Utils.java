@@ -11,13 +11,21 @@ public class Utils {
 	private Utils() {}
 	
 	public static final String PI_STRING = "3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622";
-	/** Pi rounded to 10 digits after the decimal.*/
+	/** <i>pi</i> rounded to 10 digits after the decimal.*/
 	public static final BigDecimal PI = new BigDecimal("3.1415926536");
 	/** Euler's number <i>e</i> rounded to 10 digits after the decimal.*/
 	public static final BigDecimal E = new BigDecimal("2.7182818285");
+	/** The golden ratio <i>phi</i> rounded to 10 digits after the decimal. */
+	public static final BigDecimal PHI = new BigDecimal("1.6180339887");
+	/**<i>pi</i> raised to the power of Euler's number <i>e</i>, rounded to 10 digits after the decimal. */
+	public static final BigDecimal PI_TO_E = new BigDecimal("22.4591577184");
+	/**Euler's number <i>e</i> raised to <i>pi</i>, rounded to 10 digits after the decimal. */
+	public static final BigDecimal E_TO_PI = new BigDecimal("23.1406926328");
 	
+	private static final BigDecimal PI_INTERMEDIATE = new BigDecimal("3.14159265358979");
+	private static final int MAX_INTEGER_POWER_AS_INT = 999999999;
 	private static final BigDecimal MAX_INTEGER_POWER = new BigDecimal("999999999");
-	private static final MathContext CONTEXT_14 = new MathContext(14);
+	private static final MathContext INTERMEDIATE_CONTEXT = new MathContext(14);
 	private static final MathContext RESULT_CONTEXT = new MathContext(10);
 	
 	/** Returns {@code base} raised to the power of {@code exponent}. Returns {@link BigDecimal#ONE} if {@code (exponent.compareTo(BigDecimal.ZERO) == 0)}
@@ -25,7 +33,7 @@ public class Utils {
 	public static BigDecimal pow(final BigDecimal base, final BigDecimal exponent) {
 		if(exponent.compareTo(BigDecimal.ZERO) == 0)
 			return BigDecimal.ONE;
-		BigDecimal positiveExponent = exponent.abs(CONTEXT_14);
+		BigDecimal positiveExponent = exponent.abs(INTERMEDIATE_CONTEXT);
 		BigDecimal baseToPositiveExponent;
 		if(positiveExponent.compareTo(MAX_INTEGER_POWER) <= 0) {
 			BigDecimal[] divMod = positiveExponent.divideAndRemainder(BigDecimal.ONE);
@@ -39,6 +47,12 @@ public class Utils {
 		if(isNegative(exponent))
 			return BigDecimal.ONE.divide(baseToPositiveExponent);
 		return baseToPositiveExponent;
+	}
+	
+	public static BigDecimal piTo(final int nonNegativeExponent) {
+		if(nonNegativeExponent > MAX_INTEGER_POWER_AS_INT)
+			throw new IllegalArgumentException("exponent is too large");
+		return PI_INTERMEDIATE.pow(nonNegativeExponent, RESULT_CONTEXT);
 	}
 	
 	public static boolean isPositive(final BigDecimal n) {
