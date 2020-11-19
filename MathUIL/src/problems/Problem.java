@@ -244,4 +244,10 @@ public interface Problem {
 		return false;
 	}
 	
+	/** Returns an estimate of the number of lines of text that would be needed to display this {@link Problem}. The default implementation returns
+	 * {@code 1.0}.*/
+	default double estimatedDisplayLines() {
+		return 1.0;
+	}
+	
 }

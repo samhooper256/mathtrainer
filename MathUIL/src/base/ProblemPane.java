@@ -20,6 +20,10 @@ import utils.*;
  */
 public class ProblemPane extends Pane {
 	
+	/**
+	 * 
+	 */
+	private static final int PROBLEM_LINE_HEIGHT = 20;
 	private static final Border FIELD_RED_BORDER = Borders.of(Color.RED);
 	private static final Border FIELD_EMPTY_BORDER = Borders.of(Color.TRANSPARENT);
 
@@ -49,7 +53,7 @@ public class ProblemPane extends Pane {
 	private final Button submit, clear, showSkill, showAnswer, resetResults;
 	private final CheckBox deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer;
 	private final ImageWrap approxWrap;
-	private final StackPane root;
+	private final StackPane root, problemViewWrap;
 	private final Set<Class<? extends ProblemSupplier>> supplierClasses;
 	
 	
@@ -89,6 +93,8 @@ public class ProblemPane extends Pane {
 		buttonBox = new HBox(4, submit, clear, showSkill, showAnswer, answerLabel);
 		field = new TextField();
 		problemView = new WebView();
+		problemViewWrap = new StackPane(problemView);
+		problemViewWrap.setBorder(Borders.of(Color.DEEPPINK));
 		skillLabel = new Label();
 		deleteText = new CheckBox("Can delete text");
 		markWrongIfCleared = new CheckBox("Mark wrong if cleared or deleted");
@@ -111,10 +117,16 @@ public class ProblemPane extends Pane {
 		markWrongIfCleared.setSelected(true);
 		markWrongIfShownAnswer.setSelected(true);
 	}
-
+	
+	private void initProblemView() {
+		problemView.getEngine().setUserStyleSheetLocation(getClass().getResource(PROBLEM_VIEW_CSS_FILENAME).toString());
+		problemViewWrap.prefWidthProperty().bind(field.widthProperty());
+		setOnKeyPressed(this::paneKeyHandler);
+	}
+	
 	private void finishInit() {
 		buttonBox.setAlignment(Pos.CENTER);
-		VBox vBox = new VBox(10, problemView, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
+		VBox vBox = new VBox(10, problemViewWrap, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
 		vBox.setAlignment(Pos.CENTER);
 		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel, resetResults);
 		AnchorPane anchor = new AnchorPane(resultsBox);
@@ -144,12 +156,7 @@ public class ProblemPane extends Pane {
 		compositeSupplier.suppliers().addRemoveListener(ps -> supplierClasses.remove(ps.getClass()));
 	}
 
-	private void initProblemView() {
-		problemView.getEngine().setUserStyleSheetLocation(getClass().getResource(PROBLEM_VIEW_CSS_FILENAME).toString());
-		problemView.prefWidthProperty().bind(field.widthProperty());
-		problemView.prefHeightProperty().bind(field.heightProperty().multiply(1.5));
-		setOnKeyPressed(this::paneKeyHandler);
-	}
+	
 
 	private void initInputField() {
 		field.setBorder(FIELD_EMPTY_BORDER);
@@ -335,6 +342,7 @@ public class ProblemPane extends Pane {
 	private void updateLabel() {
 		assert currentProblem.displayString() != null;
 		problemView.getEngine().loadContent(currentProblem.displayString());
+		problemViewWrap.setPrefHeight(10 + currentProblem.estimatedDisplayLines() * PROBLEM_LINE_HEIGHT);
 	}
 	
 	private void showSkillButtonAction() {

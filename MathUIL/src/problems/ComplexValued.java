@@ -11,13 +11,26 @@ public abstract class ComplexValued implements Problem {
 	 * Returns a new {@link ComplexValued} that will be displayed as the given formatted html text directly.
 	 * The {@link #result() result} is the given {@link Complex} value.
 	 */
-	public static ComplexValued of(final String htmlFormattedText, final Complex result) {
+	public static ComplexValued of(final String htmlFormattedText, final Complex result, final double estimatedDisplayLinesNeeded) {
 		return new ComplexValued(result) {
 			@Override
 			public String displayString() {
 				return htmlFormattedText;
 			}
+
+			@Override
+			public double estimatedDisplayLines() {
+				return estimatedDisplayLinesNeeded;
+			}
 		};
+	}
+	
+	/**
+	 * Returns a new {@link ComplexValued} that will be displayed as the given formatted html text directly.
+	 * The {@link #result() result} is the given {@link Complex} value.
+	 */
+	public static ComplexValued of(final String htmlFormattedText, final Complex result) {
+		return of(htmlFormattedText, result, 1.0);
 	}
 	
 	private final Complex result;
