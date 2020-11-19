@@ -11,7 +11,7 @@ import utils.*;
  * @author Sam Hooper
  *
  */
-public class SquareSupplier implements ProblemSupplier {
+public class SquaresSupplier implements ProblemSupplier {
 	
 	private static final int MIN_BASE = 0, MAX_BASE = 200;
 	public static final int DEFAULT_MIN_BASE = 1, DEFAULT_MAX_BASE = 30;
@@ -19,11 +19,11 @@ public class SquareSupplier implements ProblemSupplier {
 	private final NamedSetting<IntRange> baseRange;
 	private final List<Ref> settings;
 	
-	public SquareSupplier() {
+	public SquaresSupplier() {
 		this(DEFAULT_MIN_BASE, DEFAULT_MAX_BASE);
 	}
 	
-	public SquareSupplier(int minBase, int maxBase) {
+	public SquaresSupplier(int minBase, int maxBase) {
 		this.baseRange = NamedSetting.of(new IntRange(MIN_BASE, MAX_BASE, minBase, maxBase), "Base");
 		this.settings = new ArrayList<>(1);
 		Collections.addAll(settings, baseRange);
