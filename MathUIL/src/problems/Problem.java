@@ -172,6 +172,14 @@ public interface Problem {
 		return product;
 	}
 	
+	public static String makeExpr(final int terms, final NamedSetting<IntRange> digitRange, final List<String> operators) {
+		return makeExpr(terms, digitRange.ref(), operators);
+	}
+	
+	public static String makeExpr(final int terms, final IntRange digitRange, final List<String> operators) {
+		return makeExpr(terms, digitRange.getLow(), digitRange.getHigh(), operators);
+	}
+	
 	public static String makeExpr(final int terms, final int minDigits, final int maxDigits, final List<String> operators) {
 		if(terms <= 1)
 			throw new IllegalArgumentException("Invalid number of terms: " + terms);

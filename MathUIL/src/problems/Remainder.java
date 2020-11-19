@@ -10,17 +10,17 @@ public class Remainder extends ComplexValued {
 	
 	private final String display;
 	
-	/**
-	 * @param result
-	 */
 	public Remainder(long operand, long modulus) {
 		super(new Complex(operand % modulus));
 		display = ExpressionPrettifier.pretty(operand + "/" + modulus) + " has a remainder of: ";
 	}
 	
+	/**
+	 * This adds parentheses around {@code expression}.
+	 */
 	public Remainder(String expression, long modulus) {
 		super(Evaluator.evaluateAsLongOrThrow(expression) % modulus);
-		display = ExpressionPrettifier.pretty(expression + "/" + modulus) + " has a remainder of " + (result().longValueExact() % modulus);
+		display = ExpressionPrettifier.pretty("(" + expression + ")/" + modulus) + " has a remainder of: ";
 	}
 
 	@Override
