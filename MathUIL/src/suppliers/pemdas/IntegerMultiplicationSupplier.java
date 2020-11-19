@@ -1,4 +1,4 @@
-package suppliers;
+package suppliers.pemdas;
 
 import static suppliers.NamedIntRange.*;
 
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import problems.*;
+import suppliers.*;
 /**
  * @author Sam Hooper
  *

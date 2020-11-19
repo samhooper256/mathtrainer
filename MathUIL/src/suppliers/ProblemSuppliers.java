@@ -7,6 +7,10 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
+import suppliers.exponentiation.*;
+import suppliers.gcd.BackwardsGCDLCMSupplier;
+import suppliers.pemdas.*;
+
 /**
  * @author Sam Hooper
  *

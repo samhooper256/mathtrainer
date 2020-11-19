@@ -1,4 +1,4 @@
-package suppliers;
+package suppliers.pemdas;
 
 import static problems.Problem.*;
 import static suppliers.NamedIntRange.*;
@@ -6,6 +6,7 @@ import static suppliers.NamedIntRange.*;
 import java.util.List;
 
 import problems.*;
+import suppliers.*;
 /**
  * Produces {@link IntegerMultiplication} {@link Problem Problems} with two terms. One is any integer and the other is an integer ending in 5.
  * @author Sam Hooper

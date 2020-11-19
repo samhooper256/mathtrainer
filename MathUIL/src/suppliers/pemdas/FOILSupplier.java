@@ -1,6 +1,7 @@
-package suppliers;
+package suppliers.pemdas;
 
 import problems.*;
+import suppliers.ProblemSupplier;
 
 /**
  * @author Sam Hooper

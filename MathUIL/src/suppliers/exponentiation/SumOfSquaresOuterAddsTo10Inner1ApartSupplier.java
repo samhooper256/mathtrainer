@@ -1,9 +1,10 @@
-package suppliers;
+package suppliers.exponentiation;
 
 import static problems.Problem.*;
 import static suppliers.NamedIntRange.*;
 
 import problems.*;
+import suppliers.ProblemSupplier;
 
 /**
  * @author Sam Hooper

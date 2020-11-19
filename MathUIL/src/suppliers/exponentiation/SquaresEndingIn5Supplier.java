@@ -1,4 +1,4 @@
-package suppliers;
+package suppliers.exponentiation;
 
 import static problems.Problem.*;
 import static suppliers.NamedIntRange.*;
@@ -6,6 +6,7 @@ import static suppliers.NamedIntRange.*;
 import java.util.List;
 
 import problems.*;
+import suppliers.*;
 
 /**
  * @author Sam Hooper
