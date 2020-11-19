@@ -26,6 +26,10 @@ public abstract class ComplexValued implements Problem {
 		this.result = result;
 	}
 	
+	public ComplexValued(final long result) {
+		this.result = new Complex(result);
+	}
+	
 	/**
 	 * @return the answer to this {@link ComplexValued} {@link Problem}.
 	 */

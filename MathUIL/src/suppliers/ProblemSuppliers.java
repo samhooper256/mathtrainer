@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import suppliers.exponentiation.*;
 import suppliers.gcd.BackwardsGCDLCMSupplier;
 import suppliers.pemdas.*;
+import suppliers.remainder.Mod9Supplier;
 
 /**
  * @author Sam Hooper
@@ -72,6 +73,7 @@ public final class ProblemSuppliers {
 		customName(SumConsecutiveSquaresSupplier.class, "Sum of two consecutive squares");
 		customName(SumOfSquaresOuterAddsTo10Inner1ApartSupplier.class, "Sum of squares when outer digits add to 10 and inner digits are 1 apart");
 		customName(BackwardsGCDLCMSupplier.class, "Find term given GCD and LCM");
+		customName(Mod9Supplier.class, "Remainder when divided by 9");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {
@@ -83,22 +85,50 @@ public final class ProblemSuppliers {
 		URL res = instance.getClass().getResource(instance.getClass().getSimpleName() + ".class");
 		File f = new File(res.toURI());
 		File pkgFile = f.getParentFile();
+		addInfosFromPackageAndSubpackages(pkgFile);
+	}
+
+	/**
+	 * @param classFile
+	 */
+	private static void addInfosFromPackageAndSubpackages(File pkgFile) throws ClassNotFoundException {
+//		System.out.printf("adding info from package sub subpackages: \"%s\"%n", pkgFile);
 		for(File classFile : pkgFile.listFiles()) {
 			final String fileName = classFile.getName();
-			if(fileName.endsWith("Supplier.class")) {
-				final String clazzName = fileName.substring(0, fileName.lastIndexOf('.'));
-				if(EXCLUDED_SUPPLIER_NAMES.contains(clazzName))
-					continue;
-				Class<? extends ProblemSupplier> clazz = (Class<? extends ProblemSupplier>)
-						Class.forName("suppliers." + clazzName);
-				if(clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers()))
-					continue;
-				Constructor<?> noArgConstructor = getNoArgConstructorOrThrow(clazz.getConstructors());
-				Supplier<? extends ProblemSupplier> supplier = getSupplierFromNoArgConstructor(noArgConstructor);
-				String name = getDisplayNameFromSupplierClass(clazz);
-				addInfos(info(clazz, supplier, name));
-			}
+			if(classFile.isDirectory())
+				addInfosFromPackageAndSubpackages(classFile);
+			else
+				addInfoFromFile(classFile);
 		}
+	}
+
+	private static void addInfoFromFile(final File classFile) throws ClassNotFoundException {
+//		System.out.printf("\tadding info from file: \"%s\"%n", classFile);
+		final String fileName = classFile.getName();
+		if(fileName.endsWith("Supplier.class")) {
+			final String className = fileName.substring(0, fileName.lastIndexOf('.'));
+			if(EXCLUDED_SUPPLIER_NAMES.contains(className))
+				return;
+			final String fullyQualifiedName = getPackageName(classFile) + className;
+//			System.out.printf("\t\tfqN: \"%s\"%n", fullyQualifiedName);
+			Class<? extends ProblemSupplier> clazz = (Class<? extends ProblemSupplier>)
+					Class.forName(fullyQualifiedName);
+			if(clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers()))
+				return;
+			Constructor<?> noArgConstructor = getNoArgConstructorOrThrow(clazz.getConstructors());
+			Supplier<? extends ProblemSupplier> supplier = getSupplierFromNoArgConstructor(noArgConstructor);
+			String name = getDisplayNameFromSupplierClass(clazz);
+			addInfos(info(clazz, supplier, name));
+		}
+	}
+	
+	private static String getPackageName(File classFile) {
+		StringBuilder sb = new StringBuilder(".");
+		while(!classFile.getParentFile().getName().equals("suppliers")) {
+			sb.insert(0, "." + classFile.getParentFile().getName());
+			classFile = classFile.getParentFile();
+		}
+		return "suppliers" + sb;
 	}
 	
 	private static String getDisplayNameFromSupplierClass(Class<?> clazz) {

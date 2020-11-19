@@ -48,6 +48,20 @@ public class Complex {
 	}
 	
 	/**
+	 * The "a" and "b" parameters are those in the rectangular form "a + bi"
+	 */
+	public Complex(final long a, final long b) {
+		this(BigDecimal.valueOf(a), BigDecimal.valueOf(b));
+	}
+	
+	/**
+	 * The "a" parameter is the one in the rectangular form "a + bi". The imaginary part is {@code 0}.
+	 */
+	public Complex(final long a) {
+		this(a, 0);
+	}
+	
+	/**
 	 * Takes a {@link String} either of the form "a+bi" (where a and b are valid {@link BigDecimal BigDecimals}) or "a" where
 	 * a is a valid {@link BigDecimal}.
 	 * @param abi
@@ -102,6 +116,12 @@ public class Complex {
 	
 	public BigDecimal imaginaryPart() {
 		return b;
+	}
+	
+	public long longValueExact() {
+		if(b.compareTo(BigDecimal.ZERO) != 0)
+			throw new ArithmeticException("This complex number has an imaginary part, so it does not have an exact long value.");
+		return a.longValueExact();
 	}
 	
 	
