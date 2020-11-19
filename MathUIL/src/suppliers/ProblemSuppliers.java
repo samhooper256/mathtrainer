@@ -8,9 +8,9 @@ import java.util.function.*;
 import java.util.regex.Pattern;
 
 import suppliers.exponentiation.*;
-import suppliers.gcd.BackwardsGCDLCMSupplier;
+import suppliers.gcd.*;
 import suppliers.pemdas.*;
-import suppliers.remainder.Mod9Supplier;
+import suppliers.remainder.*;
 
 /**
  * @author Sam Hooper
@@ -74,6 +74,7 @@ public final class ProblemSuppliers {
 		customName(SumOfSquaresOuterAddsTo10Inner1ApartSupplier.class, "Sum of squares when outer digits add to 10 and inner digits are 1 apart");
 		customName(BackwardsGCDLCMSupplier.class, "Find term given GCD and LCM");
 		customName(Mod9Supplier.class, "Remainder when divided by 9");
+		customName(Mod11Supplier.class, "Remainder when divided by 11");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {
