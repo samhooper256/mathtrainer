@@ -94,7 +94,6 @@ public class ProblemPane extends Pane {
 		field = new TextField();
 		problemView = new WebView();
 		problemViewWrap = new StackPane(problemView);
-		problemViewWrap.setBorder(Borders.of(Color.DEEPPINK));
 		skillLabel = new Label();
 		deleteText = new CheckBox("Can delete text");
 		markWrongIfCleared = new CheckBox("Mark wrong if cleared or deleted");
