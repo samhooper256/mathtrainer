@@ -1,5 +1,7 @@
 package problems;
 
+import java.math.BigDecimal;
+
 import math.*;
 /**
  * @author Sam Hooper
@@ -37,6 +39,10 @@ public abstract class ComplexValued implements Problem {
 	
 	public ComplexValued(final Complex result) {
 		this.result = result;
+	}
+	
+	public ComplexValued(final BigDecimal result) {
+		this.result = new Complex(result);
 	}
 	
 	public ComplexValued(final long result) {

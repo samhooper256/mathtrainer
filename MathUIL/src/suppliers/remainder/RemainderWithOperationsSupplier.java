@@ -24,7 +24,7 @@ public class RemainderWithOperationsSupplier extends SettingsProblemSupplier {
 	@Override
 	public Problem get() {
 		String exp = Problem.makeExpr(Problem.intInclusive(terms), digits, OPERATORS);
-		return new Remainder(exp, Problem.intInclusive(divisor));
+		return new Remainder("(" + exp + ")", Problem.intInclusive(divisor));
 	}
 	
 }

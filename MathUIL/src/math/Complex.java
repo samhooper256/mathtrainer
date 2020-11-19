@@ -109,17 +109,47 @@ public class Complex {
 		Complex other = (Complex) obj;
 		return a.compareTo(other.a) == 0 && b.compareTo(other.b) == 0;
 	}
-
+	
 	public BigDecimal realPart() {
 		return a;
+	}
+	
+	public boolean hasRealPart() {
+		return a.compareTo(BigDecimal.ZERO) != 0;
 	}
 	
 	public BigDecimal imaginaryPart() {
 		return b;
 	}
 	
+	public boolean hasImaginaryPart() {
+		return b.compareTo(BigDecimal.ZERO) != 0;
+	}
+	
+	/**
+	 * Returns {@code (this % divisor)}. {@code this} and {@code divisor} must not {@link #hasImaginaryPart() have an imaginary part}. The
+	 * returned {@link Complex} will not have an imaginary part.
+	 * 
+	 * The remainder is given as described in {@link BigDecimal#remainder(BigDecimal)}, which is <i>not</i> to the modulo operation.
+	 */
+	public Complex remainder(final Complex divisor) {
+		if(divisor.hasImaginaryPart())
+			throw new IllegalArgumentException("Cannot find the remainder when the divisor has an imaginary part");
+		return remainder(divisor.realPart());
+	}
+	
+	public Complex remainder(final BigDecimal divisor) {
+		if(hasImaginaryPart())
+			throw new IllegalArgumentException("Cannot find the remainder when the dividend has an imaginary part");
+		return new Complex(realPart().remainder(divisor));
+	}
+	
+	public Complex remainder(final long divisor) {
+		return remainder(BigDecimal.valueOf(divisor));
+	}
+	
 	public long longValueExact() {
-		if(b.compareTo(BigDecimal.ZERO) != 0)
+		if(hasImaginaryPart())
 			throw new ArithmeticException("This complex number has an imaginary part, so it does not have an exact long value.");
 		return a.longValueExact();
 	}
