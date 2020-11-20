@@ -5,6 +5,7 @@ import java.util.*;
 import problems.*;
 import suppliers.*;
 import utils.*;
+import utils.refs.IntRange;
 
 /**
  * @author Sam Hooper

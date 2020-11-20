@@ -1,4 +1,6 @@
-package utils;
+package utils.refs;
+
+import utils.Listener;
 
 /**
  * A reference to some data. Subtypes of {@link Ref} are encouraged but not required to allow for {@link Listener Listeners} to

@@ -7,7 +7,7 @@ import java.util.List;
 
 import problems.*;
 import suppliers.*;
-import utils.BooleanRef;
+import utils.refs.BooleanRef;
 
 /**
  * @author Sam Hooper

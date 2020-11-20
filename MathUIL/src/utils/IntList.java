@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
  * @author Sam Hooper
  *
  */
-public class IntList implements Iterable<Integer>{
+public class IntList implements Iterable<Integer> {
 	/** stores 0 in unused indices. The used indices are those in the range 0 (inclusive) to size (exclusive). */
 	int[] data; 
 	/** The number of elements in this {@code IntList}. It is always true that {@code size <= data.length}.*/
@@ -31,6 +31,7 @@ public class IntList implements Iterable<Integer>{
 		return l;
 	}
 	
+	/** Constructs an empty {@link IntList} with a capacity of {@code 10}. */
 	public IntList() { this(10); }
 	
 	/** Be sure that you don't accidentally try to use this constructor to make a single-element {@code IntList} */

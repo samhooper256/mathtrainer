@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import base.*;
 import problems.*;
-import utils.Ref;
+import utils.refs.Ref;
 
 /**
  * <p>An interface that all classes which will generate {@link Problem Problems} must implement in order for their problems

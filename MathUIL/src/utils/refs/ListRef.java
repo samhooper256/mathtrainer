@@ -1,7 +1,9 @@
-package utils;
+package utils.refs;
 
 import java.util.*;
 import java.util.function.Supplier;
+
+import utils.SingleListener;
 
 /**
  * A reference to a {@link List}. Allows for {@link SingleListener SingleListeners} to be run when an element is added or removed.

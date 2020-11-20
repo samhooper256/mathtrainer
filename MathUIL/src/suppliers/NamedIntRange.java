@@ -2,7 +2,7 @@ package suppliers;
 
 import java.util.Objects;
 
-import utils.IntRange;
+import utils.refs.IntRange;
 
 /**
  * @author Sam Hooper

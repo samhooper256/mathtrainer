@@ -59,7 +59,7 @@ public abstract class ComplexValued implements Problem {
 	@Override
 	public boolean isCorrect(String input) {
 //		System.out.printf("entered ComplexVaued isCorrect%n");
-		final boolean result = Problem.isComplexInRectangularForm(input) && new Complex(input).equals(this.result);
+		final boolean result = Utils.isComplexInRectangularForm(input) && new Complex(input).equals(this.result);
 //		System.out.printf("]exit ComplexValued isCorrect%n");
 		return result;
 	}

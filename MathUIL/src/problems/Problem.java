@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import math.Complex;
 import suppliers.*;
 import utils.*;
+import utils.refs.IntRange;
 
 /**
  * <p>A problem that the user can attempt to solve. Any {@link Problem} that will be displayed to the user must have a
@@ -23,81 +24,6 @@ public interface Problem {
 	public static final IntSupplier DIGIT_SUPPLIER = () -> (int) (Math.random() * 10);
 	
 	public static final Random RAND = new Random();
-	
-	public static int magnitude(final int n) {
-		int abs = Math.abs(n);
-		if(abs >= 1_000_000_000) return 10;
-		if(abs >= 100_000_000) return 9;
-		if(abs >= 10_000_000) return 8;
-		if(abs >= 1_000_000) return 7;
-		if(abs >= 100_000) return 6;
-		if(abs >= 10_000) return 5;
-		if(abs >= 1_000) return 4;
-		if(abs >= 100) return 3;
-		if(abs >= 10) return 2;
-		return 1;
-	}
-	public static boolean isInteger(final String s) {
-		if(s.length() == 0)
-			return false;
-		int i = s.charAt(0) == '-' ? 1 : 0;
-		if(s.length() - i == 0)
-			return false;
-		for(int j = i; j < s.length(); j++)
-			if(s.charAt(j) < '0' || s.charAt(j) > '9')
-				return false;
-		return true;
-	}
-	
-	/**
-	 * Returns {@code true} if the given {@link String} represents a valid real number in decimal form, {@code false} otherwise.
-	 * returns {@code false} for {@link String Strings} that end in a decimal point.
-	 * @param s
-	 * @return
-	 */
-	public static boolean isBigDecimal(final String s) {
-		if(s.isBlank())
-			return false;
-		final int start = s.charAt(0) == '-' ?  1 : 0;
-		if(start == s.length())
-			return false;
-		int point = -1;
-		if(s.charAt(start) == '.') {
-			if(s.length() == start + 1)
-				return false;
-			point = start;
-		}
-		else {
-			point = s.indexOf('.', 1);
-		}
-		
-		if(point == s.length() - 1)
-			return false;
-		if(point == -1)
-			point = s.length();
-		for(int i = start; i < point; i++)
-			if(s.charAt(i) < '0' || s.charAt(i) > '9')
-				return false;
-		for(int i = point + 1; i < s.length(); i++)
-			if(s.charAt(i) < '0' || s.charAt(i) > '9')
-				return false;
-		
-		return true;
-	}
-	
-	public static boolean isComplexInRectangularForm(final String s) {
-//		System.out.printf("entered isComplexInRectangularForm%n");
-		if(s.length() == 0)
-			return false;
-		int pIndex = s.indexOf('+');
-		if(pIndex < 0)
-			return isBigDecimal(s);
-		if(pIndex == 0)
-			return false;
-		if(!s.endsWith("i"))
-			return false;
-		return isBigDecimal(s.substring(0, pIndex)) && isBigDecimal(s.substring(pIndex + 1, s.length() - 1));
-	}
 	
 	public static boolean within(final BigDecimal bound, final BigDecimal target, final BigDecimal guess) {
 		final BigDecimal boundPercent = target.multiply(bound).abs();

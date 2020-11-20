@@ -6,6 +6,7 @@ import base.*;
 import problems.*;
 import suppliers.*;
 import utils.*;
+import utils.refs.IntRange;
 
 /**
  * @author Sam Hooper

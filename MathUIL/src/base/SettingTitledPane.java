@@ -10,11 +10,12 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import problems.Problem;
+import math.Utils;
 import suppliers.NamedSetting;
 import suppliers.ProblemSupplier;
 import suppliers.ProblemSuppliers;
 import utils.*;
+import utils.refs.*;
 
 /**
  * @author Sam Hooper
@@ -101,7 +102,7 @@ public class SettingTitledPane extends TitledPane {
 			HBox.setHgrow(slider, Priority.ALWAYS);
 			setAlignment(Pos.CENTER);
 			final int rangeMax = range.getMax();
-			final int textFieldWidth = 10 + 15 * Problem.magnitude(rangeMax);
+			final int textFieldWidth = 10 + 15 * Utils.magnitude(rangeMax);
 			low = new TextField(Integer.toString(range.getLow()));
 			low.setMinWidth(10);
 			low.setPrefWidth(textFieldWidth);
@@ -133,7 +134,7 @@ public class SettingTitledPane extends TitledPane {
 			});
 			low.textProperty().addListener((ov, oldText, newText) -> {
 				try {
-					if(Problem.isInteger(newText)) {
+					if(Utils.isInteger(newText)) {
 						int val = Integer.parseInt(newText);
 						if(val <= range.getHigh())
 							slider.setLowValue(val);
@@ -146,7 +147,7 @@ public class SettingTitledPane extends TitledPane {
 			});
 			high.textProperty().addListener((ov, oldText, newText) -> {
 				try {
-					if(Problem.isInteger(newText)) {
+					if(Utils.isInteger(newText)) {
 						int val = Integer.parseInt(newText);
 						if(val >= range.getLow())
 							slider.setHighValue(val);

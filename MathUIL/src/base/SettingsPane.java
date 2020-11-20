@@ -7,9 +7,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import problems.Problem;
+import math.Utils;
 import suppliers.ProblemSupplier;
-import utils.ListRef;
+import utils.refs.ListRef;
 
 /**
  * @author Sam Hooper
@@ -83,7 +83,7 @@ public class SettingsPane extends StackPane {
 
 	private void resultsTrackedApplyButtonAction() {
 		String text = resultsTrackedField.getText().strip();
-		if(!Problem.isInteger(text))
+		if(!Utils.isInteger(text))
 			return;
 		int newResultsTracked = Integer.parseInt(text);
 		mainPane.getProblemPane().setResultsTracked(newResultsTracked);

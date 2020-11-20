@@ -1,6 +1,8 @@
-package utils;
+package utils.refs;
 
 import java.util.ArrayList;
+
+import utils.IntChangeListener;
 
 /**
  * A reference to an {@code int}. The {@code int} can be changed. This class supports the use of {@link IntChangeListener}s to detect

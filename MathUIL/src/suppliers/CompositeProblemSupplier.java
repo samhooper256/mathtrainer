@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.*;
 
 import problems.Problem;
-import utils.ListRef;
+import utils.refs.ListRef;
 
 /**
  * A {@link ProblemSupplier} that is composed of several other {@link ProblemSupplier ProblemSuppliers}. The {@link #get()} method

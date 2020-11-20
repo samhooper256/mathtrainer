@@ -5,7 +5,7 @@ import java.util.*;
 
 import math.*;
 import suppliers.*;
-import utils.IntRange;
+import utils.refs.IntRange;
 
 /**
  * <p>A {@link Problem} where the user must evaluate a simple mathematical expression. This class is capable of representing expressions

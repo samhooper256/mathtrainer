@@ -1,6 +1,8 @@
-package utils;
+package utils.refs;
 
 import java.util.*;
+
+import utils.BooleanChangeListener;
 
 /**
  * <p>A reference to a {@code boolean}.</p>

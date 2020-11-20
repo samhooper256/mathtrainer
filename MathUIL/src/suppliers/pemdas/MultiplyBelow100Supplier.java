@@ -4,7 +4,7 @@ import java.util.List;
 
 import problems.*;
 import suppliers.*;
-import utils.IntRange;
+import utils.refs.IntRange;
 
 /**
  * @author Sam Hooper

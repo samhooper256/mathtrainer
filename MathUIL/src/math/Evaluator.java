@@ -49,24 +49,31 @@ public class Evaluator {
 	interface Expression{
 		BigDecimal eval();
 	}
+	
 	interface HasOperator{
 		String getOperator();
 		int getPrecendence();
 	}
-	abstract static class BinaryOperator implements Expression, HasOperator{
+	
+	abstract static class BinaryOperator implements Expression, HasOperator {
+		
 		final Expression left, right;
+		
 		public BinaryOperator(Expression left, Expression right) {
 			this.left = left;
 			this.right = right;
 		}
+		
 		@Override
 		public final int getPrecendence() {
 			return binaryPrecedence.get(getOperator());
 		}
+		
 		@Override
 		public String toString() { return "(" + left + getOperator() + right + ")"; }
 	}
-	static abstract class AdditiveExpression extends BinaryOperator{
+	
+	static abstract class AdditiveExpression extends BinaryOperator {
 		/**
 		 * @param left
 		 * @param right
@@ -76,12 +83,22 @@ public class Evaluator {
 		}
 	}
 	
-	static abstract class MultiplicativeExpression extends BinaryOperator{
+	static abstract class MultiplicativeExpression extends BinaryOperator {
 		/**
 		 * @param left
 		 * @param right
 		 */
 		public MultiplicativeExpression(Expression left, Expression right) {
+			super(left, right);
+		}
+	}
+	
+	static abstract class ExponentiativeExpression extends BinaryOperator {
+		/**
+		 * @param left
+		 * @param right
+		 */
+		public ExponentiativeExpression(Expression left, Expression right) {
 			super(left, right);
 		}
 	}
@@ -106,7 +123,7 @@ public class Evaluator {
 		
 	}
 	
-	static class SubtractionOperation extends AdditiveExpression{
+	static class SubtractionOperation extends AdditiveExpression {
 		/**
 		 * @param left
 		 * @param right
@@ -125,7 +142,7 @@ public class Evaluator {
 		}
 	}
 	
-	static class MultiplicationOperation extends MultiplicativeExpression{
+	static class MultiplicationOperation extends MultiplicativeExpression {
 		/**
 		 * @param left
 		 * @param right
@@ -144,7 +161,7 @@ public class Evaluator {
 		}
 	}
 	
-	static class DivisionOperation extends MultiplicativeExpression{
+	static class DivisionOperation extends MultiplicativeExpression {
 		/**
 		 * @param left
 		 * @param right
@@ -163,7 +180,7 @@ public class Evaluator {
 		}
 	}
 	
-	static class ExponentiationOperation extends MultiplicativeExpression{
+	static class ExponentiationOperation extends ExponentiativeExpression {
 		/**
 		 * @param left
 		 * @param right
@@ -171,31 +188,20 @@ public class Evaluator {
 		public ExponentiationOperation(Expression left, Expression right) {
 			super(left, right);
 		}
+		
 		@Override
 		public BigDecimal eval() {
-			BigDecimal left = this.left.eval();
-			BigDecimal right = this.right.eval();
-			final int rightSign = right.signum();
-			// Perform X^(A+B)=X^A*X^B (B = remainder)
-	        double dleft = left.doubleValue();
-	        right = right.abs(MATH_CONTEXT);
-	        BigDecimal remainderOf2 = right.remainder(BigDecimal.ONE, MATH_CONTEXT);
-	        BigDecimal rightIntPart = right.subtract(remainderOf2, MATH_CONTEXT);
-	        BigDecimal intPow = left.pow(rightIntPart.intValueExact(),
-	                MATH_CONTEXT);
-	        BigDecimal doublePow =
-	            new BigDecimal(Math.pow(dleft, remainderOf2.doubleValue()));
-	        BigDecimal result = intPow.multiply(doublePow, MATH_CONTEXT);
-	        if(rightSign == -1) {
-	        	result = BigDecimal.ONE.divide(result, MATH_CONTEXT);
-	        }
-	        return result;
+			return Utils.pow(left.eval(), right.eval());
 		}
+		
 		@Override
 		public String getOperator() {
 			return "^";
 		}
+		
 	}
+	
+	
 	
 	abstract static class UnaryOperator implements Expression, HasOperator{
 		Expression expr;

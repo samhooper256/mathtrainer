@@ -1,6 +1,6 @@
 package suppliers;
 
-import utils.Ref;
+import utils.refs.Ref;
 
 /**
  * @author Sam Hooper

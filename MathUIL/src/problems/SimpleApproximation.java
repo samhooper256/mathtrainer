@@ -3,7 +3,7 @@ package problems;
 import java.math.*;
 import java.util.*;
 
-import math.Evaluator;
+import math.*;
 
 /**
  * @author Sam Hooper
@@ -47,7 +47,7 @@ public class SimpleApproximation implements Problem {
 
 	@Override
 	public boolean isCorrect(String input) {
-		return Problem.isBigDecimal(input) && Problem.within(approximationPercentAsBigDecimal(), result, new BigDecimal(input));
+		return Utils.isBigDecimal(input) && Problem.within(approximationPercentAsBigDecimal(), result, new BigDecimal(input));
 	}
 
 	@Override

@@ -1,6 +1,9 @@
 package math;
 
 import java.math.*;
+import java.util.*;
+
+import utils.IntList;
 
 /**
  * @author Sam Hooper
@@ -9,6 +12,8 @@ import java.math.*;
 public class Utils {
 	
 	private Utils() {}
+	
+	
 	
 	public static final String PI_STRING = "3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622";
 	/** <i>pi</i> rounded to 10 digits after the decimal.*/
@@ -99,5 +104,124 @@ public class Utils {
 		return a * b / gcd(a, b);
 	}
 	
+	
+	
+	private static long goodMask = 0xC840C04048404040L;
+//	{
+//	    for (int i=0; i<64; ++i) goodMask |= Long.MIN_VALUE >>> (i*i);
+//	}
+	
+	//Code and comments from: https://stackoverflow.com/a/18686659/11788023
+	public static boolean isSquare(long x) {
+	    // This tests if the 6 least significant bits are right.
+	    // Moving the to be tested bit to the highest position saves us masking.
+	    if (goodMask << x >= 0) return false;
+	    final int numberOfTrailingZeros = Long.numberOfTrailingZeros(x);
+	    // Each square ends with an even number of zeros.
+	    if ((numberOfTrailingZeros & 1) != 0) return false;
+	    x >>= numberOfTrailingZeros;
+	    // Now x is either 0 or odd.
+	    // In binary each odd square ends with 001.
+	    // Postpone the sign test until now; handle zero in the branch.
+	    if ((x&7) != 1 | x <= 0) return x == 0;
+	    // Do it in the classical way.
+	    // The correctness is not trivial as the conversion from long to double is lossy!
+	    final long tst = (long) Math.sqrt(x);
+	    return tst * tst == x;
+	}
+
+	public static int magnitude(final int n) {
+		int abs = Math.abs(n);
+		if(abs >= 1_000_000_000) return 10;
+		if(abs >= 100_000_000) return 9;
+		if(abs >= 10_000_000) return 8;
+		if(abs >= 1_000_000) return 7;
+		if(abs >= 100_000) return 6;
+		if(abs >= 10_000) return 5;
+		if(abs >= 1_000) return 4;
+		if(abs >= 100) return 3;
+		if(abs >= 10) return 2;
+		return 1;
+	}
+
+	public static boolean isInteger(final String s) {
+		if(s.length() == 0)
+			return false;
+		int i = s.charAt(0) == '-' ? 1 : 0;
+		if(s.length() - i == 0)
+			return false;
+		for(int j = i; j < s.length(); j++)
+			if(s.charAt(j) < '0' || s.charAt(j) > '9')
+				return false;
+		return true;
+	}
+	
+	public static boolean isInteger(BigDecimal bd) {
+		 return bd.stripTrailingZeros().scale() <= 0;
+	}
+	
+	/**
+	 * Returns {@code true} if the given {@link String} represents a valid real number in decimal form, {@code false} otherwise.
+	 * returns {@code false} for {@link String Strings} that end in a decimal point.
+	 * @param s
+	 * @return
+	 */
+	public static boolean isBigDecimal(final String s) {
+		if(s.isBlank())
+			return false;
+		final int start = s.charAt(0) == '-' ?  1 : 0;
+		if(start == s.length())
+			return false;
+		int point = -1;
+		if(s.charAt(start) == '.') {
+			if(s.length() == start + 1)
+				return false;
+			point = start;
+		}
+		else {
+			point = s.indexOf('.', 1);
+		}
+		
+		if(point == s.length() - 1)
+			return false;
+		if(point == -1)
+			point = s.length();
+		for(int i = start; i < point; i++)
+			if(s.charAt(i) < '0' || s.charAt(i) > '9')
+				return false;
+		for(int i = point + 1; i < s.length(); i++)
+			if(s.charAt(i) < '0' || s.charAt(i) > '9')
+				return false;
+		
+		return true;
+	}
+
+	public static boolean isComplexInRectangularForm(final String s) {
+	//	System.out.printf("entered isComplexInRectangularForm%n");
+		if(s.length() == 0)
+			return false;
+		int pIndex = s.indexOf('+');
+		if(pIndex < 0)
+			return isBigDecimal(s);
+		if(pIndex == 0)
+			return false;
+		if(!s.endsWith("i"))
+			return false;
+		return isBigDecimal(s.substring(0, pIndex)) && isBigDecimal(s.substring(pIndex + 1, s.length() - 1));
+	}
+	
+	public static IntList factorsUnsorted(final int n) {
+		IntList facs = new IntList();
+		final int sqrt = (int) Math.sqrt(n);
+		for(int i = 1; i <= sqrt; i++) {
+			if(n % i == 0) {
+				facs.add(i);
+				if(i != n / i) {
+					facs.add(n / i);
+				}
+			}
+		}
+		return facs;
+	}
 	
 }
