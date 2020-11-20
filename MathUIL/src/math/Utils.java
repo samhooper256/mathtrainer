@@ -23,6 +23,7 @@ public class Utils {
 	public static final BigDecimal E_TO_PI = new BigDecimal("23.1406926328");
 	
 	private static final BigDecimal PI_INTERMEDIATE = new BigDecimal("3.14159265358979");
+	private static final BigDecimal E_INTERMEDIATE = new BigDecimal("2.71828182845905");
 	private static final int MAX_INTEGER_POWER_AS_INT = 999999999;
 	private static final BigDecimal MAX_INTEGER_POWER = new BigDecimal("999999999");
 	private static final MathContext INTERMEDIATE_CONTEXT = new MathContext(14);
@@ -53,6 +54,12 @@ public class Utils {
 		if(nonNegativeExponent > MAX_INTEGER_POWER_AS_INT)
 			throw new IllegalArgumentException("exponent is too large");
 		return PI_INTERMEDIATE.pow(nonNegativeExponent, RESULT_CONTEXT);
+	}
+	
+	public static BigDecimal eTo(final int nonNegativeExponent) {
+		if(nonNegativeExponent > MAX_INTEGER_POWER_AS_INT)
+			throw new IllegalArgumentException("exponent is too large");
+		return E_INTERMEDIATE.pow(nonNegativeExponent, RESULT_CONTEXT);
 	}
 	
 	public static boolean isPositive(final BigDecimal n) {

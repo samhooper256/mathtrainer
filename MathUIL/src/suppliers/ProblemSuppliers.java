@@ -75,6 +75,7 @@ public final class ProblemSuppliers {
 		customName(BackwardsGCDLCMSupplier.class, "Find term given GCD and LCM");
 		customName(Mod9Supplier.class, "Remainder when divided by 9");
 		customName(Mod11Supplier.class, "Remainder when divided by 11");
+		customName(PowersOfESupplier.class, "Powers of e");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {

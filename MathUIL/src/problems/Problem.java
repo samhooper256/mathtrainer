@@ -99,10 +99,10 @@ public interface Problem {
 		return isBigDecimal(s.substring(0, pIndex)) && isBigDecimal(s.substring(pIndex + 1, s.length() - 1));
 	}
 	
-	public static boolean within5(final BigDecimal target, final BigDecimal guess) {
-		final BigDecimal fivePercent = target.multiply(new BigDecimal("0.05")).abs();
+	public static boolean within(final BigDecimal bound, final BigDecimal target, final BigDecimal guess) {
+		final BigDecimal boundPercent = target.multiply(bound).abs();
 		final BigDecimal diff = target.subtract(guess).abs();
-		return diff.compareTo(fivePercent) <= 0;
+		return diff.compareTo(boundPercent) <= 0;
 	}
 	
 	public static int intInclusive(int min, int max) {
@@ -244,6 +244,27 @@ public interface Problem {
 	 */
 	default boolean isApproximateResult() {
 		return false;
+	}
+	
+	/** Returns the percentage of the actual answer that a given answer must be in order to be counted correct. The default implementation returns {@code 0.05}.
+	 * If this {@link Problem} is not {@link #isApproximateResult() an approximate result}, then the behavior of this method is undefined. Note that, for
+	 * example, {@code 0.05} means within 5%, not within 0.05%.
+	 * <p>The default implementation is equivalent to:
+	 * <pre><code>return approximationPercentAsBigDecimal().doubleValue()</pre></code>
+	 * </p>
+	 * @return
+	 */
+	default double approximationPercent() {
+		return approximationPercentAsBigDecimal().doubleValue();
+	}
+	
+	/**
+	 * Returns the {@link #approximationPercent()} as a {@code String}. This method should be called in preference to {@link #approximationPercent()}
+	 * when possible because it may give a more precise value than can be stored in a {@code double}. The default implementation throws an
+	 * {@link UnsupportedOperationException}.
+	 */
+	default BigDecimal approximationPercentAsBigDecimal() {
+		throw new UnsupportedOperationException();
 	}
 	
 	/** Returns an estimate of the number of lines of text that would be needed to display this {@link Problem}. The default implementation returns
