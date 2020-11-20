@@ -18,7 +18,7 @@ public class Remainder extends ComplexValued {
 	
 	public Remainder(long operand, long divisor) {
 		super(new Complex(operand % divisor));
-		display = ExpressionPrettifier.pretty(operand + "/" + divisor) + REMAINDER_OF_STRING;
+		display = Prettifier.pretty(operand + "/" + divisor) + REMAINDER_OF_STRING;
 	}
 	
 	public Remainder(BigDecimal operand, long divisor) {
@@ -34,7 +34,7 @@ public class Remainder extends ComplexValued {
 		String operandString = operand.toString();
 		if(addParenthesis)
 			operandString = "(" + operandString + ")";
-		display = ExpressionPrettifier.pretty(operandString + "/" + divisor) + REMAINDER_OF_STRING;
+		display = Prettifier.pretty(operandString + "/" + divisor) + REMAINDER_OF_STRING;
 	}
 	
 	
@@ -43,7 +43,7 @@ public class Remainder extends ComplexValued {
 	 */
 	public Remainder(String expression, long divisor) {
 		super(Evaluator.evaluateAsBigDecimal(expression).remainder(BigDecimal.valueOf(divisor)));
-		display = ExpressionPrettifier.pretty(expression + "/" + divisor) + REMAINDER_OF_STRING;
+		display = Prettifier.pretty(expression + "/" + divisor) + REMAINDER_OF_STRING;
 	}
 
 	@Override

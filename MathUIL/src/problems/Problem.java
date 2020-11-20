@@ -197,7 +197,7 @@ public interface Problem {
 	Pattern WHITESPACE = Pattern.compile("\\s+");
 	
 	public static String prettyExpression(final String expression) {
-		return ExpressionPrettifier.pretty(expression);
+		return Prettifier.pretty(expression);
 	}
 	
 	public static String prettyComplex(final Complex c) {

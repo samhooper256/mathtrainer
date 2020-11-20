@@ -16,7 +16,7 @@ import suppliers.*;
 public class PowersOfPiSupplier extends SettingsProblemSupplier {
 	public static final boolean DEFAULT_INCLUDE_PI_TO_E = true;
 	public static final Problem TO_E_PROBLEM = new SimpleApproximation(
-			ExpressionPrettifier.PI_HTML + "<sup>" + ExpressionPrettifier.E_HTML + "</sup>", Utils.PI_TO_E);
+			Prettifier.PI_HTML + "<sup>" + Prettifier.E_HTML + "</sup>", Utils.PI_TO_E);
 	
 	private static final RangeStore EXPONENT = RangeStore.of(1, 20, 1, 6);
 	private final NamedIntRange exponent = of(EXPONENT, "Power Value");
@@ -31,6 +31,6 @@ public class PowersOfPiSupplier extends SettingsProblemSupplier {
 		if(includePiToE.get() && Math.random() <= (1d / (exponent.ref().valueRange() + 1)))
 			return TO_E_PROBLEM;
 		int exp = Problem.intInclusive(exponent);
-		return new SimpleApproximation(ExpressionPrettifier.PI_HTML + "<sup>" + exp + "</sup>", Utils.piTo(exp));
+		return new SimpleApproximation(Prettifier.PI_HTML + "<sup>" + exp + "</sup>", Utils.piTo(exp));
 	}
 }
