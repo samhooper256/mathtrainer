@@ -55,6 +55,16 @@ public class Utils {
 		return baseToPositiveExponent;
 	}
 	
+	/** {@code exponent} must be >= 0. Returns 1 for 0^0*/
+	public static long pow(final long base, final long exponent) {
+		if(exponent < 0)
+			throw new IllegalArgumentException("exponent must be greater than or equal to 0");
+		long result = 1;
+		for(int i = 0; i < exponent; i++)
+			result = result * base;
+		return result;
+	}
+	
 	public static BigDecimal piTo(final int nonNegativeExponent) {
 		if(nonNegativeExponent > MAX_INTEGER_POWER_AS_INT)
 			throw new IllegalArgumentException("exponent is too large");

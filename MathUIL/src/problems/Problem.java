@@ -37,6 +37,12 @@ public interface Problem {
 		return (int) (Math.random() * (max - min + 1)  + min);
 	}
 	
+	public static long longInclusive(long min, long max) {
+		if(min > max)
+			throw new IllegalArgumentException(String.format("min > max (%d < %d)", min, max));
+		return (long) (Math.random() * (max - min + 1)  + min);
+	}
+	
 	public static int intInclusive(IntRange range) {
 		return intInclusive(range.getLow(), range.getHigh());
 	}
