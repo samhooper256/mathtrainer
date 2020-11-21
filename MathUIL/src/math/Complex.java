@@ -9,6 +9,8 @@ import java.util.Objects;
  *
  */
 public class Complex {
+	
+	public static final Complex ZERO = new Complex(0);
 	/**
 	 * The "a" in "a + bi"
 	 */
@@ -110,6 +112,20 @@ public class Complex {
 		return a.compareTo(other.a) == 0 && b.compareTo(other.b) == 0;
 	}
 	
+	public Complex sum(Complex augend) {
+		return new Complex(realPart().add(augend.realPart()), imaginaryPart().add(augend.imaginaryPart()));
+	}
+	
+	public Complex sum(Complex augend, MathContext mc) {
+		return new Complex(realPart().add(augend.realPart(), mc), imaginaryPart().add(augend.imaginaryPart(), mc));
+	}
+	
+	public Complex multiply(Complex multiplicand, MathContext mc) {
+		BigDecimal real = realPart().multiply(multiplicand.realPart(), mc).subtract(imaginaryPart().multiply(multiplicand.imaginaryPart(), mc), mc);
+		BigDecimal im = realPart().multiply(multiplicand.imaginaryPart(), mc).add(imaginaryPart().multiply(multiplicand.realPart(), mc), mc);
+		return new Complex(real, im);
+	}
+
 	public BigDecimal realPart() {
 		return a;
 	}

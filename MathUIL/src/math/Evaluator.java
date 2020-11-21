@@ -280,7 +280,11 @@ public class Evaluator {
 		}
 	}
 	
+	public static Complex evaluateAsComplex(final String expression) {
+		return new Complex(evaluateAsBigDecimal(expression)); //TODO MAJOR
+	}
 	public static BigDecimal evaluateAsBigDecimal(final String expression) {
+//		System.out.printf("evaluateAsBigDecimal(%s)%n", expression);
 		ExpressionParser parser = new ExpressionParser(expression.strip());
 		Expression exp = parser.parseTokens();
 		return exp.eval();
