@@ -5,6 +5,7 @@ import javafx.animation.Animation.Status;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import suppliers.*;
+import suppliers.divisors.RelativelyPrimeSupplier;
 import suppliers.pemdas.IntAddSubtractSupplier;
 import utils.*;
 
@@ -35,7 +36,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new IntAddSubtractSupplier(2, 2, 2, 2)));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new RelativelyPrimeSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();

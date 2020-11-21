@@ -12,6 +12,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+//TODO some way to make the values be more reasonable?
 public class OtherRootsSupplier extends SettingsProblemSupplier {
 	private static final RangeStore ROOT = RangeStore.of(1, 7), RADICAND_BASE = RangeStore.of(1, 30, 1, 13);
 	private final NamedIntRange root = of(ROOT, "Root"), radicandBase = of(RADICAND_BASE, "Base of the radicand");

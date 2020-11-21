@@ -4,6 +4,7 @@ import static problems.Problem.*;
 import static suppliers.NamedBooleanRef.*;
 import static suppliers.NamedIntRange.*;
 
+
 import java.math.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -17,6 +18,7 @@ import utils.*;
  * @author Sam Hooper
  *
  */
+//TODO remove redundant parentheses in the resulting expression
 public class NestedSquareRootsSupplier extends SettingsProblemSupplier {
 	private static final RangeStore VALUE = RangeStore.of(1, 10, 3, 6);
 	private static final List<Integer> SQUARES; //squares of the numbers from 1 to 100

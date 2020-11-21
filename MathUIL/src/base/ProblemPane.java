@@ -18,6 +18,9 @@ import utils.*;
  * @author Sam Hooper
  *
  */
+//TODO The correct answer to approximation problems should show as a range of values (not a single one)
+//TODO Approximation questions should somehow indicate what percent your answer must be within
+//TODO Approx problems shouldn't show so many decimals!
 public class ProblemPane extends Pane {
 	
 	/**

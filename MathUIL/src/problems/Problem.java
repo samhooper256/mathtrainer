@@ -31,6 +31,12 @@ public interface Problem {
 		return diff.compareTo(boundPercent) <= 0;
 	}
 	
+	/** Returns an {@code int} between 0 (inclusive) and max (exclusive). */
+	public static int intExclusive(int max) {
+		if(max == 0)
+			throw new IllegalArgumentException(); //TODO message
+		return intInclusive(0, max - 1);
+	}
 	public static int intInclusive(int min, int max) {
 		if(min > max)
 			throw new IllegalArgumentException(String.format("min > max (%d < %d)", min, max));

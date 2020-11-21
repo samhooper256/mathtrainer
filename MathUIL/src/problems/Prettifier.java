@@ -40,4 +40,28 @@ public class Prettifier {
 		pretty = pretty.replaceAll("(\\d+) \\^ (\\d+)", "$1<sup>$2</sup>");
 		return pretty;
 	}
+	
+	public static String num(String num) {
+		return "<mn>" + num + "</mn>";
+	}
+	
+	public static String num(final int num) {
+		return num(Integer.toString(num));
+	}
+	
+	public static String sqrt(final String expr) {
+		return "<msqrt>" + expr + "</msqrt>";
+	}
+	
+	public static String sqrt(final int num) {
+		return sqrt(num(num));
+	}
+	
+	public static String op(final String op) {
+		return "<mo>" + op + "</mo>";
+	}
+	
+	public static String op(final char op) {
+		return op(Character.toString(op));
+	}
 }

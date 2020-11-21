@@ -235,11 +235,46 @@ public class IntList implements Iterable<Integer> {
 		
 	}
 	
+	public PrimitiveIterator.OfInt primitiveIterator() {
+		return new PrimitiveIterator.OfInt() {
+			int index; //index of the NEXT element to be returned by next(). Zero by default.
+			boolean canRemove;
+			
+			@Override
+			public boolean hasNext() {
+				return index != size;
+			}
+
+			@Override
+			public int nextInt() {
+				if(index >= size) throw new NoSuchElementException();
+				canRemove = true;
+				return data[index++];
+			}
+
+			@Override
+			public void remove() {
+				if(!canRemove) throw new IllegalStateException();
+				canRemove = false;
+				removeByIndex(--index);
+			}
+		};
+	}
+	
 	@Override
 	public String toString() {
 		StringJoiner j = new StringJoiner(", ", "[", "]");
 		for(int i = 0; i < size; i++)
 			j.add(Integer.toString(data[i]));
 		return j.toString();
+	}
+	
+	/** Utility methods */
+	
+	public long sum() {
+		long s = 0;
+		for(int i = 0; i < size; i++)
+			s += data[i];
+		return s;
 	}
 }

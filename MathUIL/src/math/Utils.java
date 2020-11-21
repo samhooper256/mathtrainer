@@ -11,6 +11,10 @@ import utils.IntList;
  */
 public class Utils {
 	
+//	public static void main(String[] args) {
+//		System.out.println(primeFactorization(12));
+//	}
+	
 	private Utils() {}
 	
 	
@@ -31,8 +35,9 @@ public class Utils {
 	private static final BigDecimal E_INTERMEDIATE = new BigDecimal("2.71828182845905");
 	private static final int MAX_INTEGER_POWER_AS_INT = 999999999;
 	private static final BigDecimal MAX_INTEGER_POWER = new BigDecimal("999999999");
-	private static final MathContext INTERMEDIATE_CONTEXT = new MathContext(14);
-	private static final MathContext RESULT_CONTEXT = new MathContext(10);
+	
+	public static final MathContext INTERMEDIATE_CONTEXT = new MathContext(14);
+	public static final MathContext RESULT_CONTEXT = new MathContext(10);
 	
 	/** Returns {@code base} raised to the power of {@code exponent}. Returns {@link BigDecimal#ONE} if {@code (exponent.compareTo(BigDecimal.ZERO) == 0)}
 	 * regardless of what {@code base} is. The result is rounded to ten decimal places.*/
@@ -233,5 +238,31 @@ public class Utils {
 		}
 		return facs;
 	}
+	
+	/**
+	 * Returns a {@link SortedMap} where the keys are the prime factors of {@code n} and the values are the powers of those factors.
+	 * For example, {@code primeFactorization(12)} would produce the map:
+	 * <pre><code>{2=2, 3=1}</code></pre>
+	 * to represent 2^2 * 3^1.  
+	 * @param n
+	 * @return
+	 */
+	public static SortedMap<Integer, Integer> primeFactorization(int n) {
+		SortedMap<Integer, Integer> map = new TreeMap<>();
+        while (n % 2 == 0) {
+        	map.put(2, map.getOrDefault(2, 0) + 1);
+            n /= 2; 
+        }
+  
+		for (int i = 3; i <= (int) Math.sqrt(n); i += 2)  { 
+            while (n % i == 0) { 
+                map.put(i, map.getOrDefault(i, 0) + 1);
+                n /= i; 
+            } 
+        }
+        if(n > 2)
+        	map.put(n, 1);
+        return map;
+    }
 	
 }
