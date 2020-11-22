@@ -42,6 +42,21 @@ public class Complex {
 	/**
 	 * The "a" and "b" parameters are those in the rectangular form "a + bi"
 	 */
+	public Complex(final BigInteger a, final BigInteger b) {
+		this.a = Objects.requireNonNull(new BigDecimal(a));
+		this.b = Objects.requireNonNull(new BigDecimal(b));
+	}
+	
+	/**
+	 * A {@link Complex} with only a real part.
+	 */
+	public Complex(final BigInteger a) {
+		this(new BigDecimal(a), BigDecimal.ZERO);
+	}
+	
+	/**
+	 * The "a" and "b" parameters are those in the rectangular form "a + bi"
+	 */
 	public Complex(final double a, final double b) {
 		this(BigDecimal.valueOf(a), BigDecimal.valueOf(b));
 	}
@@ -242,6 +257,14 @@ public class Complex {
 	    return c.multiply(sq.multiply(sq, mc), mc); 
 	} 
 	
+	/**
+	 * Returns a {@link Complex} with the {@link #realPart()} and {@link #imaginaryPart()} rounded using the given {@link MathContext}
+	 * via {@link BigDecimal#round(MathContext)}.
+	 */
+	public Complex round(MathContext resultContext) {
+		return new Complex(realPart().round(resultContext), imaginaryPart().round(resultContext));
+	}
+	
 	public BigDecimal realPart() {
 		return a;
 	}
@@ -301,5 +324,7 @@ public class Complex {
 			throw new ArithmeticException("This complex number has an imaginary part, so it does not have an exact BigDecimal value.");
 		return realPart();
 	}
+
+	
 	
 }

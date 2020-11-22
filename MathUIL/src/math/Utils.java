@@ -289,4 +289,20 @@ public class Utils {
 		return Arrays.stream(arr);
 	}
 	
+	private static final ArrayList<BigInteger> MEMOIZED_FACTORIALS = new ArrayList<>(16);
+	
+	static {
+		MEMOIZED_FACTORIALS.add(BigInteger.ONE);
+		MEMOIZED_FACTORIALS.add(BigInteger.ONE);
+		MEMOIZED_FACTORIALS.add(BigInteger.TWO);
+	}
+	/**
+	 * Returns n factorial, or <i>n!</i>
+	 */
+	public static BigInteger factorial(int n) {
+		while(MEMOIZED_FACTORIALS.size() <= n)
+			MEMOIZED_FACTORIALS.add(BigInteger.valueOf(MEMOIZED_FACTORIALS.size()).multiply(MEMOIZED_FACTORIALS.get(MEMOIZED_FACTORIALS.size() - 1)));
+		return MEMOIZED_FACTORIALS.get(n);
+	}
+	
 }

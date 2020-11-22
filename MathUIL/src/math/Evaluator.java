@@ -23,7 +23,9 @@ public class Evaluator {
 		}
 		
 	}
-	private static final MathContext MATH_CONTEXT = new MathContext(32, RoundingMode.HALF_UP);
+	public static final MathContext DEFAULT_RESULT_CONTEXT = new MathContext(16, RoundingMode.HALF_UP);
+	
+	private static final MathContext INTERMEDIATE_MATH_CONTEXT = new MathContext(32, RoundingMode.HALF_UP);
 	private static final Map<String, Integer> binaryPrecedence;
 	private static final Map<String, Integer> unaryPrecedence;
 	private static final Map<String, Associativity> binaryAssociativities;
@@ -31,8 +33,6 @@ public class Evaluator {
 	private static final Map<String, BiFunction<Expression, Expression, BinaryOperator>> binaryFactories;
 	private static final Map<String, Function<Expression, UnaryOperator>> unaryFactories;
 	private static final Pattern WHITESPACE = Pattern.compile("\\s+");
-	private static final Pattern SIGNS = Pattern.compile("[+-]+");
-	private static final Pattern TOKEN_BOUNDARY = Pattern.compile("(?<=[^0-9\\.])|(?=[^0-9\\.])");
 	private static final char DECIMAL_POINT = '.';
 	
 	static {
@@ -58,6 +58,7 @@ public class Evaluator {
 		HashMap<String, Function<Expression, UnaryOperator>> unaryFacs = new HashMap<>();
 		unaryFacs.put("+", UnaryPlus::new);
 		unaryFacs.put("-", UnaryMinus::new);
+		unaryFacs.put("!", Factorial::new);
 		unaryFactories = Collections.unmodifiableMap(unaryFacs);
 		
 		binaryAssociativities = new HashMap<>();
@@ -161,7 +162,7 @@ public class Evaluator {
 		}
 		@Override
 		public Complex eval() {
-			return left.eval().add(right.eval(), MATH_CONTEXT);
+			return left.eval().add(right.eval(), INTERMEDIATE_MATH_CONTEXT);
 		}
 		
 	}
@@ -180,7 +181,7 @@ public class Evaluator {
 		}
 		@Override
 		public Complex eval() {
-			return left.eval().subtract(right.eval(), MATH_CONTEXT);
+			return left.eval().subtract(right.eval(), INTERMEDIATE_MATH_CONTEXT);
 		}
 	}
 	
@@ -194,7 +195,7 @@ public class Evaluator {
 		}
 		@Override
 		public Complex eval() {
-			return left.eval().multiply(right.eval(), MATH_CONTEXT);
+			return left.eval().multiply(right.eval(), INTERMEDIATE_MATH_CONTEXT);
 		}
 		@Override
 		public String getOperator() {
@@ -213,7 +214,7 @@ public class Evaluator {
 		
 		@Override
 		public Complex eval() {
-			return left.eval().divide(right.eval(), MATH_CONTEXT);
+			return left.eval().divide(right.eval(), INTERMEDIATE_MATH_CONTEXT);
 		}
 		
 		@Override
@@ -234,7 +235,7 @@ public class Evaluator {
 		
 		@Override
 		public Complex eval() {
-			return left.eval().pow(right.eval(), MATH_CONTEXT);
+			return left.eval().pow(right.eval(), INTERMEDIATE_MATH_CONTEXT);
 		}
 		
 		@Override
@@ -289,7 +290,7 @@ public class Evaluator {
 
 		@Override
 		public Complex eval() {
-			return expr.eval().negate(MATH_CONTEXT);
+			return expr.eval().negate(INTERMEDIATE_MATH_CONTEXT);
 		}
 	}
 	
@@ -322,12 +323,30 @@ public class Evaluator {
 
 		@Override
 		public Complex eval() {
-			return expr.eval().abs(MATH_CONTEXT);
+			return expr.eval().abs(INTERMEDIATE_MATH_CONTEXT);
 		}
 
 		@Override
 		public String toString() {
 			return String.format("|%s|", expr);
+		}
+		
+	}
+	
+	static class Factorial extends UnaryOperator {
+		
+		public Factorial(Expression expr) {
+			super(expr);
+		}
+		
+		@Override
+		public String getOperator() {
+			return "!";
+		}
+		
+		@Override
+		public Complex eval() {
+			return new Complex(Utils.factorial(expr.eval().intValueExact()));
 		}
 		
 	}
@@ -418,13 +437,14 @@ public class Evaluator {
 	}
 	
 	public static Complex evaluateAsComplex(final String expression) {
+		return evaluateAsComplex(expression, DEFAULT_RESULT_CONTEXT);
+	}
+	
+	public static Complex evaluateAsComplex(final String expression, final MathContext resultContext) {
 		final List<Token> tokens = tokenize(WHITESPACE.matcher(expression).replaceAll(""));
-//		System.out.printf("tokens=%s%n", tokens);
 		final List<Token> postfixTokens = toPostfix(tokens);
-//		System.out.printf("postfixTokens=%s%n", postfixTokens);
 		Expression exp = makeTree(postfixTokens);
-//		System.out.printf("tree=%s%n", exp);
-		return exp.eval();
+		return exp.eval().round(resultContext);
 	}
 
 	public static BigDecimal evaluateAsBigDecimalExact(final String expression) {
