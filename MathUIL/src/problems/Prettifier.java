@@ -43,6 +43,20 @@ public class Prettifier {
 		return pretty;
 	}
 	
+	public static String stripTrailingZeros(Object obj) {
+		String number = obj.toString();
+		int dotIndex = number.indexOf('.');
+		if(dotIndex < 0)
+			return number;
+		int last0 = number.length();
+		while(number.charAt(last0 - 1) == '0')
+			last0--;
+		if(number.charAt(last0 - 1) == '.')
+			return number.substring(0, dotIndex);
+		
+		return number.substring(0, last0);
+	}
+	
 	public static String num(String num) {
 		return "<mn>" + num + "</mn>";
 	}

@@ -3,6 +3,8 @@ package math;
 import java.math.*;
 import java.util.Objects;
 
+import problems.Prettifier;
+
 /**
  * <p>A complex number, represented in the rectangular form <i>a+bi</i>, where <i>a</i> is the real part and <i>bi</i> is the imaginary part. {@code Complex}
  * objects are immutable.</p>
@@ -99,10 +101,10 @@ public class Complex {
 	@Override
 	public String toString() {
 		if(!hasImaginaryPart())
-			return String.format("%f", realPart());
+			return String.format("%s", Prettifier.stripTrailingZeros(realPart()));
 		else if(!hasRealPart())
-			return String.format("%fi", imaginaryPart());
-		return String.format("%f+%fi", realPart(), imaginaryPart());
+			return String.format("%si", Prettifier.stripTrailingZeros(imaginaryPart()));
+		return String.format("%s+%si", Prettifier.stripTrailingZeros(realPart()), imaginaryPart().compareTo(BigDecimal.ONE) == 0 ? "" : Prettifier.stripTrailingZeros(imaginaryPart()));
 	}
 	
 	
