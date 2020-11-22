@@ -42,7 +42,7 @@ public class Remainder extends ComplexValued {
 	 * This does <b>NOT</b> add parentheses around {@code expression}.
 	 */
 	public Remainder(String expression, long divisor) {
-		super(Evaluator.evaluateAsBigDecimal(expression).remainder(BigDecimal.valueOf(divisor)));
+		super(Evaluator.evaluateAsBigDecimalExact(expression).remainder(BigDecimal.valueOf(divisor)));
 		display = Prettifier.pretty(expression + "/" + divisor) + REMAINDER_OF_STRING;
 	}
 

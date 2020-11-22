@@ -50,7 +50,7 @@ public class SimpleExpression extends ComplexValued {
 	 * to represent mathematical operators.
 	 */
 	public SimpleExpression(String expression) {
-		super(new Complex(Evaluator.evaluateAsBigDecimal(expression)));
+		super(new Complex(Evaluator.evaluateAsBigDecimalExact(expression)));
 		display = Problem.prettyExpression(expression);
 	}
 

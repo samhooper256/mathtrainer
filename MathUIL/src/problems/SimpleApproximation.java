@@ -31,7 +31,7 @@ public class SimpleApproximation implements Problem {
 	}
 	
 	public SimpleApproximation(final BigDecimal approximationPercent, String expression) {
-		result = Evaluator.evaluateAsBigDecimal(expression);
+		result = Evaluator.evaluateAsBigDecimalExact(expression);
 		display = Problem.prettyExpression(expression);
 		percent = approximationPercent;
 	}

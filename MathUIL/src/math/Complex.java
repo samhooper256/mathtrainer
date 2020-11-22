@@ -4,13 +4,15 @@ import java.math.*;
 import java.util.Objects;
 
 /**
- * <p>A complex number, represented in the rectangular form <i>a+bi</i>, where <i>a</i> is the real part and <i>bi</i> is the imaginary part.</p>
+ * <p>A complex number, represented in the rectangular form <i>a+bi</i>, where <i>a</i> is the real part and <i>bi</i> is the imaginary part. {@code Complex}
+ * objects are immutable.</p>
  * @author Sam Hooper
  *
  */
 public class Complex {
 	
 	public static final Complex ZERO = new Complex(0);
+	public static final Complex ONE = new Complex(1);
 	/**
 	 * The "a" in "a + bi"
 	 */
@@ -64,8 +66,9 @@ public class Complex {
 	}
 	
 	/**
-	 * Takes a {@link String} either of the form "a+bi" (where a and b are valid {@link BigDecimal BigDecimals}) or "a" where
-	 * a is a valid {@link BigDecimal}.
+	 * Takes a {@link String} of the form "a+bi" (where a and b are valid {@link BigDecimal BigDecimals}), or of the form "a" where
+	 * a is a valid {@code BigDecimal}, or of the form "bi" where "b" is a valid {@code BigDecimal}. The given {@code String}
+	 * must not have any whitespace or other extraneous characters.
 	 * @param abi
 	 */
 	public Complex(final String abi) {
@@ -76,16 +79,30 @@ public class Complex {
 			b = new BigDecimal(abi.substring(p + 1, abi.length() - 1));
 		}
 		else {
-			a = new BigDecimal(abi);
-			b = BigDecimal.ZERO;
+			if(abi.endsWith("i")) {
+				if(abi.length() == 1) {
+					a = BigDecimal.ZERO;
+					b = BigDecimal.ONE;
+				}
+				else {
+					a = BigDecimal.ZERO;
+					b = new BigDecimal(abi.substring(0, abi.length() - 1));
+				}
+			}
+			else {
+				a = new BigDecimal(abi);
+				b = BigDecimal.ZERO;
+			}
 		}
 	}
 
 	@Override
 	public String toString() {
-		if(b.compareTo(BigDecimal.ZERO) == 0)
-			return String.format("%f", a);
-		return String.format("%f+%fi", a, b);
+		if(!hasImaginaryPart())
+			return String.format("%f", realPart());
+		else if(!hasRealPart())
+			return String.format("%fi", imaginaryPart());
+		return String.format("%f+%fi", realPart(), imaginaryPart());
 	}
 	
 	
@@ -112,12 +129,42 @@ public class Complex {
 		return a.compareTo(other.a) == 0 && b.compareTo(other.b) == 0;
 	}
 	
-	public Complex sum(Complex augend) {
+	public Complex add(Complex augend) {
 		return new Complex(realPart().add(augend.realPart()), imaginaryPart().add(augend.imaginaryPart()));
 	}
 	
-	public Complex sum(Complex augend, MathContext mc) {
+	public Complex add(Complex augend, MathContext mc) {
 		return new Complex(realPart().add(augend.realPart(), mc), imaginaryPart().add(augend.imaginaryPart(), mc));
+	}
+	
+	public Complex subtract(Complex subtrahend) {
+		return new Complex(realPart().subtract(subtrahend.realPart()), imaginaryPart().subtract(subtrahend.imaginaryPart()));
+	}
+	
+	public Complex subtract(Complex subtrahend, MathContext mc) {
+		return new Complex(realPart().subtract(subtrahend.realPart(), mc), imaginaryPart().subtract(subtrahend.imaginaryPart(), mc));
+	}
+	
+	/**
+	 * Returns the quotient of {@code this} and the given complex number.
+	 */
+	public Complex divide(Complex divisor, MathContext mc) {
+		Complex dCon = divisor.conjugate(mc);
+		BigDecimal div = divisor.abs2AsBigDecimal(mc);
+		return multiply(dCon, mc).divide(div, mc);
+	}
+	
+	/**
+	 * Returns the quotient of {@code this} and the given real number.
+	 */
+	public Complex divide(BigDecimal divisor, MathContext mc) {
+		return new Complex(realPart().divide(divisor, mc), imaginaryPart().divide(divisor, mc));
+	}
+	
+	public Complex multiply(Complex multiplicand) {
+		BigDecimal real = realPart().multiply(multiplicand.realPart()).subtract(imaginaryPart().multiply(multiplicand.imaginaryPart()));
+		BigDecimal im = realPart().multiply(multiplicand.imaginaryPart()).add(imaginaryPart().multiply(multiplicand.realPart()));
+		return new Complex(real, im);
 	}
 	
 	public Complex multiply(Complex multiplicand, MathContext mc) {
@@ -125,13 +172,80 @@ public class Complex {
 		BigDecimal im = realPart().multiply(multiplicand.imaginaryPart(), mc).add(imaginaryPart().multiply(multiplicand.realPart(), mc), mc);
 		return new Complex(real, im);
 	}
-
+	
+	public Complex negate() {
+		return new Complex(realPart().negate(), imaginaryPart().negate());
+	}
+	
+	public Complex negate(MathContext mc) {
+		return new Complex(realPart().negate(mc), imaginaryPart().negate(mc));
+	}
+	
+	/**
+	 * Returns the complex conjugate of {@code this}.
+	 */
+	public Complex conjugate() {
+		return new Complex(realPart(), imaginaryPart().negate());
+	}
+	
+	/**
+	 * Returns the complex conjugate of {@code this}.
+	 */
+	public Complex conjugate(MathContext mc) {
+		return new Complex(realPart(), imaginaryPart().negate(mc));
+	}
+	
+	/** Returns the absolute value of this complex number. */
+	public Complex abs(MathContext mc) {
+		return new Complex(absAsBigDecimal(mc));
+	}
+	
+	/** Returns the absolute value of this complex number. */
+	private BigDecimal absAsBigDecimal(MathContext mc) {
+		return (realPart().pow(2, mc).add(imaginaryPart().pow(2, mc))).sqrt(mc);
+	}
+	
+	/** Returns the square of the absolute value of this complex number. */
+	public Complex abs2(MathContext mc) {
+		return new Complex(abs2AsBigDecimal(mc));
+	}
+	
+	/** Returns the square of the absolute value of this complex number. */
+	public BigDecimal abs2AsBigDecimal(MathContext mc) {
+		return realPart().multiply(realPart(), mc).add(imaginaryPart().multiply(imaginaryPart(), mc), mc);
+	}
+	
+	/** Throws an exception if the exponentiation cannot be done. */
+	public Complex pow(Complex power, MathContext mc) {
+		if(power.hasExactIntValue()) {
+			return power(this, power.intValueExact(), mc);
+		}
+		else if(!hasImaginaryPart() && !power.hasImaginaryPart()) {
+			return new Complex(Utils.pow(realPart(), power.realPart()));
+		}
+		throw new IllegalArgumentException("Cannot take power.");
+	}
+	
+	private static Complex power(Complex c, int n, MathContext mc) { 
+	    if (n == 0) { 
+	        return Complex.ONE;
+	    } 
+	    if (n == 1) 
+	        return c; 
+	  
+	    // Recursive call for n/2 
+	    Complex sq = power(c, n / 2, mc); 
+	    if (n % 2 == 0) 
+	        return sq.multiply(sq, mc); 
+	    return c.multiply(sq.multiply(sq, mc), mc); 
+	} 
+	
 	public BigDecimal realPart() {
 		return a;
 	}
 	
 	public boolean hasRealPart() {
-		return a.compareTo(BigDecimal.ZERO) != 0;
+		return realPart().compareTo(BigDecimal.ZERO) != 0;
 	}
 	
 	public BigDecimal imaginaryPart() {
@@ -139,14 +253,14 @@ public class Complex {
 	}
 	
 	public boolean hasImaginaryPart() {
-		return b.compareTo(BigDecimal.ZERO) != 0;
+		return imaginaryPart().compareTo(BigDecimal.ZERO) != 0;
 	}
 	
 	/**
 	 * Returns {@code (this % divisor)}. {@code this} and {@code divisor} must not {@link #hasImaginaryPart() have an imaginary part}. The
 	 * returned {@link Complex} will not have an imaginary part.
 	 * 
-	 * The remainder is given as described in {@link BigDecimal#remainder(BigDecimal)}, which is <i>not</i> to the modulo operation.
+	 * The remainder is given as described in {@link BigDecimal#remainder(BigDecimal)}, which is <i>not</i> equivalent to the modulo operation.
 	 */
 	public Complex remainder(final Complex divisor) {
 		if(divisor.hasImaginaryPart())
@@ -164,11 +278,26 @@ public class Complex {
 		return remainder(BigDecimal.valueOf(divisor));
 	}
 	
+	public boolean hasExactIntValue() {
+		return !hasImaginaryPart() && Utils.isInteger(a);
+	}
+	
+	public int intValueExact() {
+		if(hasImaginaryPart())
+			throw new ArithmeticException("This complex number has an imaginary part, so it does not have an exact int value.");
+		return realPart().intValueExact();
+	}
+	
 	public long longValueExact() {
 		if(hasImaginaryPart())
 			throw new ArithmeticException("This complex number has an imaginary part, so it does not have an exact long value.");
-		return a.longValueExact();
+		return realPart().longValueExact();
 	}
 	
+	public BigDecimal bigDecimalValueExact() {
+		if(hasImaginaryPart())
+			throw new ArithmeticException("This complex number has an imaginary part, so it does not have an exact BigDecimal value.");
+		return realPart();
+	}
 	
 }

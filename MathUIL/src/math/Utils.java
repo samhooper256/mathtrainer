@@ -159,6 +159,10 @@ public class Utils {
 		return 1;
 	}
 
+	public static boolean isint(final String s) {
+		return isInteger(s) && s.length() <= 10 || (s.startsWith("-") && s.length() <= 11); //TODO
+	}
+	
 	public static boolean isInteger(final String s) {
 		if(s.length() == 0)
 			return false;

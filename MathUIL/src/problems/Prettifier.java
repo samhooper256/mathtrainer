@@ -2,6 +2,8 @@ package problems;
 
 import java.util.regex.Pattern;
 
+import math.Fraction;
+
 /**
  * @author Sam Hooper
  *
@@ -63,5 +65,11 @@ public class Prettifier {
 	
 	public static String op(final char op) {
 		return op(Character.toString(op));
+	}
+	
+	public static String frac(final Fraction f) {
+		if(f.getDenominator() == 1)
+			return num(f.getNumerator());
+		return String.format("<mfrac><mn>%d</mn><mn>%d</mn></mfrac>", f.getNumerator(), f.getDenominator());
 	}
 }

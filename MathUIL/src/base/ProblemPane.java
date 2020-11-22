@@ -343,8 +343,9 @@ public class ProblemPane extends Pane {
 
 	private void updateLabel() {
 		assert currentProblem.displayString() != null;
-		problemView.getEngine().loadContent(currentProblem.displayString());
+		problemView.getEngine().loadContent("<html><body>" + currentProblem.displayString() + "</body></html>");
 		problemViewWrap.setPrefHeight(10 + currentProblem.estimatedDisplayLines() * PROBLEM_LINE_HEIGHT);
+//		problemViewWrap.setPrefHeight(200);
 	}
 	
 	private void showSkillButtonAction() {
