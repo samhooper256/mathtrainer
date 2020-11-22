@@ -44,6 +44,5 @@ public interface FractionValued extends Problem {
 	default String answerAsString() {
 		return answerAsFraction().toString();
 	}
-
 	
 }
