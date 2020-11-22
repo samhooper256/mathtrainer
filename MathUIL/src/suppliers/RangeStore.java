@@ -10,6 +10,8 @@ public final class RangeStore {
 
 	private RangeStore(int min, int max, int low, int high) {
 		super();
+		if(low > high || min > max || high > max || low < min)
+			throw new IllegalArgumentException();
 		this.min = min;
 		this.max = max;
 		this.low = low;

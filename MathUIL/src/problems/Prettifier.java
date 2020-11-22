@@ -43,6 +43,26 @@ public class Prettifier {
 		return pretty;
 	}
 	
+	/**
+	 * <p>Returns the suffix of the given number if it were describing a position in a sequence. For example, returns "st" for 1 (because "1st" ends with "st"),
+	 * "nd" for 2,"rd" for 3, "th" for 4, etc.</p>
+	 * <p>{@code n} must be greater than or equal to zero. Returns "th" for 0.</p>
+	 */
+	public static String ordinalSuffix(int n) {
+		if(n < 0)
+			throw new IllegalArgumentException("n must be >= 0");
+		int mod100 = n % 100;
+		int mod10 = n % 10;
+		if(10 <= mod100 && mod100 <= 20)
+			return "th";
+		if(mod10 == 1)
+			return "st";
+		if(mod10 == 2)
+			return "nd";
+		if(mod10 == 3)
+			return "rd";
+		return "th";
+	}
 	public static String stripTrailingZeros(Object obj) {
 		String number = obj.toString();
 		int dotIndex = number.indexOf('.');
