@@ -197,7 +197,7 @@ public class IntList implements Iterable<Integer> {
 	}
 	
 	public IntStream stream() {
-		return Arrays.stream(data);
+		return Arrays.stream(data, 0, size);
 	}
 	
 	/**
@@ -270,6 +270,7 @@ public class IntList implements Iterable<Integer> {
 	}
 	
 	/** Utility methods */
+	
 	
 	public long sum() {
 		long s = 0;

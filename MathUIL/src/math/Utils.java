@@ -2,6 +2,7 @@ package math;
 
 import java.math.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 import utils.IntList;
 
@@ -144,7 +145,11 @@ public class Utils {
 	    final long tst = (long) Math.sqrt(x);
 	    return tst * tst == x;
 	}
-
+	
+	/**
+	 * <p>Returns the number of digits in {@code n}.</p>
+	 * <p>{@code magnitude(n)} is equivalent to {@code magnitude(Math.abs(n))} (in other words, the sign of the number is ignored).</p>
+	 */
 	public static int magnitude(final int n) {
 		int abs = Math.abs(n);
 		if(abs >= 1_000_000_000) return 10;
@@ -229,7 +234,13 @@ public class Utils {
 		return isBigDecimal(s.substring(0, pIndex)) && isBigDecimal(s.substring(pIndex + 1, s.length() - 1));
 	}
 	
+	/**
+	 * Returns an {@link IntList} containing the factors of {@code n}. The elements in the returned list are unique but are in no particular order.
+	 * @throws IllegalArgumentException if {@code n <= 0}.
+	 */
 	public static IntList factorsUnsorted(final int n) {
+		if(n <= 0)
+			throw new IllegalArgumentException("n must be greater than 0");
 		IntList facs = new IntList();
 		final int sqrt = (int) Math.sqrt(n);
 		for(int i = 1; i <= sqrt; i++) {
@@ -268,5 +279,14 @@ public class Utils {
         	map.put(n, 1);
         return map;
     }
+	
+	public static IntStream digits(int n) {
+		int[] arr = new int[magnitude(n)];
+		for(int i = arr.length - 1; i >= 0; i--) {
+			arr[i] = n % 10;
+			n /= 10;
+		}
+		return Arrays.stream(arr);
+	}
 	
 }

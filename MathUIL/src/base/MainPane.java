@@ -37,7 +37,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new PolygonalNumbersSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new TypesOfNumbersSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();
