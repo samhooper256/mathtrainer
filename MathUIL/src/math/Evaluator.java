@@ -457,6 +457,7 @@ public class Evaluator {
 
 	/** Given a mathematical expression in String form, tokenizes the expression and returns the results as a {@link List} of {@link Token Tokens}.*/
 	private static List<Token> tokenize(final String expression) {
+//		System.out.printf("tokenize(%s)%n", expression);
 		List<Token> tokens = new ArrayList<>();
 		for(int i = 0; i < expression.length(); ) {
 			String iStr = expression.substring(i, i + 1);
@@ -474,7 +475,7 @@ public class Evaluator {
 				i++;
 			}
 			else {
-				if("123456789i.".contains(iStr)) {
+				if("0123456789i.".contains(iStr)) {
 					int end = endOfComplexNumber(expression, i);
 					token = new Token(expression.substring(i, end), TokenType.NUMBER);
 					i = end;
@@ -490,7 +491,7 @@ public class Evaluator {
 						}
 					}
 					if(op == null)
-						throw new IllegalArgumentException("Invalid expression");
+						throw new IllegalArgumentException("Invalid expression. Tokens (at this stage of parsing) were: " + tokens);
 					if(isUnaryOperator(op)) {
 						if(isBinaryOperator(op)) { //This token could be a left or a right unary operator! We will figure out which one it is after.
 							token = new Token(op, TokenType.OPERATOR);
@@ -508,12 +509,14 @@ public class Evaluator {
 			
 			tokens.add(token);
 		}
+//		System.out.printf("before figuring out types of operators: %n\t%s%n", tokens);
 		for(int i = 0; i < tokens.size(); i++) {
 			Token token = tokens.get(i);
 			if(token.getType() == TokenType.OPERATOR) {
 				figureOutTypeOfOperator(tokens, i);
 			}
 		}
+//		System.out.printf("after figuring out types of operators, before figuring out types of absolute value bars: %n\t%s%n", tokens);
 		for(int i = 0; i < tokens.size(); i++) {
 			Token token = tokens.get(i);
 			if(token.getType() == TokenType.ABSOLUTE_VALUE_BAR) {
@@ -762,7 +765,7 @@ public class Evaluator {
 			}
 		}
 		if(stack.size() != 1)
-			throw new IllegalArgumentException("Invalid expression");
+			throw new IllegalArgumentException("Invalid expression, Postfix tokens were: " + postfixTokens);
 		return stack.pop();
 	}
 	
@@ -834,7 +837,9 @@ public class Evaluator {
 	}
 	
 	private static boolean isOperator(final String s) {
-		return isBinaryOperator(s) || isUnaryOperator(s);
+		final boolean result = isBinaryOperator(s) || isUnaryOperator(s);
+//		System.out.printf("\tisOperator(%s) == %b%n", s, result);
+		return result;
 	}
 	
 	private static boolean isBinaryOperator(final String s) {

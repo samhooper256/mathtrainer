@@ -154,6 +154,12 @@ public class Complex {
 		return new Complex(realPart().add(augend.realPart(), mc), imaginaryPart().add(augend.imaginaryPart(), mc));
 	}
 	
+	public Complex subtract(final int subtrahend) {
+		if(subtrahend == 0)
+			return this;
+		return new Complex(realPart().subtract(BigDecimal.valueOf(subtrahend)), imaginaryPart());
+	}
+	
 	public Complex subtract(Complex subtrahend) {
 		return new Complex(realPart().subtract(subtrahend.realPart()), imaginaryPart().subtract(subtrahend.imaginaryPart()));
 	}
@@ -161,6 +167,7 @@ public class Complex {
 	public Complex subtract(Complex subtrahend, MathContext mc) {
 		return new Complex(realPart().subtract(subtrahend.realPart(), mc), imaginaryPart().subtract(subtrahend.imaginaryPart(), mc));
 	}
+	
 	
 	/**
 	 * Returns the quotient of {@code this} and the given complex number.
@@ -176,6 +183,16 @@ public class Complex {
 	 */
 	public Complex divide(BigDecimal divisor, MathContext mc) {
 		return new Complex(realPart().divide(divisor, mc), imaginaryPart().divide(divisor, mc));
+	}
+	
+	public Complex multiply(int multiplicand) {
+		final BigDecimal multiplicandAsBigDecimal = BigDecimal.valueOf(multiplicand);
+		return new Complex(realPart().multiply(multiplicandAsBigDecimal), imaginaryPart().multiply(multiplicandAsBigDecimal));
+	}
+	
+	public Complex multiply(int multiplicand, MathContext mc) {
+		final BigDecimal multiplicandAsBigDecimal = BigDecimal.valueOf(multiplicand).round(mc);
+		return new Complex(realPart().multiply(multiplicandAsBigDecimal, mc), imaginaryPart().multiply(multiplicandAsBigDecimal, mc));
 	}
 	
 	public Complex multiply(Complex multiplicand) {

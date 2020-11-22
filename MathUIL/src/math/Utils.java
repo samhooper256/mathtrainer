@@ -305,4 +305,14 @@ public class Utils {
 		return MEMOIZED_FACTORIALS.get(n);
 	}
 	
+	public static BigInteger nPr(final int n, final int r) {
+		if(n < 0 || r < 0 || r > n)
+			throw new IllegalArgumentException(String.format("Invalid arguments: n=%d, r=%d", n, r));
+		return factorial(n).divide(factorial(n - r));
+	}
+	
+	public static BigInteger nCr(final int n, final int r) {
+		return nPr(n, r).divide(factorial(r));
+	}
+	
 }

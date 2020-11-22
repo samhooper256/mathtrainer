@@ -3,7 +3,7 @@ package utils;
 import java.util.*;
 import java.util.function.Consumer;
 
-import math.NumberAdjectives;
+import problems.Problem;
 
 /**
  * @author Sam Hooper
@@ -12,6 +12,33 @@ import math.NumberAdjectives;
 public class Colls {
 	
 	private Colls() {}
+	
+	/**
+	 * Returns a random element from the given {@link Collecton}. Throws an exception if the given {@code Collection} {@link Collection#isEmpty() is empty}.
+	 * @throws IllegalArgumentException if {@code coll} is empty.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getRandom(Collection<? extends T> coll) {
+		if(coll instanceof List<?>)
+			return (T) getRandom((List<?>) coll);
+		if(coll.isEmpty())
+			throw new IllegalArgumentException();
+		int stop = Problem.intExclusive(coll.size());
+		Iterator<? extends T> itr = coll.iterator();
+		while(stop > 0) {
+			itr.next();
+			stop--;
+		}
+		return itr.next();
+	}
+	
+	/**
+	 * Returns a random element from the given {@link List}. Throws an exception if the given {@code List} {@link List#isEmpty() is empty}.
+	 * @throws IllegalArgumentException if {@code list} is empty.
+	 */
+	public static <T> T getRandom(List<? extends T> list) {
+		return list.get(Problem.intExclusive(list.size()));
+	}
 	
 	/**
 	 * Returns {@code true} if all the {@link Collection Collections} in {@code colls} {@link Collection#contains(Object) contain} {@code item}.
