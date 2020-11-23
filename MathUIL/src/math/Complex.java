@@ -324,6 +324,10 @@ public class Complex {
 		return imaginaryPart().compareTo(BigDecimal.ZERO) != 0;
 	}
 	
+	public boolean isZero() {
+		return realPart().compareTo(BigDecimal.ZERO) == 0 && imaginaryPart().compareTo(BigDecimal.ZERO) == 0;
+	}
+	
 	/**
 	 * Returns {@code (this % divisor)}. {@code this} and {@code divisor} must not {@link #hasImaginaryPart() have an imaginary part}. The
 	 * returned {@link Complex} will not have an imaginary part.

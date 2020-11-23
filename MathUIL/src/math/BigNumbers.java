@@ -19,7 +19,7 @@ public class BigNumbers {
 	}
 	
 	public static boolean isPositive(BigInteger bi) {
-		return bi.compareTo(BigInteger.ZERO) < 0;
+		return bi.compareTo(BigInteger.ZERO) > 0;
 	}
 	
 	public static boolean isZero(BigInteger bi) {

@@ -22,6 +22,7 @@ import utils.refs.IntRange;
 public interface Problem {
 	
 	public static final IntSupplier DIGIT_SUPPLIER = () -> (int) (Math.random() * 10);
+	public static final CharSupplier DIGIT_SUPPLIER_AS_CHAR = () -> (char) intInclusive('0', '9');
 	
 	public static final Random RAND = new Random();
 	
@@ -70,6 +71,13 @@ public interface Problem {
 		for(int i = 0, add = 1; i < digits; i++, add *= 10)
 			num += DIGIT_SUPPLIER.getAsInt() * add;
 		return num;
+	}
+	
+	public static String stringOfDigits(final int digits) {
+		char[] dig = new char[digits];
+		for(int i = 0; i < dig.length; i++)
+			dig[i] = DIGIT_SUPPLIER_AS_CHAR.get();
+		return new String(dig);
 	}
 	
 	/**

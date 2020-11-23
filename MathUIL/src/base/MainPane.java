@@ -9,6 +9,7 @@ import suppliers.divisors.*;
 import suppliers.factorials.*;
 import suppliers.other.*;
 import suppliers.pemdas.*;
+import suppliers.sequences.*;
 import utils.*;
 
 /**
@@ -38,7 +39,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new CombinationsSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new ArithmeticSequencesSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();

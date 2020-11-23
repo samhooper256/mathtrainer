@@ -20,14 +20,25 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	 * {@code 1}, and a positive sign.
 	 */
 	public static final BigFraction ZERO = new BigFraction(BigInteger.ZERO, BigInteger.ONE, 1);
+	public static final BigFraction ONE = BigFraction.of(1, 1);
+	public static final BigFraction NEGATIVE_ONE = BigFraction.of(1, -1);
+	public static final BigFraction HALF = BigFraction.of(1, 2);
 	
 	public static BigInteger setSign(BigInteger i, int sign) {
+		final BigInteger result;
 		if(sign == 1 && BigNumbers.isNegative(i) || sign == -1 && BigNumbers.isPositive(i))
-			return i.negate();
-		return i;
+			result = i.negate();
+		else
+			result = i;
+//		System.out.printf("setSign(%s, %d) => %s%n", i, sign, result);
+		return result;
+		
 	}
 	
-	public static final BigFraction add(final BigFraction a, final BigFraction b) {
+	/**
+	 * Returns the sum of {@code a} and {@code b}.
+	 */
+	public static final BigFraction sum(final BigFraction a, final BigFraction b) {
 		if(BigNumbers.isZero(a.num)) return b;
 		if(BigNumbers.isZero(b.num)) return a;
 		final BigInteger denomGCD = BigNumbers.gcd(a.denom, b.denom); // nonnegative
@@ -43,7 +54,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	}
 
 	public static final BigFraction subtract(final BigFraction a, final BigFraction b) {
-		return add(a, b.negate());
+		return sum(a, b.negate());
 	}
 
 	public static final BigFraction divide(final BigFraction a, final BigFraction b) {
@@ -52,7 +63,9 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	}
 
 	public static int compare(final BigFraction a, final BigFraction b) {
-		return setSign(a.num.multiply(b.denom), a.sign).compareTo(setSign(a.denom.multiply(b.num), b.sign));
+		int result = setSign(a.num.multiply(b.denom), a.sign).compareTo(setSign(a.denom.multiply(b.num), b.sign));
+//		System.out.printf("compare(%s, %s) == %d%n", a, b, result);
+		return result;
 	}
 
 	/**
@@ -206,7 +219,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 		denom = da.divide(gcd);
 	}
 	public BigFraction add(final BigFraction o) {
-		return add(this, o);
+		return sum(this, o);
 	}
 	
 	public BigFraction multiply(final BigFraction o) {
