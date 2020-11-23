@@ -15,6 +15,9 @@ public class Complex {
 	
 	public static final Complex ZERO = new Complex(0);
 	public static final Complex ONE = new Complex(1);
+	
+	private static final MathContext POWER_CONTEXT = new MathContext(32);
+	
 	/**
 	 * The "a" in "a + bi"
 	 */
@@ -251,27 +254,50 @@ public class Complex {
 	
 	/** Throws an exception if the exponentiation cannot be done. */
 	public Complex pow(Complex power, MathContext mc) {
-		if(power.hasExactIntValue()) {
+		if(power.hasExactIntValue())
 			return power(this, power.intValueExact(), mc);
-		}
-		else if(!hasImaginaryPart() && !power.hasImaginaryPart()) {
+		else if(!hasImaginaryPart() && !power.hasImaginaryPart())
 			return new Complex(Utils.pow(realPart(), power.realPart()));
-		}
 		throw new IllegalArgumentException("Cannot take power.");
 	}
 	
-	private static Complex power(Complex c, int n, MathContext mc) { 
-	    if (n == 0) { 
+	/** Throws an exception if the exponentiation cannot be done. */
+	public Complex pow(Complex power) {
+		if(power.hasExactIntValue())
+			return pow(power.intValueExact());
+		else if(!hasImaginaryPart() && !power.hasImaginaryPart())
+			return new Complex(Utils.pow(realPart(), power.realPart()));
+		throw new IllegalArgumentException("Cannot take power.");
+	}
+	
+	public Complex pow(int power) {
+		return power(this, power);
+	}
+	
+	private static Complex power(Complex c, int n, MathContext mc) {
+		if(n < 0)
+			return Complex.ONE.divide(power(c, -n, mc), mc);
+	    if (n == 0)
 	        return Complex.ONE;
-	    } 
 	    if (n == 1) 
-	        return c; 
-	  
-	    // Recursive call for n/2 
+	        return c;
 	    Complex sq = power(c, n / 2, mc); 
 	    if (n % 2 == 0) 
 	        return sq.multiply(sq, mc); 
 	    return c.multiply(sq.multiply(sq, mc), mc); 
+	}
+	
+	private static Complex power(Complex c, int n) {
+		if(n < 0)
+			return Complex.ONE.divide(power(c, -n), POWER_CONTEXT);
+	    if (n == 0)
+	        return Complex.ONE;
+	    if (n == 1) 
+	        return c;
+	    Complex sq = power(c, n / 2); 
+	    if (n % 2 == 0) 
+	        return sq.multiply(sq); 
+	    return c.multiply(sq.multiply(sq)); 
 	} 
 	
 	/**
@@ -321,7 +347,7 @@ public class Complex {
 	}
 	
 	public boolean hasExactIntValue() {
-		return !hasImaginaryPart() && Utils.isInteger(a);
+		return !hasImaginaryPart() && BigNumbers.isInteger(a);
 	}
 	
 	public int intValueExact() {

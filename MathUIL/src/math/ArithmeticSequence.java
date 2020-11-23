@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author Sam Hooper
  *
  */
-public class ArithmeticSequence implements Sequence {
+public class ArithmeticSequence implements FiniteComplexSequence {
 	/*
 	public static void main(String[] args) {
 		ArithmeticSequence seq = new ArithmeticSequence(Complex.ONE, Complex.ONE, 3);
@@ -29,26 +29,24 @@ public class ArithmeticSequence implements Sequence {
 	private static final MathContext DEFAULT_MATH_CONTEXT = new MathContext(32);
 	
 	private final Complex firstTerm;
-	private final Complex commonDifference;
+	private final Complex difference;
 	private final int size;
 	
 	/**
-	 * @param firstTerm
-	 * @param commonDifference
-	 * @throws NullPointerException if {@code firstTerm} or {@code commonDifference} is {@code null}.
+	 * @throws NullPointerException if {@code firstTerm} or {@code difference} is {@code null}.
 	 * @throws IllegalArgumentException if {@code size <= 0}
 	 */
-	public ArithmeticSequence(final Complex firstTerm, final Complex commonDifference, final int size) {
+	public ArithmeticSequence(final Complex firstTerm, final Complex difference, final int size) {
 		if(size <= 0)
 			throw new IllegalArgumentException("size <= 0");
 		this.firstTerm = Objects.requireNonNull(firstTerm);
-		this.commonDifference = Objects.requireNonNull(commonDifference);
+		this.difference = Objects.requireNonNull(difference);
 		this.size = size;
 	}
 	
 	@Override
 	public Complex nthTerm(int n) {
-		return commonDifference().multiply(n - 1).add(firstTerm);
+		return difference().multiply(n - 1).add(firstTerm);
 	}
 	
 	@Override
@@ -75,8 +73,8 @@ public class ArithmeticSequence implements Sequence {
 		return toFullString();
 	}
 
-	public Complex commonDifference() {
-		return commonDifference;
+	public Complex difference() {
+		return difference;
 	}
 	
 	public Complex firstTerm() {

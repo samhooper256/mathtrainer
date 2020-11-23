@@ -180,10 +180,6 @@ public class Utils {
 		return true;
 	}
 	
-	public static boolean isInteger(BigDecimal bd) {
-		 return bd.stripTrailingZeros().scale() <= 0;
-	}
-	
 	/**
 	 * Returns {@code true} if the given {@link String} represents a valid real number in decimal form, {@code false} otherwise.
 	 * returns {@code false} for {@link String Strings} that end in a decimal point.

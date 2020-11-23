@@ -297,7 +297,7 @@ public class NestedSquareRootsSupplier extends SettingsProblemSupplier {
 			final double doubleVal = val.doubleValue();
 			final Node parent = node.parent;
 //			System.out.printf("parent=%s, parent.hash=%h%n", parent, parent);
-			final boolean isInt = Utils.isInteger(val);
+			final boolean isInt = BigNumbers.isInteger(val);
 			int intVal = Integer.MAX_VALUE;
 			if(isInt) {
 				intVal = val.intValueExact();
