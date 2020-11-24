@@ -1,19 +1,19 @@
 package problems;
 
-import math.Fraction;
+import math.*;
 
 /**
  * @author Sam Hooper
  *
  */
-public interface FractionValued extends Problem {
+public interface BigFractionValued extends Problem {
 	
-	public static FractionValued of(final String htmlFormattedText, final Fraction result) {
+	public static BigFractionValued of(final String htmlFormattedText, final BigFraction result) {
 		return of(htmlFormattedText, result, 1.5);
 	}
 	
-	public static FractionValued of(final String htmlFormattedText, final Fraction result, final double estimatedDisplayLines) {
-		return new FractionValued() {
+	public static BigFractionValued of(final String htmlFormattedText, final BigFraction result, final double estimatedDisplayLines) {
+		return new BigFractionValued() {
 			
 			@Override
 			public String displayString() {
@@ -21,7 +21,7 @@ public interface FractionValued extends Problem {
 			}
 			
 			@Override
-			public Fraction answerAsFraction() {
+			public BigFraction answerAsFraction() {
 				return result;
 			}
 
@@ -33,11 +33,11 @@ public interface FractionValued extends Problem {
 		};
 	}
 	
-	Fraction answerAsFraction();
+	BigFraction answerAsFraction();
 
 	@Override
 	default boolean isCorrect(String input) {
-		return Fraction.isValidVulgar(input) && Fraction.fromVulgar(input).equals(answerAsFraction());
+		return BigFraction.isValidVulgar(input) && BigFraction.fromVulgar(input).equals(answerAsFraction());
 	}
 
 	@Override

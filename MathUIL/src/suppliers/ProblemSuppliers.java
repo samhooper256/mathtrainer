@@ -96,7 +96,6 @@ public final class ProblemSuppliers {
 	private static void addInfosFromPackageAndSubpackages(File pkgFile) throws ClassNotFoundException {
 //		System.out.printf("adding info from package sub subpackages: \"%s\"%n", pkgFile);
 		for(File classFile : pkgFile.listFiles()) {
-			final String fileName = classFile.getName();
 			if(classFile.isDirectory())
 				addInfosFromPackageAndSubpackages(classFile);
 			else
@@ -113,6 +112,7 @@ public final class ProblemSuppliers {
 				return;
 			final String fullyQualifiedName = getPackageName(classFile) + className;
 //			System.out.printf("\t\tfqN: \"%s\"%n", fullyQualifiedName);
+			@SuppressWarnings("unchecked")
 			Class<? extends ProblemSupplier> clazz = (Class<? extends ProblemSupplier>)
 					Class.forName(fullyQualifiedName);
 			if(clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers()))

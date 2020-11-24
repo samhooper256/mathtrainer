@@ -27,18 +27,15 @@ public class BigNumbers {
 	}
 	
 	public static BigInteger gcd(BigInteger a, BigInteger b) {
+		System.out.printf("enter BigNumbers::gcd(a=%s, b=%s)%n", a, b);
 		if(isZero(a) || isZero(b))
 			throw new IllegalArgumentException("numbers cannot be zero");
-		if(b.compareTo(a) > 0) {
-			BigInteger temp = a;
-			a = b;
-			b = temp;
-		}
-		while(a.compareTo(b) != 0) {
-			if(a.compareTo(b) > 0)
-				a = a.subtract(b);
-			else
-				b = b.subtract(a);
+		if(isNegative(a) || isNegative(b))
+			throw new IllegalArgumentException("cannot find gcd if numbers are negative");
+		while(!isZero(b)) {
+			BigInteger t = b;
+			b = a.mod(b);
+			a = t;
 		}
 		return a;
 	}

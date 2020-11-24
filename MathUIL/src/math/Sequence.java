@@ -55,6 +55,13 @@ public interface Sequence<T> extends Iterable<T> {
 	}
 	
 	/**
+	 * Equivalent to {@code toPartialString(n, ", ")}.
+	 */
+	default String toPartialString(int n) {
+		return toPartialString(n, ", ");
+	}
+	
+	/**
 	 * Returns a {@code String} containing the first {@code n} terms in this {@link Sequence}, separated by {@code delimiter}, followed by
 	 * {@code (delimiter + "..." + delimiter + nthTerm(size())} if this {@code Sequence} {@link #isFinite() is finite}, {@code (delimiter + "...")} if
 	 * this {@code Sequence} is infinite. If this {@code Sequence} is finite and {@code (n >= size() - 1)}, then there
@@ -63,6 +70,10 @@ public interface Sequence<T> extends Iterable<T> {
 	 * @throws IllegalArgumentException if {@code (n <= 0)}.
 	 */
 	default String toPartialString(int n, String delimiter) {
+		if(n <= 0)
+			throw new IllegalArgumentException("n <= 0");
+		final String result;
+		iff:
 		if(isFinite()) {
 			StringJoiner j = new StringJoiner(delimiter);
 			final int maxI = Math.min(n, size());
@@ -71,17 +82,20 @@ public interface Sequence<T> extends Iterable<T> {
 			if(n >= size() - 1) {
 				if(n == size() - 1)
 					j.add(nthTerm(size()).toString());
-				return j.toString();
+				result = j.toString();
+				break iff;
 			}	
 			
-			return j + delimiter + "..." + delimiter + nthTerm(size());
+			result = j + delimiter + "..." + delimiter + nthTerm(size());
 		}
 		else {
 			StringJoiner j = new StringJoiner(delimiter);
 			for(int i = 1; i <= n; i++)
 				j.add(nthTerm(i).toString());
-			return j + delimiter + "...";
+			result = j + delimiter + "...";
 		}
+		System.out.printf("toPartialString(%d, %s) returning: %s%n", n, delimiter, result);
+		return result;
 	}
 
 	@Override

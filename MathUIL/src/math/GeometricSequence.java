@@ -40,6 +40,7 @@ public class GeometricSequence implements SummableSequence<BigFraction> {
 	
 	@Override
 	public BigFraction nthTerm(int n) {
+//		System.out.printf("(enter) GeometricSequence::nthTerm(n=%d)%n", n);
 		return firstTerm.multiply(ratio.pow(n - 1));
 	}
 	

@@ -48,9 +48,12 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	}
 
 	public static final BigFraction multiply(final BigFraction a, final BigFraction b) {
+		System.out.printf("(enter) [static] BigFraction::multiply(a=%s, b=%s)%n", a, b);
 		if(BigNumbers.isZero(a.num) || BigNumbers.isZero(b.num)) return ZERO;
 		BigInteger resultNum = a.num.multiply(b.num), resultDenom = a.denom.multiply(b.denom);
-		return BigFraction.of(resultNum, resultDenom, a.sign == b.sign ? 1 : -1);
+		final BigFraction result = BigFraction.of(resultNum, resultDenom, a.sign == b.sign ? 1 : -1);
+		System.out.printf("[static] multiply(a=%s, b=%s) returning %s%n", a, b, result);
+		return result;
 	}
 
 	public static final BigFraction subtract(final BigFraction a, final BigFraction b) {
@@ -114,6 +117,13 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 		if(BigNumbers.isZero(numerator)) return ZERO;
 		if(BigNumbers.isZero(denominator)) zeroDenominator();
 		return new BigFraction(numerator, denominator, signum);
+	}
+	
+	public static boolean isValidVulgar(String vulgarFraction) {
+		String[] split = vulgarFraction.split("/");
+		final boolean result = split.length == 1 && Utils.isInteger(vulgarFraction) || split.length == 2 && Utils.isInteger(split[0]) && Utils.isInteger(split[1]);
+//		System.out.printf("(enter) isValidVulgar(%s) == %b%n", vulgarFraction, result);
+		return result;
 	}
 	
 	/** Returns a new {@link BigFraction} from the given vulgar fraction expressed as a {@code String}.
@@ -212,6 +222,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	 * @param signum
 	 */
 	private BigFraction(final BigInteger numerator, final BigInteger denominator, final int signum) {
+//		System.out.printf("(enter) constructor:BigFraction(numerator=%s, denominator=%s, signum=%d)%n", numerator, denominator, signum);
 		final BigInteger na = numerator.abs(), da = denominator.abs();
 		final BigInteger gcd = numerator == BigInteger.ZERO ? BigInteger.ONE : BigNumbers.gcd(na, da);
 		this.sign = signum;
@@ -235,6 +246,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	}
 	
 	public BigFraction pow(final int power) {
+//		System.out.printf("(enter) BigFraction::pow(power=%d), this=%s%n", power, this);
 		int uPow = Math.abs(power);
 		BigInteger oNum = setSign(getNumerator(), sign).pow(uPow);
 		BigInteger oDenom = getDenominator().pow(uPow);
@@ -243,7 +255,9 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 			oNum = oDenom;
 			oDenom = temp;
 		}
-		return BigFraction.of(oNum, oDenom);
+		final BigFraction result = BigFraction.of(oNum, oDenom);
+//		System.out.printf("(exit) BigFraction::pow(power=%d), returning %s%n", power, result);
+		return result;
 	}
 	public BigFraction negate() {
 		return BigFraction.of(num, denom, -sign);
@@ -293,7 +307,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 			return false;
 		}
 		BigFraction other = (BigFraction) obj;
-		return denom == other.denom && num == other.num && sign == other.sign;
+		return denom.equals(other.denom) && num.equals(other.num) && sign == other.sign;
 	}
 
 	@Override

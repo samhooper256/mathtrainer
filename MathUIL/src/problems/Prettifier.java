@@ -1,8 +1,9 @@
 package problems;
 
+import java.math.BigInteger;
 import java.util.regex.Pattern;
 
-import math.Fraction;
+import math.*;
 
 /**
  * @author Sam Hooper
@@ -85,6 +86,10 @@ public class Prettifier {
 		return num(Integer.toString(num));
 	}
 	
+	public static String num(final BigInteger num) {
+		return num(stripTrailingZeros(num.toString()));
+	}
+	
 	public static String sqrt(final String expr) {
 		return "<msqrt>" + expr + "</msqrt>";
 	}
@@ -101,9 +106,11 @@ public class Prettifier {
 		return op(Character.toString(op));
 	}
 	
-	public static String frac(final Fraction f) {
-		if(f.getDenominator() == 1)
+	public static String frac(final BigFraction f) {
+		if(f.getDenominator().compareTo(BigInteger.ONE) == 0)
 			return num(f.getNumerator());
 		return String.format("<mfrac><mn>%d</mn><mn>%d</mn></mfrac>", f.getNumerator(), f.getDenominator());
 	}
+	
+	
 }
