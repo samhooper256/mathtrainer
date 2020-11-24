@@ -5,8 +5,9 @@ import java.util.*;
 import math.*;
 
 /**
- * A {@link Problem} with multiple correct answers. Correct answers can be added via the various {@code addResult} methods. {@link #answerAsString()} returns
- * a {@code String} containing all the correct answers, separated by {@code ", "}.
+ * A {@link Problem} with multiple correct answers. Correct answers can be added via the various {@code addResult} methods.
+ * A {@link #isCorrect(String) correct} answer must match <i>one or more</i> of the {@link #allAnswers() answers} to this {@code Problem}.
+ * {@link #answerAsString()} returns a {@code String} containing all the correct answers, separated by {@code ", "}.
  * @author Sam Hooper
  *
  */
