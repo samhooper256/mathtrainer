@@ -21,7 +21,10 @@ public class MultiValued implements Problem {
 	private final String display;
 	private final Map<Object, Verifier> resultMap;
 	
-	interface Verifier {
+	/**
+	 * A functional interface that provides a method to verify that some result, given as a {@code String}, is correct.
+	 */
+	public interface Verifier {
 		boolean isValid(String input);
 	}
 	
@@ -31,6 +34,7 @@ public class MultiValued implements Problem {
 	}
 	
 	/**
+	 * Returns {@code this}.
 	 * @throws NullPointerException if {@code result} is {@code null}.
 	 */
 	public MultiValued addResult(final Complex result) {
@@ -40,11 +44,25 @@ public class MultiValued implements Problem {
 	}
 	
 	/**
+	 * Returns {@code this}.
 	 * @throws NullPointerException if {@code result} is {@code null}.
 	 */
 	public MultiValued addResult(final BigFraction result) {
 		Objects.requireNonNull(result);
 		resultMap.put(result, input -> BigFraction.isValidVulgar(input) && BigFraction.fromVulgar(input).equals(result));
+		return this;
+	}
+	
+	/**
+	 * Returns {@code this}.
+	 * @param result that {@code String} that will be displayed to the user as part of the {@link #answerAsString()}.
+	 * @param verifier a function that will verify whether a user's guess "matches" (however that may be defined) {@code result}.
+	 * @throws NullPointerException if {@code result} or {@code verifier} is {@code null}.
+	 */
+	public MultiValued addResult(final String result, Verifier verifier) {
+		Objects.requireNonNull(result);
+		Objects.requireNonNull(verifier);
+		resultMap.put(result, verifier);
 		return this;
 	}
 	
