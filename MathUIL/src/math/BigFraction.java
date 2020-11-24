@@ -116,6 +116,13 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 		return new BigFraction(numerator, denominator, signum);
 	}
 	
+	/**
+	 * Returns {@code true} if {@code vulgarFraction} is a valid vulgar fraction in {@code String} form, {@code false} otherwise.
+	 * If, for any {@code String} <i>s</i>, {@code isValidVulgar(s)} returns {@code true}, {@link #fromVulgar(String) fromVulgar}{@code (s)} will
+	 * produce an accurate {@link BigFraction} without producing any exceptions.
+	 * @param vulgarFraction
+	 * @return
+	 */
 	public static boolean isValidVulgar(String vulgarFraction) {
 		String[] split = vulgarFraction.split("/");
 		return split.length == 1 && Utils.isInteger(vulgarFraction) || split.length == 2 && Utils.isInteger(split[0]) && Utils.isInteger(split[1]);
@@ -123,7 +130,8 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	
 	/** Returns a new {@link BigFraction} from the given vulgar fraction expressed as a {@code String}.
 	 * Example {@code Strings} include "1/2" or "3/4".
-	 * The input {@code String} must contain exactly one {@code /} with an integer on either side of it with extraneous whitespace or other characters.
+	 * The input {@code String} must contain exactly one {@code /} with an integer on either side of it with extraneous whitespace or other characters. An
+	 * exception is thrown if the given {@code String} is not {@link #isValidVulgar(String) valid}.
 	 * */
 	public static final BigFraction fromVulgar(final String vulgarBigFraction) {
 		String[] split = vulgarBigFraction.split("/");

@@ -39,11 +39,8 @@ public class GeometricSequencesSupplier extends SettingsProblemSupplier {
 	 * @return
 	 */
 	private Problem termProblem(GeometricSequence seq) {
-//		System.out.printf("enter GSS::termProblem(seq)%n");
 		int termIndex = intInclusive(MIN_NTH_TERM, MAX_NTH_TERM);
-		final BigFractionValued prob = BigFractionValued.of(String.format("What is the %d%s term of the sequence %s?", termIndex, Prettifier.ordinalSuffix(termIndex), seq.toPartialString(4)), seq.nthTerm(termIndex));
-//		System.out.printf("exit GSS::termProblem(seq)%n");
-		return prob;
+		return MultiValued.of(String.format("What is the %d%s term of the sequence %s?", termIndex, Prettifier.ordinalSuffix(termIndex), seq.toPartialString(4))).addResult(seq.nthTerm(termIndex));
 	}
 
 	/**
@@ -51,8 +48,7 @@ public class GeometricSequencesSupplier extends SettingsProblemSupplier {
 	 * @return
 	 */
 	private Problem sumProblem(GeometricSequence seq) {
-//		System.out.printf("enter GSS::sumProblem(seq)%n");
-		return BigFractionValued.of(String.format("What is the sum of the sequence %s?", seq.toPartialString(3)), seq.sum());
+		return MultiValued.of(String.format("What is the sum of the sequence %s?", seq.toPartialString(3))).addResult(seq.sum());
 	}
 	
 	
