@@ -70,27 +70,44 @@ public interface Sequence<T> extends Iterable<T> {
 	 * @throws IllegalArgumentException if {@code (n <= 0)}.
 	 */
 	default String toPartialString(int n, String delimiter) {
+		return toPartialString(n, 0, delimiter);
+	}
+	
+	default String toPartialString(int startTerms, int endTerms, String delimiter) {
+		if(endTerms < 0)
+			throw new IllegalArgumentException("startTerms < 0");
+		if(startTerms < 0)
+			throw new IllegalArgumentException("endTerms < 0");
+		if(endTerms > 0 && isFinite())
+			throw new IllegalArgumentException("Cannot get any end terms from an infinite sequence");
 		if(isFinite()) {
-			StringJoiner j = new StringJoiner(delimiter);
-			final int maxI = Math.min(n, size());
-			for(int i = 1; i <= maxI; i++)
-				j.add(nthTerm(i).toString());
-			if(n >= size() - 1) {
-				if(n == size() - 1)
-					j.add(nthTerm(size()).toString());
+			if(startTerms + endTerms >= size()) {
+				StringJoiner j = new StringJoiner(delimiter);
+				for(int i = 1; i <= size(); i++)
+					j.add(nthTerm(i).toString());
 				return j.toString();
-			}	
+			}
+			else {
+				StringJoiner j1 = new StringJoiner(delimiter);
+				int maxI = Math.min(startTerms, size());
+				for(int i = 1; i <= maxI; i++)
+					j1.add(nthTerm(i).toString());
+				StringJoiner j2 = new StringJoiner(delimiter);
+				for(int k = Math.max(0, size() - endTerms + 1); k <= size(); k++)
+					j2.add(nthTerm(k).toString());
+				return j1 + (startTerms > 0 ? delimiter : "") + "..." + (endTerms > 0 ? delimiter + j2 : "");
+			}
 			
-			return j + delimiter + "..." + delimiter + nthTerm(size());
+			
 		}
 		else {
 			StringJoiner j = new StringJoiner(delimiter);
-			for(int i = 1; i <= n; i++)
+			for(int i = 1; i <= startTerms; i++)
 				j.add(nthTerm(i).toString());
 			return j + delimiter + "...";
 		}
 	}
-
+	
 	@Override
 	default Iterator<T> iterator() {
 		return isFinite() ? finiteIterator() : infiniteIterator();
