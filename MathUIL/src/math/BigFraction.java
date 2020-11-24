@@ -289,6 +289,9 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 		return this == ZERO;
 	}
 	
+	public boolean isInteger() {
+		return getDenominator().compareTo(BigInteger.ONE) == 0;
+	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(denom, num, sign);

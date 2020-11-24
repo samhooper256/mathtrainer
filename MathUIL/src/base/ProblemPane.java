@@ -298,6 +298,7 @@ public class ProblemPane extends Pane {
 		wrongAnswers = 0;
 		hasDeletedText = false;
 		hasShownAnswer = false;
+		System.out.printf("fresh is approx ? %b%n", currentProblem.isApproximateResult());
 		approxWrap.setVisible(currentProblem.isApproximateResult());
 		resetCurrentProblemTimer();
 //		System.out.printf("]exit freshProblem()%n");

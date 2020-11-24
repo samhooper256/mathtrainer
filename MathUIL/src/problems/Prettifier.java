@@ -1,6 +1,6 @@
 package problems;
 
-import java.math.BigInteger;
+import java.math.*;
 import java.util.regex.Pattern;
 
 import math.*;
@@ -16,6 +16,7 @@ public class Prettifier {
 	
 	public static final String PI_HTML = "&#960;";
 	public static final String E_HTML = "<i>e</i>";
+	public static final String I_HTML = "<mi mathvariant=\"bold\">i</mi>";
 	private static final Pattern WHITESPACE = Pattern.compile("\\s+");
 	
 	public static String stripMath(String html) {
@@ -44,6 +45,13 @@ public class Prettifier {
 		return pretty;
 	}
 	
+	public static String prettyOperatorRepresentation(final String operatorAsString) {
+		if("*".equals(operatorAsString))
+			return "×";
+		if("/".equals(operatorAsString))
+			return "÷";
+		return operatorAsString;
+	}
 	/**
 	 * <p>Returns the suffix of the given number if it were describing a position in a sequence. For example, returns "st" for 1 (because "1st" ends with "st"),
 	 * "nd" for 2,"rd" for 3, "th" for 4, etc.</p>
@@ -64,7 +72,10 @@ public class Prettifier {
 			return "rd";
 		return "th";
 	}
-	
+	/**
+	 * Returns "0" if the number is zero in any form (such as "0", "0.0", ".00", etc).
+	 * @return
+	 */
 	public static String stripTrailingZeros(Object obj) {
 		String number = obj.toString();
 		int dotIndex = number.indexOf('.');
@@ -74,8 +85,10 @@ public class Prettifier {
 		while(number.charAt(last0 - 1) == '0')
 			last0--;
 		if(number.charAt(last0 - 1) == '.')
-			return number.substring(0, dotIndex);
-		
+			if(last0 == 1)
+				return "0";
+			else
+				return number.substring(0, dotIndex);
 		return number.substring(0, last0);
 	}
 	
@@ -103,6 +116,24 @@ public class Prettifier {
 	/**
 	 * The returned {@code String} does not have {@code <math>} tags.
 	 */
+	public static String num(final BigDecimal num) {
+		return num(stripTrailingZeros(num));
+	}
+	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
+	public static String num(final Complex num) {
+		if(BigNumbers.isZero(num.imaginaryPart()))
+			return num(num.realPart());
+		else if(BigNumbers.isZero(num.realPart()))
+			return num(num.imaginaryPart());
+		return num(num.realPart()) + op("+") + num(num.imaginaryPart());
+	}
+	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String sqrt(final String expr) {
 		return "<msqrt>" + expr + "</msqrt>";
 	}
@@ -118,7 +149,7 @@ public class Prettifier {
 	 * The returned {@code String} does not have {@code <math>} tags.
 	 */
 	public static String op(final String op) {
-		return "<mo>" + op + "</mo>";
+		return "<mo>" + prettyOperatorRepresentation(op) + "</mo>";
 	}
 	
 	/**
@@ -140,7 +171,7 @@ public class Prettifier {
 	/**
 	 * The returned {@code String} does not have {@code <math>} tags.
 	 */
-	public String mixed(final MixedNumber mixedNumber) {
+	public static String mixed(final MixedNumber mixedNumber) {
 		if(mixedNumber.getFractionalPart().isZero())
 			return num(mixedNumber.getIntegralPart());
 		if(BigNumbers.isZero(mixedNumber.getIntegralPart()))

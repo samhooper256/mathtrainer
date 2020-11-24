@@ -17,9 +17,10 @@ public class MixedNumber extends Number {
 	private final BigFraction fraction;
 	private final BigInteger integer;
 	
-	public MixedNumber of(final BigInteger integer, final BigFraction fraction) {
+	public static MixedNumber of(final BigInteger integer, final BigFraction fraction) {
 		Objects.requireNonNull(integer);
 		Objects.requireNonNull(fraction);
+		System.out.printf("MixedNumber::of(integer=%s, fraction=%s)%n", integer, fraction);
 		if(fraction.isNegative())
 			throw new IllegalArgumentException("The BigFraction of a MixedNumber must not be negative");
 		if(fraction.getDenominator().compareTo(BigInteger.ONE) == 0)
@@ -27,15 +28,15 @@ public class MixedNumber extends Number {
 		return new MixedNumber(integer, fraction);
 	}
 	
-	public MixedNumber of(final long integer, final BigFraction fraction) {
+	public static MixedNumber of(final long integer, final BigFraction fraction) {
 		return of(BigInteger.valueOf(integer), fraction);
 	}
 
-	public MixedNumber of(final BigFraction fraction) {
+	public static MixedNumber of(final BigFraction fraction) {
 		return of(BigInteger.ZERO, fraction);
 	}
 	
-	public MixedNumber of(final long integer) {
+	public static MixedNumber of(final long integer) {
 		return of(BigInteger.valueOf(integer), BigFraction.ZERO);
 	}
 	

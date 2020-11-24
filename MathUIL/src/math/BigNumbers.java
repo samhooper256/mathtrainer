@@ -26,6 +26,18 @@ public class BigNumbers {
 		return bi.compareTo(BigInteger.ZERO) == 0;
 	}
 	
+	public static boolean isZero(BigDecimal bi) {
+		return bi.compareTo(BigDecimal.ZERO) == 0;
+	}
+	
+	public static boolean isNegative(BigDecimal bd) {
+		return bd.compareTo(BigDecimal.ZERO) < 0;
+	}
+	
+	public static boolean isPositive(BigDecimal bd) {
+		return bd.compareTo(BigDecimal.ZERO) > 0;
+	}
+	
 	public static BigInteger gcd(BigInteger a, BigInteger b) {
 		if(isZero(a) || isZero(b))
 			throw new IllegalArgumentException("numbers cannot be zero");
