@@ -1,6 +1,6 @@
 package suppliers.sequences;
 
-import static problems.Problem.*;
+import static problems.Problem.intInclusive;
 import static suppliers.NamedIntRange.*;
 
 import math.*;

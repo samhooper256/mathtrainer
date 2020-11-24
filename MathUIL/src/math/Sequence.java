@@ -70,10 +70,6 @@ public interface Sequence<T> extends Iterable<T> {
 	 * @throws IllegalArgumentException if {@code (n <= 0)}.
 	 */
 	default String toPartialString(int n, String delimiter) {
-		if(n <= 0)
-			throw new IllegalArgumentException("n <= 0");
-		final String result;
-		iff:
 		if(isFinite()) {
 			StringJoiner j = new StringJoiner(delimiter);
 			final int maxI = Math.min(n, size());
@@ -82,20 +78,17 @@ public interface Sequence<T> extends Iterable<T> {
 			if(n >= size() - 1) {
 				if(n == size() - 1)
 					j.add(nthTerm(size()).toString());
-				result = j.toString();
-				break iff;
+				return j.toString();
 			}	
 			
-			result = j + delimiter + "..." + delimiter + nthTerm(size());
+			return j + delimiter + "..." + delimiter + nthTerm(size());
 		}
 		else {
 			StringJoiner j = new StringJoiner(delimiter);
 			for(int i = 1; i <= n; i++)
 				j.add(nthTerm(i).toString());
-			result = j + delimiter + "...";
+			return j + delimiter + "...";
 		}
-		System.out.printf("toPartialString(%d, %s) returning: %s%n", n, delimiter, result);
-		return result;
 	}
 
 	@Override
@@ -142,6 +135,10 @@ public interface Sequence<T> extends Iterable<T> {
 			}
 			
 		};
+	}
+	
+	default Sequence<T> subSequence(final int startInclusive, final int endInclusive) {
+		throw new UnsupportedOperationException(); //TODO
 	}
 	
 }

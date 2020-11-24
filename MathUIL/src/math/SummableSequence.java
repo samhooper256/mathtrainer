@@ -18,7 +18,9 @@ public interface SummableSequence<T> extends Sequence<T> {
 	 * </code></pre>
 	 * May throw an exception if the sum does not exist.
 	 */
-	T sum();
+	default T sum() {
+		return sum(1);
+	}
 	
 	/**
 	 * Returns the sum of the terms in this sequence between {@code startInclusive} and {@code endInclusive}, according to
@@ -48,4 +50,54 @@ public interface SummableSequence<T> extends Sequence<T> {
 	 * All methods that sum elements from this {@link Sequence} act as if they use this {@link BinaryOperator} to compute the sum.
 	 */
 	BinaryOperator<T> sumFunction();
+
+	@Override
+	default SummableSequence<T> subSequence(final int startInclusive, final int endInclusive) {
+		if(startInclusive < 1 || endInclusive < 1)
+			throw new IllegalArgumentException(); //TODO these if statements
+		if(isFinite() && (startInclusive > size() || endInclusive > size()))
+			throw new IllegalArgumentException();
+		if(startInclusive > endInclusive)
+			throw new IllegalArgumentException("startInclusive > endInclusive");
+		final int size = endInclusive - startInclusive + 1;
+		return new SummableSequence<>() {
+
+			@Override
+			public T nthTerm(int n) {
+				if(n > size())
+					throw new IllegalArgumentException("n > size()");
+				return SummableSequence.this.nthTerm(startInclusive + n - 1);
+			}
+
+			@Override
+			public int size() {
+				return size;
+			}
+
+			@Override
+			public T sum() {
+				return sum(1);
+			}
+
+			@Override
+			public T sum(int sumStart) {
+				return SummableSequence.this.sum(startInclusive + sumStart - 1, endInclusive);
+			}
+
+			@Override
+			public T sum(int sumStart, int sumEnd) {
+				if(sumStart > size() || sumEnd > size() || sumStart > sumEnd)
+					throw new IllegalArgumentException();
+				return SummableSequence.this.sum(startInclusive + sumStart - 1, startInclusive + sumEnd - 1);
+			}
+
+			@Override
+			public BinaryOperator<T> sumFunction() {
+				return SummableSequence.this.sumFunction();
+			}
+			
+		};
+	}
+	
+	
 }

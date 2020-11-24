@@ -4,7 +4,7 @@ import static problems.Problem.*;
 import static suppliers.NamedBooleanRef.*;
 import static suppliers.NamedIntRange.*;
 
-import math.*;
+import math.Fraction;
 import problems.*;
 import suppliers.*;
 
@@ -22,10 +22,10 @@ public class AdditiveAndMultiplicativeInversesSupplier extends SettingsProblemSu
 
 	@Override
 	public Problem get() {
-		BigFraction frac = BigFraction.of(intInclusive(values), intInclusive(values));
+		Fraction frac = Fraction.of(intInclusive(values), intInclusive(values));
 		if(Math.random() < 0.5)
-			return BigFractionValued.of(String.format("What is the additive inverse of %s:", Prettifier.ensureMath(Prettifier.frac(frac))), frac.negate());
-		return BigFractionValued.of(String.format("What is the multiplicative inverse of %s:", Prettifier.ensureMath(Prettifier.frac(frac))), frac.multiplicativeInverse());
+			return FractionValued.of(String.format("What is the additive inverse of %s:", Prettifier.ensureMath(Prettifier.frac(frac))), frac.negate());
+		return FractionValued.of(String.format("What is the multiplicative inverse of %s:", Prettifier.ensureMath(Prettifier.frac(frac))), frac.multiplicativeInverse());
 	}
 	
 	

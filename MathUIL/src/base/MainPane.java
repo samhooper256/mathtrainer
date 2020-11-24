@@ -39,7 +39,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new GeometricSequencesSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new ArithmeticSequencesSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();
