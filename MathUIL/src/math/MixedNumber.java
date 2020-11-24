@@ -20,10 +20,9 @@ public class MixedNumber extends Number {
 	public static MixedNumber of(final BigInteger integer, final BigFraction fraction) {
 		Objects.requireNonNull(integer);
 		Objects.requireNonNull(fraction);
-		System.out.printf("MixedNumber::of(integer=%s, fraction=%s)%n", integer, fraction);
 		if(fraction.isNegative())
 			throw new IllegalArgumentException("The BigFraction of a MixedNumber must not be negative");
-		if(fraction.getDenominator().compareTo(BigInteger.ONE) == 0)
+		if(!fraction.isZero() && fraction.getDenominator().compareTo(BigInteger.ONE) == 0)
 			throw new IllegalArgumentException("Cannot create MixedNumber if the BigFraction's denominator is one");
 		return new MixedNumber(integer, fraction);
 	}
@@ -33,7 +32,8 @@ public class MixedNumber extends Number {
 	}
 
 	public static MixedNumber of(final BigFraction fraction) {
-		return of(BigInteger.ZERO, fraction);
+		BigInteger[] divRem = fraction.getNumerator().divideAndRemainder(fraction.getDenominator());
+		return of(divRem[0], BigFraction.of(divRem[1], fraction.getDenominator()));
 	}
 	
 	public static MixedNumber of(final long integer) {
@@ -49,6 +49,22 @@ public class MixedNumber extends Number {
 		this.fraction = fraction;
 	}
 	
+	public MixedNumber add(final MixedNumber augend) {
+		return MixedNumber.of(toImproperFraction().add(augend.toImproperFraction()));
+	}
+	
+	public MixedNumber subtract(final MixedNumber subtrahend) {
+		return MixedNumber.of(toImproperFraction().subtract(subtrahend.toImproperFraction()));
+	}
+	
+	public MixedNumber multiply(final MixedNumber multiplicand) {
+		return MixedNumber.of(toImproperFraction().multiply(multiplicand.toImproperFraction()));
+	}
+	
+	public MixedNumber divide(final MixedNumber divisor) {
+		return MixedNumber.of(toImproperFraction().divide(divisor.toImproperFraction()));
+	}
+	
 	public BigFraction getFractionalPart() {
 		return fraction;
 	}
@@ -59,6 +75,10 @@ public class MixedNumber extends Number {
 	
 	public BigDecimal toBigDecimal() {
 		return new BigDecimal(integer).add(fraction.toBigDecimal());
+	}
+	
+	public BigFraction toImproperFraction() {
+		return BigFraction.of(integer.multiply(fraction.getDenominator()).add(fraction.getNumerator()), fraction.getDenominator());
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import javafx.util.Duration;
 import suppliers.*;
 import suppliers.divisors.*;
 import suppliers.factorials.*;
+import suppliers.fractions.*;
 import suppliers.other.*;
 import suppliers.pemdas.*;
 import suppliers.sequences.*;
@@ -39,7 +40,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new ApproximationsWithRationalsSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new AddingOrSubtractingAnyFractionsSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();

@@ -159,6 +159,14 @@ public interface Problem {
 		return decimal.toPlainString();
 	}
 	
+	@SafeVarargs
+	public static <T> List<T> shuffled(T... items) {
+		 List<T> list = new ArrayList<>(items.length);
+		 Collections.addAll(list, items);
+		 Collections.shuffle(list, RAND);
+		 return list;
+	}
+	
 	/**
 	 * Returns a random permutation of the given two {@code int}s.
 	 */

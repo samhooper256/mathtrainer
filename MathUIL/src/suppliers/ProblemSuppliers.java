@@ -8,6 +8,7 @@ import java.util.function.*;
 import java.util.regex.Pattern;
 
 import suppliers.exponentiation.*;
+import suppliers.fractions.AddingABPlusBAPlusBSupplier;
 import suppliers.gcd.*;
 import suppliers.pemdas.*;
 import suppliers.remainder.*;
@@ -76,6 +77,7 @@ public final class ProblemSuppliers {
 		customName(Mod9Supplier.class, "Remainder when divided by 9");
 		customName(Mod11Supplier.class, "Remainder when divided by 11");
 		customName(PowersOfESupplier.class, "Powers of e");
+		customName(AddingABPlusBAPlusBSupplier.class, "Adding Fractions of the form a/b + b/(a+b)");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {

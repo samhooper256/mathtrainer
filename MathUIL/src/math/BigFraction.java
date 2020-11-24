@@ -289,6 +289,14 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 		return this == ZERO;
 	}
 	
+	public boolean isImproper() {
+		return getNumerator().compareTo(getDenominator()) > 0;
+	}
+	
+	public MixedNumber toMixedNumber() {
+		return MixedNumber.of(this);
+	}
+	
 	public boolean isInteger() {
 		return getDenominator().compareTo(BigInteger.ONE) == 0;
 	}

@@ -14,7 +14,7 @@ public class Prettifier {
 	private static final String OPENING_MATH_TAG = "<math>";
 	private static final String CLOSING_MATH_TAG = "</math>";
 	
-	public static final String PI_HTML = "&#960;";
+	public static final String PI_HTML = "<mi>&#x3C0;</mi>";
 	public static final String E_HTML = "<i>e</i>";
 	public static final String I_HTML = "<mi mathvariant=\"bold\">i</mi>";
 	private static final Pattern WHITESPACE = Pattern.compile("\\s+");
