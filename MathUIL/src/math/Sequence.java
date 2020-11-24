@@ -78,7 +78,7 @@ public interface Sequence<T> extends Iterable<T> {
 			throw new IllegalArgumentException("startTerms < 0");
 		if(startTerms < 0)
 			throw new IllegalArgumentException("endTerms < 0");
-		if(endTerms > 0 && isFinite())
+		if(endTerms > 0 && !isFinite())
 			throw new IllegalArgumentException("Cannot get any end terms from an infinite sequence");
 		if(isFinite()) {
 			if(startTerms + endTerms >= size()) {
