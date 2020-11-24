@@ -1,8 +1,9 @@
 package problems;
 
+import java.math.BigInteger;
 import java.util.regex.Pattern;
 
-import math.Fraction;
+import math.*;
 
 /**
  * @author Sam Hooper
@@ -63,6 +64,7 @@ public class Prettifier {
 			return "rd";
 		return "th";
 	}
+	
 	public static String stripTrailingZeros(Object obj) {
 		String number = obj.toString();
 		int dotIndex = number.indexOf('.');
@@ -77,33 +79,72 @@ public class Prettifier {
 		return number.substring(0, last0);
 	}
 	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String num(String num) {
 		return "<mn>" + num + "</mn>";
 	}
 	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String num(final int num) {
 		return num(Integer.toString(num));
 	}
 	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
+	public static String num(final BigInteger num) {
+		return num(stripTrailingZeros(num));
+	}
+	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String sqrt(final String expr) {
 		return "<msqrt>" + expr + "</msqrt>";
 	}
 	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String sqrt(final int num) {
 		return sqrt(num(num));
 	}
 	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String op(final String op) {
 		return "<mo>" + op + "</mo>";
 	}
 	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String op(final char op) {
 		return op(Character.toString(op));
 	}
 	
-	public static String frac(final Fraction f) {
-		if(f.getDenominator() == 1)
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
+	public static String frac(final BigFraction f) {
+		if(f.getDenominator().compareTo(BigInteger.ONE) == 0)
 			return num(f.getNumerator());
-		return String.format("<mfrac><mn>%d</mn><mn>%d</mn></mfrac>", f.getNumerator(), f.getDenominator());
+		return String.format("<mfrac>%s%s</mfrac>", num(f.getNumerator()), num(f.getDenominator()));
+	}
+	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
+	public String mixed(final MixedNumber mixedNumber) {
+		if(mixedNumber.getFractionalPart().isZero())
+			return num(mixedNumber.getIntegralPart());
+		if(BigNumbers.isZero(mixedNumber.getIntegralPart()))
+			return frac(mixedNumber.getFractionalPart());
+		return String.format("%s%s", num(mixedNumber.getIntegralPart()), frac(mixedNumber.getFractionalPart()));
 	}
 }

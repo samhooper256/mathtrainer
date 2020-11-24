@@ -11,6 +11,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+//TODO make fractions display nicely - right now they display on the same line (like "1/2") instead of being on top of each other.
 public class GeometricSequencesSupplier extends SettingsProblemSupplier {
 	
 	private static final int MIN_NTH_TERM = 6, MAX_NTH_TERM = 12;
@@ -23,7 +24,6 @@ public class GeometricSequencesSupplier extends SettingsProblemSupplier {
 	
 	@Override
 	public Problem get() {
-//		System.out.printf("enter GSS::get()%n");
 		BigFraction r = BigFraction.of(1, intInclusive(rDenom));
 		if(Math.random() <= 0.5)
 			r = r.negate();

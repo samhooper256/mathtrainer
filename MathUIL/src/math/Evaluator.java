@@ -36,51 +36,48 @@ public class Evaluator {
 	private static final char DECIMAL_POINT = '.';
 	
 	static {
-		HashMap<String, Integer> binMap = new HashMap<>();
-		binMap.put("+", 1);
-		binMap.put("-", 1);
-		binMap.put("*", 2);
-		binMap.put("/", 2);
-		binMap.put("^", 3);
-		binaryPrecedence = Collections.unmodifiableMap(binMap);
-		HashMap<String, Integer> unaryMap = new HashMap<>();
-		unaryMap.put("+", 2);
-		unaryMap.put("-", 2);
-		unaryMap.put("!", 4);
-		unaryPrecedence = Collections.unmodifiableMap(unaryMap);
-		HashMap<String, BiFunction<Expression, Expression, BinaryOperator>> binFacs = new HashMap<>();
-		binFacs.put("+", AdditionOperation::new);
-		binFacs.put("-", SubtractionOperation::new);
-		binFacs.put("*", MultiplicationOperation::new);
-		binFacs.put("/", DivisionOperation::new);
-		binFacs.put("^", ExponentiationOperation::new);
-		binaryFactories = Collections.unmodifiableMap(binFacs);
-		HashMap<String, Function<Expression, UnaryOperator>> unaryFacs = new HashMap<>();
-		unaryFacs.put("+", UnaryPlus::new);
-		unaryFacs.put("-", UnaryMinus::new);
-		unaryFacs.put("!", Factorial::new);
-		unaryFactories = Collections.unmodifiableMap(unaryFacs);
 		
+		binaryPrecedence = new HashMap<>();
+		unaryPrecedence = new HashMap<>();
+		binaryFactories = new HashMap<>();
+		unaryFactories = new HashMap<>();
 		binaryAssociativities = new HashMap<>();
-		binaryAssociativities.put("+", Associativity.LEFT);
-		binaryAssociativities.put("-", Associativity.LEFT);
-		binaryAssociativities.put("*", Associativity.LEFT);
-		binaryAssociativities.put("/", Associativity.LEFT);
-		binaryAssociativities.put("^", Associativity.RIGHT);
-		
 		unaryAssociativities = new HashMap<>();
-		unaryAssociativities.put("-", Associativity.RIGHT);
-		unaryAssociativities.put("+", Associativity.RIGHT);
-		unaryAssociativities.put("!", Associativity.LEFT);
+		
+		putBinaryOperator("+", 1, Associativity.BOTH, AdditionOperation::new);
+		putBinaryOperator("-", 1, Associativity.LEFT, SubtractionOperation::new);
+		putBinaryOperator("*", 2, Associativity.BOTH, MultiplicationOperation::new);
+		putBinaryOperator("/", 2, Associativity.LEFT, DivisionOperation::new);
+		putBinaryOperator("^", 1, Associativity.RIGHT, ExponentiationOperation::new);
+		
+		putUnaryOperator("-", 2, Associativity.RIGHT, UnaryMinus::new);
+		putUnaryOperator("+", 2, Associativity.RIGHT, UnaryPlus::new);
+		putUnaryOperator("!", 4, Associativity.LEFT, Factorial::new);
+		putUnaryOperator("%", 5, Associativity.LEFT, Percent::new);
 	}
 	
-	interface Expression{
+	private static void putBinaryOperator(final String op, final int precedence, final Associativity associativity, final BiFunction<Expression, Expression, BinaryOperator> factory) {
+		binaryPrecedence.put(op, precedence);
+		binaryAssociativities.put(op, associativity);
+		binaryFactories.put(op, factory);
+	}
+	
+	private static void putUnaryOperator(final String op, final int precedence, final Associativity associativity, final Function<Expression, UnaryOperator> factory) {
+		unaryPrecedence.put(op, precedence);
+		unaryAssociativities.put(op, associativity);
+		unaryFactories.put(op, factory);
+	}
+	
+	interface Expression {
 		Complex eval();
 	}
 	
-	interface HasOperator{
+	interface HasOperator {
+		
 		String getOperator();
+		
 		int getPrecendence();
+		
 		Associativity getAssociativity();
 		
 		default boolean isLeftAssociative() {
@@ -148,18 +145,17 @@ public class Evaluator {
 		}
 	}
 	
-	static class AdditionOperation extends AdditiveExpression{
-		/**
-		 * @param left
-		 * @param right
-		 */
+	static class AdditionOperation extends AdditiveExpression {
+		
 		public AdditionOperation(Expression left, Expression right) {
 			super(left, right);
 		}
+		
 		@Override
 		public String getOperator() {
 			return "+";
 		}
+		
 		@Override
 		public Complex eval() {
 			return left.eval().add(right.eval(), INTERMEDIATE_MATH_CONTEXT);
@@ -168,46 +164,43 @@ public class Evaluator {
 	}
 	
 	static class SubtractionOperation extends AdditiveExpression {
-		/**
-		 * @param left
-		 * @param right
-		 */
+		
 		public SubtractionOperation(Expression left, Expression right) {
 			super(left, right);
 		}
+		
 		@Override
 		public String getOperator() {
 			return "-";
 		}
+		
 		@Override
 		public Complex eval() {
 			return left.eval().subtract(right.eval(), INTERMEDIATE_MATH_CONTEXT);
 		}
+		
 	}
 	
 	static class MultiplicationOperation extends MultiplicativeExpression {
-		/**
-		 * @param left
-		 * @param right
-		 */
+		
 		public MultiplicationOperation(Expression left, Expression right) {
 			super(left, right);
 		}
+		
 		@Override
 		public Complex eval() {
 			return left.eval().multiply(right.eval(), INTERMEDIATE_MATH_CONTEXT);
 		}
+		
 		@Override
 		public String getOperator() {
 			return "*";
 		}
+		
 	}
 	
 	static class DivisionOperation extends MultiplicativeExpression {
-		/**
-		 * @param left
-		 * @param right
-		 */
+
 		public DivisionOperation(Expression left, Expression right) {
 			super(left, right);
 		}
@@ -225,10 +218,7 @@ public class Evaluator {
 	}
 	
 	static class ExponentiationOperation extends ExponentiativeExpression {
-		/**
-		 * @param left
-		 * @param right
-		 */
+		
 		public ExponentiationOperation(Expression left, Expression right) {
 			super(left, right);
 		}
@@ -260,12 +250,10 @@ public class Evaluator {
 		
 		@Override
 		public String toString() {
-			if(isLeftAssociative()) {
+			if(isLeftAssociative())
 				return "(" + expr + getOperator() + ")";
-			}
-			else {
+			else
 				return "(" + getOperator() + expr + ")";
-			}
 		}
 
 		@Override
@@ -276,9 +264,7 @@ public class Evaluator {
 	}
 	
 	static class UnaryMinus extends UnaryOperator {
-		/**
-		 * @param expr
-		 */
+		
 		public UnaryMinus(Expression expr) {
 			super(expr);
 		}
@@ -292,26 +278,29 @@ public class Evaluator {
 		public Complex eval() {
 			return expr.eval().negate(INTERMEDIATE_MATH_CONTEXT);
 		}
+		
 	}
 	
 	static class UnaryPlus extends UnaryOperator{
-		/**
-		 * @param expr
-		 */
+		
 		public UnaryPlus(Expression expr) {
 			super(expr);
 		}
+		
 		@Override
 		public String getOperator() {
 			return "+";
 		}
+		
 		@Override
 		public Complex eval() {
 			return expr.eval();
 		}
+		
 	}
 	
 	static class AbsoluteValueOperator extends UnaryOperator {
+		
 		public AbsoluteValueOperator(final Expression expr) {
 			super(expr);
 		}
@@ -351,17 +340,44 @@ public class Evaluator {
 		
 	}
 	
-	static class ConstantExpression implements Expression{
+	static class Percent extends UnaryOperator {
+		
+		private static final BigDecimal B100 = BigDecimal.valueOf(100);
+
+		public Percent(Expression expr) {
+			super(expr);
+		}
+		
+		@Override
+		public String getOperator() {
+			return "%";
+		}
+		
+		@Override
+		public Complex eval() {
+			return expr.eval().divide(B100, INTERMEDIATE_MATH_CONTEXT);
+		}
+		
+	}
+	
+	static class ConstantExpression implements Expression {
+		
 		private final Complex constant;
+		
 		public ConstantExpression(Complex constant) {
 			this.constant = constant;
 		}
+		
 		@Override
 		public Complex eval() {
 			return constant;
 		}
+		
 		@Override
-		public String toString() { return constant.toString(); }
+		public String toString() {
+			return constant.toString();
+		}
+		
 	}
 	
 	private enum TokenType {
