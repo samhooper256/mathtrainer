@@ -1,7 +1,5 @@
 package problems;
 
-import math.Fraction;
-
 /**
  * @author Sam Hooper
  *

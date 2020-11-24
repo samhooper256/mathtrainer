@@ -1,6 +1,6 @@
 package problems;
 
-import java.math.BigDecimal;
+import java.math.*;
 import java.util.*;
 
 import math.*;
@@ -69,7 +69,32 @@ public class MultiValued implements Problem {
 	 */
 	public MultiValued addResult(final BigFraction result) {
 		Objects.requireNonNull(result);
-		resultMap.put(result, input -> BigFraction.isValidVulgar(input) && BigFraction.fromVulgar(input).equals(result));
+		resultMap.put(result, input -> {
+			if(isApproximateResult())
+				throw new UnsupportedOperationException("Approximations with fractional answers are not supported");
+			else
+				return BigFraction.isValidVulgar(input) && BigFraction.fromVulgar(input).equals(result);
+		});
+		return this;
+	}
+	
+	/**
+	 * Returns {@code this}.
+	 * @throws NullPointerException if {@code result} is {@code null}.
+	 */
+	public MultiValued addResult(final MixedNumber result) {
+		Objects.requireNonNull(result);
+		resultMap.put(result, input -> {
+			if(isApproximateResult())
+				throw new UnsupportedOperationException("Approximations with fractional answers are not supported");
+			else {
+				String[] split = input.split(" +");
+				if(split.length != 2)
+					return false;
+				return Utils.isInteger(split[0]) && new BigInteger(split[0]).equals(result.getIntegralPart()) && BigFraction.isValidVulgar(split[1]) &&
+						BigFraction.fromVulgar(split[1]).equals(result.getFractionalPart());
+			}
+		});
 		return this;
 	}
 	
@@ -83,6 +108,17 @@ public class MultiValued implements Problem {
 		Objects.requireNonNull(result);
 		Objects.requireNonNull(verifier);
 		resultMap.put(result, verifier);
+		return this;
+	}
+	
+	/**
+	 * The guess must be {@link String#equals(Object) equal} to {@code result}. Returns {@code this}.
+	 * @param result that {@code String} that will be displayed to the user as part of the {@link #answerAsString()}.
+	 * @throws NullPointerException if {@code result} or {@code verifier} is {@code null}.
+	 */
+	public MultiValued addResult(final String result) {
+		Objects.requireNonNull(result);
+		resultMap.put(result, str -> result.equals(str));
 		return this;
 	}
 	

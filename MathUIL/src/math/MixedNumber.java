@@ -33,7 +33,7 @@ public class MixedNumber extends Number {
 
 	public static MixedNumber of(final BigFraction fraction) {
 		BigInteger[] divRem = fraction.getNumerator().divideAndRemainder(fraction.getDenominator());
-		return of(divRem[0], BigFraction.of(divRem[1], fraction.getDenominator()));
+		return of(fraction.isNegative() ? divRem[0].negate() : divRem[0], BigFraction.of(divRem[1], fraction.getDenominator()));
 	}
 	
 	public static MixedNumber of(final long integer) {
@@ -50,19 +50,19 @@ public class MixedNumber extends Number {
 	}
 	
 	public MixedNumber add(final MixedNumber augend) {
-		return MixedNumber.of(toImproperFraction().add(augend.toImproperFraction()));
+		return MixedNumber.of(toFraction().add(augend.toFraction()));
 	}
 	
 	public MixedNumber subtract(final MixedNumber subtrahend) {
-		return MixedNumber.of(toImproperFraction().subtract(subtrahend.toImproperFraction()));
+		return MixedNumber.of(toFraction().subtract(subtrahend.toFraction()));
 	}
 	
 	public MixedNumber multiply(final MixedNumber multiplicand) {
-		return MixedNumber.of(toImproperFraction().multiply(multiplicand.toImproperFraction()));
+		return MixedNumber.of(toFraction().multiply(multiplicand.toFraction()));
 	}
 	
 	public MixedNumber divide(final MixedNumber divisor) {
-		return MixedNumber.of(toImproperFraction().divide(divisor.toImproperFraction()));
+		return MixedNumber.of(toFraction().divide(divisor.toFraction()));
 	}
 	
 	public BigFraction getFractionalPart() {
@@ -77,13 +77,13 @@ public class MixedNumber extends Number {
 		return new BigDecimal(integer).add(fraction.toBigDecimal());
 	}
 	
-	public BigFraction toImproperFraction() {
+	public BigFraction toFraction() {
 		return BigFraction.of(integer.multiply(fraction.getDenominator()).add(fraction.getNumerator()), fraction.getDenominator());
 	}
 	
 	@Override
 	public String toString() {
-		return "MixedNumber[integer=" + integer + ", fraction=" + fraction + "]";
+		return (!BigNumbers.isZero(getIntegralPart()) ? getIntegralPart() + " " : "") + (!getFractionalPart().isZero() ? getFractionalPart() : "");
 	}
 
 	@Override

@@ -31,18 +31,8 @@ public class AddingMultiplicativeInversesSupplier extends SettingsProblemSupplie
 			low = temp;
 		}
 		if(high == low) high++;
-		Number a = BigFraction.of(high, low);
-		Number b = ((BigFraction) a).multiplicativeInverse();
-		BigFraction res = ((BigFraction) a).add((BigFraction) b);
-		if(Math.random() <= 0.25)
-			a = ((BigFraction) a).toMixedNumber();
-		if(Math.random() <= 0.5) {
-			Number temp = a;
-			a = b;
-			b = temp;
-		}
-		exp.addTerm(a).addOperator("+").addTerm(b);
-		return MultiValued.of(exp.toMathML()).setLines(1.5).addResult(res);
+		BigFraction a = BigFraction.of(high, low);
+		return FracSupUtils.addScrambled(a, a.multiplicativeInverse(), true, false);
 	}
 	
 	
