@@ -4,6 +4,7 @@ import java.math.*;
 import java.util.*;
 
 import math.*;
+import utils.Strings;
 
 /**
  * A {@link Problem} with multiple correct answers. Correct answers can be added via the various {@code addResult} methods.
@@ -126,7 +127,8 @@ public class MultiValued implements Problem {
 	 * <p>Adds a result to this {@link Problem} that requires the user's guess to be accurate up to {@code numDigits} decimal places of the given
 	 * {@code String}. If the guess is accurate up to {@code numDigits} digits after the decimal but has further characters after that, it is still
 	 * counted correct. The part of the guess before the decimal point must be {@link String#equals(Object) equal} the part of the given {@code String}
-	 * before the decimal point.</p>
+	 * before the decimal point after leading zeros have been ignored.</p>
+	 * <p>Returns {@code this}.</p>
 	 * @param s the given {@code String} that the guess must match up to {@code numDigits} decimal places. Must contain a decimal point ('.').
 	 * @throws NullPointerException if the {@code String} is {@code null}.
 	 * @throws IllegalArgumentException if {@code (numDigits <= 0)}.
@@ -144,15 +146,35 @@ public class MultiValued implements Problem {
 			result = s + "0".repeat(dotIndex + numDigits - s.length() + 1);
 		else
 			result = s;
-		String decimalDigits = s.substring(dotIndex + 1, dotIndex + numDigits + 1);
+		String beforeDecimal = Strings.stripLeading(result.substring(0, dotIndex), '0');
+		String decimalDigits = Strings.stripTrailing(result.substring(dotIndex + 1, dotIndex + numDigits + 1), '0');
 		resultMap.put(s, str -> {
 			if(isApproximateResult())
 				throw new UnsupportedOperationException("Minimum digits after decimal answers are not supported for approximate result Problems");
 			else {
 				final int strDot = str.indexOf('.');
-				return str.substring(0, strDot).equals(result.substring(0, dotIndex)) && str.substring(strDot + 1).startsWith(decimalDigits);
+				if(strDot < 0)
+					return decimalDigits.length() == 0 &&  Strings.stripLeading(str, '0').equals(beforeDecimal);
+				else
+					return Strings.stripLeading(str.substring(0, strDot), '0').equals(beforeDecimal) && str.substring(strDot + 1).startsWith(decimalDigits);
 			}
 		});
+		return this;
+	}
+	
+	/**
+	 * <p>{@code number} in base 10 must be less than or equal to {@link Integer#MAX_VALUE}. {@code number} must be greater than or equal to zero.
+	 * {@code baseOfNumber} must be between 2 and 16 (inclusive).</p>
+	 * <p>Returns {@code this}</p>
+	 * @param number
+	 * @param baseOfNumber
+	 * @throws NullPointerException if {@code number} is {@code null}
+	 */
+	public MultiValued addBaseResult(final String number, final int baseOfNumber) {
+		Objects.requireNonNull(number);
+		if(baseOfNumber < 2 || baseOfNumber > 16)
+			throw new IllegalArgumentException();
+		
 		return this;
 	}
 	

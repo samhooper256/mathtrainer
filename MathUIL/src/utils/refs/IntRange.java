@@ -123,6 +123,13 @@ public class IntRange implements Ref {
 		return getHigh() - getLow() + 1;
 	}
 	
+	/** Returns the largest possible {@link #valueRange() value range} that this {@link IntRange} could have, equal to
+	 * {@code (getMax() - getMin() + 1)}.
+	 */
+	public int maxValueRange() {
+		return getMax() - getMin() + 1;
+	}
+	
 	@Override
 	public String toString() {
 		return "IntRange[min=" + min + ", max=" + max + ", lowRef=" + lowRef + ", highRef=" + highRef + "]";

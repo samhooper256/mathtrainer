@@ -4,7 +4,7 @@ import java.math.*;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import utils.IntList;
+import utils.*;
 
 /**
  * @author Sam Hooper
@@ -12,10 +12,20 @@ import utils.IntList;
  */
 public class Utils {
 	
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
 //		System.out.println(primeFactorization(12));
 //		System.out.println(convertBase("1000", 10, 8));
-//	}
+		System.out.printf("%s%n", toBase10Fraction(".163", 7));
+		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(1)));
+		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(3)));
+		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(9)));
+		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(27)));
+		System.out.printf("%n");
+		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("4/3"), 3));
+		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("1/169"), 13));
+		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("-1/169"), 13));
+		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("0"), 16));
+	}
 	
 	private Utils() {}
 	
@@ -33,6 +43,9 @@ public class Utils {
 	/**Euler's number <i>e</i> raised to <i>pi</i>, rounded to 10 digits after the decimal. */
 	public static final BigDecimal E_TO_PI = new BigDecimal("23.1406926328");
 	
+	public static final int MIN_RADIX = 2, MAX_RADIX = 16;
+	
+	private static final List<Character> RADIX_CHARS = List.of('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
 	private static final BigDecimal PI_INTERMEDIATE = new BigDecimal("3.14159265358979");
 	private static final BigDecimal E_INTERMEDIATE = new BigDecimal("2.71828182845905");
 	private static final int MAX_INTEGER_POWER_AS_INT = 999999999;
@@ -149,7 +162,8 @@ public class Utils {
 	
 	/**
 	 * <p>Returns the number of digits in {@code n}.</p>
-	 * <p>{@code magnitude(n)} is equivalent to {@code magnitude(Math.abs(n))} (in other words, the sign of the number is ignored).</p>
+	 * <p>{@code magnitude(n)} is equivalent to {@code magnitude(Math.abs(n))} (in other words, the sign of the number does not affect
+	 * the result).</p>
 	 */
 	public static int magnitude(final int n) {
 		int abs = Math.abs(n);
@@ -170,13 +184,27 @@ public class Utils {
 	}
 	
 	public static boolean isInteger(final String s) {
-		if(s.length() == 0)
+		return isInteger(s, 10);
+	}
+	
+	/**
+	 * {@code radix} must be between {@link #MIN_RADIX} and {@link #MAX_RADIX} (inclusive).
+	 * @param s
+	 * @param radix
+	 * @return
+	 */
+	public static boolean isInteger(String s, final int radix) {
+		if(radix < MIN_RADIX || radix > MAX_RADIX)
+			throw new IllegalArgumentException("Radix " + radix + " is unsupported");
+		if(s.isEmpty())
 			return false;
 		int i = s.charAt(0) == '-' ? 1 : 0;
-		if(s.length() - i == 0)
+		if(i == s.length())
 			return false;
+		s = s.toUpperCase();
+		List<Character> subList = RADIX_CHARS.subList(0, radix);
 		for(int j = i; j < s.length(); j++)
-			if(s.charAt(j) < '0' || s.charAt(j) > '9')
+			if(!subList.contains(s.charAt(j)))
 				return false;
 		return true;
 	}
@@ -312,8 +340,112 @@ public class Utils {
 		return nPr(n, r).divide(factorial(r));
 	}
 	
-	public static String convertBase(String number, int startBase, int endBase) {
-		return Integer.toString(Integer.parseInt(number, startBase), endBase);
+	/**
+	 * {@code number} is assumed to be {@link #isInteger(String, int) an integer}.
+	 */
+	public static String convertBase(String number, int startRadix, int endRadix) {
+		return new BigInteger(number, startRadix).toString(endRadix);
 	}
 	
+	/**
+	 * {@code number} may have a radix point (that is, it need not be an integer). The radix point is assumed to be the period
+	 * character ('.').
+	 * @param number
+	 * @param radix
+	 * @return
+	 */
+	public static BigFraction toBase10Fraction(String number, int radix) {
+		int dotIndex = number.indexOf('.');
+		if(dotIndex < 0)
+			return BigFraction.of(new BigInteger(number, radix), BigInteger.ONE);
+		number = Strings.stripTrailing(number, '0'); //we know it has a decimal point, so this is okay.
+		BigFraction integral = dotIndex == 0 ? BigFraction.ZERO : BigFraction.of(new BigInteger(number.substring(0, dotIndex), radix), BigInteger.ONE);
+		if(dotIndex == number.length() - 1)
+			return integral;
+		String afterDot = number.substring(dotIndex + 1);
+		BigFraction frac = BigFraction.of(new BigInteger(afterDot, radix), BigInteger.valueOf(radix).pow(afterDot.length()));
+		return integral.add(frac);
+	}
+	
+	/**
+	 * Converts the given {@link BigFraction} to a {@code String} in the given radix. {@code endRadix} must be between {@link #MIN_RADIX} and
+	 * {@link #MAX_RADIX} (inclusive). {@code fraction} must be equivalent to a fraction whose denominator is an integer power of {@code endRadix},
+	 * or an {@link IllegalArgumentException} is thrown.
+	 * @return
+	 */
+	public static String toDecimal(final BigFraction fraction, final int endRadix) {
+		if(endRadix < MIN_RADIX || endRadix > MAX_RADIX)
+			throw new IllegalArgumentException("Unsupported radix: " + endRadix);
+		if(fraction.isZero())
+			return "0";
+		BigInteger oldNum = fraction.getNumerator();
+		BigInteger oldDenom = fraction.getDenominator();
+		BigInteger endRadixAsBigInteger = BigInteger.valueOf(endRadix);
+		BigInteger newDenom = oldDenom;
+		int multiple = 1;
+		while(!isIntegerPower(newDenom, endRadixAsBigInteger) && multiple < endRadix) {
+			newDenom = newDenom.add(oldDenom);
+			multiple++;
+		}
+		if(!isIntegerPower(newDenom, endRadixAsBigInteger))
+			throw new UnsupportedOperationException("Only fractions with a denominator that is an integer power of the radix are supported");
+		BigInteger newNum = oldNum.multiply(BigInteger.valueOf(multiple));
+		String numToRadix = newNum.toString(endRadix);
+		int log = log(BigInteger.valueOf(endRadix), newDenom);
+		if(numToRadix.length() - log < 0)
+			numToRadix = "0".repeat(log - numToRadix.length()) + numToRadix;
+		return (fraction.isNegative() ? "-" : "") + new StringBuilder(numToRadix).insert(numToRadix.length() - log, '.').toString();
+	}
+	
+	/**
+	 * Returns log<sub>{@code b}</sub>{@code (a)} if it is an {@code int}, throws an {@link ArithmeticException} otherwise. {@code a} must be positive
+	 * and {@code b} must be greater than one, or an {@link ArithmeticException} is thrown.
+	 */
+	public static int log(BigInteger b, BigInteger a) {
+		if(!BigNumbers.isPositive(a) || !BigNumbers.isPositive(b))
+			throw new ArithmeticException();
+		if(b.compareTo(BigInteger.ONE) == 0)
+			throw new ArithmeticException();
+		if(a.compareTo(BigInteger.ONE) == 0)
+			return 0;
+		
+		BigInteger pow = b;
+		int multiple = 1;
+		while(true) {
+			int comp = pow.compareTo(a);
+			if(comp > 0)
+				throw new ArithmeticException();
+			if(comp == 0)
+				return multiple;
+			else {
+				pow = pow.multiply(b);
+				multiple++;
+				if(multiple < 0) //it overflowed
+					throw new ArithmeticException();
+			}
+		}
+	}
+	
+	/**
+	 * Returns {@code true} if {@code x} is an integer power of {@code y}, {@code false} otherwise.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public static boolean isIntegerPower(BigInteger x, BigInteger y) {
+		if(BigNumbers.isNegative(x) || BigNumbers.isNegative(y))
+			throw new IllegalArgumentException("BigIntegers must not be negative");
+		if(BigNumbers.isZero(y))
+			return BigNumbers.isZero(x) || x.compareTo(BigInteger.ONE) == 0;
+		else if(BigNumbers.isZero(x))
+			return false;
+		while(true) {
+			BigInteger[] divMod = x.divideAndRemainder(y);
+			if(BigNumbers.isZero(divMod[1]))
+				x = divMod[0];
+			else
+				break;
+		}
+		return x.compareTo(BigInteger.ONE) == 0;
+	}
 }

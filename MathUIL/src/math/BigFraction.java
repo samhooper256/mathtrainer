@@ -1,7 +1,6 @@
 package math;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.*;
 import java.util.Objects;
 
 /**
@@ -276,8 +275,13 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	public BigFraction multiplicativeInverse() {
 		return BigFraction.of(denom, num, sign);
 	}
+	
 	public final BigDecimal toBigDecimal() {
 		return new BigDecimal(num).divide(new BigDecimal(denom));
+	}
+	
+	public final BigDecimal toBigDecimal(MathContext mc) {
+		return new BigDecimal(num, mc).divide(new BigDecimal(denom, mc), mc);
 	}
 	
 	public boolean isNonnegative() {
