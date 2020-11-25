@@ -40,7 +40,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new MultiplyingOrDividingAnyFractionsSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new CompareFractionsSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();

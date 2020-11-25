@@ -73,7 +73,9 @@ public class Prettifier {
 		return "th";
 	}
 	/**
-	 * Returns "0" if the number is zero in any form (such as "0", "0.0", ".00", etc).
+	 * Strips any unnecessary zeros from after the decimal point in the {@code String} representation of {@code obj}. Returns {@code obj.toString()}
+	 * if {@code obj.toString()} does not contain a decimal point ('.'). Otherwise, if the number is zero in any form (such as "0", "0.0", ".00", etc),
+	 * returns "0". Behavior is undefined if {@code obj.toString()} contains more than one decimal point.
 	 * @return
 	 */
 	public static String stripTrailingZeros(Object obj) {
@@ -177,5 +179,10 @@ public class Prettifier {
 		if(BigNumbers.isZero(mixedNumber.getIntegralPart()))
 			return frac(mixedNumber.getFractionalPart());
 		return String.format("%s%s", num(mixedNumber.getIntegralPart()), frac(mixedNumber.getFractionalPart()));
+	}
+	
+	public static String repeating(final RepeatingDecimal repeatingDecimal) {
+		return String.format("<mn>%s</mn><menclose notation=\"top\"><mn>%s</mn></menclose>",
+				stripTrailingZeros(repeatingDecimal.getTerminatingPart()), repeatingDecimal.getRepeatingPart());
 	}
 }

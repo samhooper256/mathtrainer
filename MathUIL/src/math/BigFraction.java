@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  */
 public class BigFraction extends Number implements Comparable<BigFraction> {
-
+	
 	/**
 	 * 
 	 */
@@ -101,7 +101,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 		if(BigNumbers.isZero(denominator)) zeroDenominator();
 		return new BigFraction(numerator, denominator);
 	}
-
+	
 	/**
 	 * This method returns {@link #ZERO} if {@code numerator} is {@code 0}.
 	 * @param numerator a <b>nonnegative</b> value representing the numerator of this fraction
@@ -115,6 +115,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 		if(BigNumbers.isZero(denominator)) zeroDenominator();
 		return new BigFraction(numerator, denominator, signum);
 	}
+	
 	
 	/**
 	 * Returns {@code true} if {@code vulgarFraction} is a valid vulgar fraction in {@code String} form, {@code false} otherwise.
@@ -136,6 +137,10 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	public static final BigFraction fromVulgar(final String vulgarBigFraction) {
 		String[] split = vulgarBigFraction.split("/");
 		return split.length == 1 ? BigFraction.of(new BigInteger(vulgarBigFraction), BigInteger.ONE) : BigFraction.of(new BigInteger(split[0]), new BigInteger(split[1]));
+	}
+	
+	public static final BigFraction from(final BigDecimal bigDecimal) {
+		return from(bigDecimal.toPlainString());
 	}
 	
 	/**
@@ -177,7 +182,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 //				+ "realNumberAsString=%s%n", s, first, pointIndex, signum, realNumberAsString);
 		final String digitsOnly = s.substring(0, pointIndex) + s.substring(pointIndex + 1);
 //		System.out.printf("digitsOnly=%s%n", digitsOnly);
-		return BigFraction.of(new BigInteger(digitsOnly), new BigInteger("1" + "0".repeat(digitsOnly.length() - pointIndex)), signum);
+		return BigFraction.of(new BigInteger(digitsOnly), BigInteger.TEN.pow(digitsOnly.length() - pointIndex), signum);
 		}
 
 	/**
