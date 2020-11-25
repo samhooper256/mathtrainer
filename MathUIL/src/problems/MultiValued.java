@@ -122,6 +122,40 @@ public class MultiValued implements Problem {
 		return this;
 	}
 	
+	/**
+	 * <p>Adds a result to this {@link Problem} that requires the user's guess to be accurate up to {@code numDigits} decimal places of the given
+	 * {@code String}. If the guess is accurate up to {@code numDigits} digits after the decimal but has further characters after that, it is still
+	 * counted correct. The part of the guess before the decimal point must be {@link String#equals(Object) equal} the part of the given {@code String}
+	 * before the decimal point.</p>
+	 * @param s the given {@code String} that the guess must match up to {@code numDigits} decimal places. Must contain a decimal point ('.').
+	 * @throws NullPointerException if the {@code String} is {@code null}.
+	 * @throws IllegalArgumentException if {@code (numDigits <= 0)}.
+	 * @throws IllegalArgumentException if the {@code String} does not contain a decimal point ('.').
+	 */
+	public MultiValued addMinimumDigitsAfterDecimalResult(String s, final int numDigits) {
+		Objects.requireNonNull(s);
+		if(numDigits <= 0)
+			throw new IllegalArgumentException("numDigits <= 0");
+		final int dotIndex = s.indexOf('.');
+		if(dotIndex < 0)
+			throw new IllegalArgumentException("The given String has no decimal point");
+		final String result;
+		if(s.length() - dotIndex  - 1 < numDigits)
+			result = s + "0".repeat(dotIndex + numDigits - s.length() + 1);
+		else
+			result = s;
+		String decimalDigits = s.substring(dotIndex + 1, dotIndex + numDigits + 1);
+		resultMap.put(s, str -> {
+			if(isApproximateResult())
+				throw new UnsupportedOperationException("Minimum digits after decimal answers are not supported for approximate result Problems");
+			else {
+				final int strDot = str.indexOf('.');
+				return str.substring(0, strDot).equals(result.substring(0, dotIndex)) && str.substring(strDot + 1).startsWith(decimalDigits);
+			}
+		});
+		return this;
+	}
+	
 	public MultiValued setLines(final double newEstimatedDisplayLinesNeeded) {
 		this.lines = newEstimatedDisplayLinesNeeded;
 		return this;

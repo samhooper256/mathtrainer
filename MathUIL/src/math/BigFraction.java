@@ -9,10 +9,16 @@ import java.util.Objects;
  *
  */
 public class BigFraction extends Number implements Comparable<BigFraction> {
+	/*
+	public static void main(String[] args) {
+		final BigFraction f1 = BigFraction.of(-1, 2);
+		final BigFraction f2 = BigFraction.of(1, -3);
+		System.out.printf("f1=%s, f2=%s, comp=%s%n", f1, f2, BigFraction.compare(f1, f2));
+		
+		
+	}
+	*/
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3738055726507507877L;
 	
 	/**

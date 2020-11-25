@@ -14,6 +14,7 @@ public class Utils {
 	
 //	public static void main(String[] args) {
 //		System.out.println(primeFactorization(12));
+//		System.out.println(convertBase("1000", 10, 8));
 //	}
 	
 	private Utils() {}
@@ -309,6 +310,10 @@ public class Utils {
 	
 	public static BigInteger nCr(final int n, final int r) {
 		return nPr(n, r).divide(factorial(r));
+	}
+	
+	public static String convertBase(String number, int startBase, int endBase) {
+		return Integer.toString(Integer.parseInt(number, startBase), endBase);
 	}
 	
 }

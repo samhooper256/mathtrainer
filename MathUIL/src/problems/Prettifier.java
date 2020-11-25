@@ -172,7 +172,7 @@ public class Prettifier {
 	
 	/**
 	 * The returned {@code String} does not have {@code <math>} tags.
-	 */
+	 */ 
 	public static String mixed(final MixedNumber mixedNumber) {
 		if(mixedNumber.getFractionalPart().isZero())
 			return num(mixedNumber.getIntegralPart());
@@ -184,5 +184,9 @@ public class Prettifier {
 	public static String repeating(final RepeatingDecimal repeatingDecimal) {
 		return String.format("<mn>%s</mn><menclose notation=\"top\"><mn>%s</mn></menclose>",
 				stripTrailingZeros(repeatingDecimal.getTerminatingPart()), repeatingDecimal.getRepeatingPart());
+	}
+	
+	public static String base(final String number, final int base) {
+		return String.format("<msub><mn>%s</mn><mn>%d</mn></msub>", number, base);
 	}
 }
