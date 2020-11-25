@@ -164,6 +164,13 @@ public class Prettifier {
 	/**
 	 * The returned {@code String} does not have {@code <math>} tags.
 	 */
+	public static String variable(final char variable) {
+		return "<mi>" + variable + "</mi>";
+	}
+	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String frac(final BigFraction f) {
 		if(f.getDenominator().compareTo(BigInteger.ONE) == 0)
 			return num(f.getNumerator());
@@ -189,5 +196,33 @@ public class Prettifier {
 	
 	public static String base(final String number, final int base) {
 		return String.format("<msub><mn>%s</mn><mn>%d</mn></msub>", number, base);
+	}
+	
+	/**
+	 * Returns a greater-than-or-equal-to sign, formatted in MathML (the returned {@code String} does not contain {@code <math>} tags).
+	 */
+	public static String ge() {
+		return "<mo>&#x2265;</mo>";
+	}
+	
+	/**
+	 * Returns a less-than-or-equal-to sign, formatted in MathML (the returned {@code String} does not contain {@code <math>} tags).
+	 */
+	public static String le() {
+		return "<mo>&#x2264;</mo>";
+	}
+	
+	/**
+	 * Returns a greater-than sign, formatted in MathML (the returned {@code String} does not contain {@code <math>} tags).
+	 */
+	public static String gt() {
+		return "<mo>&gt;</mo>";
+	}
+	
+	/**
+	 * Returns a less-than sign, formatted in MathML (the returned {@code String} does not contain {@code <math>} tags).
+	 */
+	public static String lt() {
+		return "<mo>&lt;</mo>";
 	}
 }

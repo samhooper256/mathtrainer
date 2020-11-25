@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
+import suppliers.equations.SlopeOfLineFromEquationSupplier;
 import suppliers.exponentiation.*;
 import suppliers.fractions.*;
 import suppliers.gcd.*;

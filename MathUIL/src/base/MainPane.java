@@ -42,7 +42,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new SolvingLinearEquationsSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new SlopeOfLineFromEquationSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();
