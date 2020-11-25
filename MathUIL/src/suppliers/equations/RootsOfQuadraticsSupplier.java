@@ -24,7 +24,7 @@ public class RootsOfQuadraticsSupplier extends SettingsProblemSupplier {
 	@Override
 	public Problem get() {
 		BigFraction a = makeRoot(), b = makeRoot();
-		String quad = Prettifier.quadraticEqualsZero(Utils.intQuadraticFromRoots(a, b));
+		String quad = Prettifier.polynomialEqualsZero('x', Utils.intQuadraticFromRoots(a, b));
 		if(Math.random() <= 0.5) {
 			return MultiValued.of(String.format("What is the larger root of %s:", Prettifier.ensureMath(quad)))
 					.addResult(BigFraction.max(a, b));

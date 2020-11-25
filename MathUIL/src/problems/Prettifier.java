@@ -231,49 +231,40 @@ public class Prettifier {
 	}
 	
 	/**
-	 * Returns a MathML formatted quadratic expression of the form ax^2 + bx + c, where abc[0] is a, abc[1] is b, and abc[2] is c.
-	 * @throws IllegalArgumentException if {@code (abc.length != 3)}.
+	 * Returns a MathML-formatted polynomial of degree {@code (coefficients.length - 1)} where the coefficients are
+	 * given in left to right order in the {@code coefficients} array (that is, the coefficient of the variable with
+	 * the highest power is first). For example, <code>polynomial('x', new int[] {1, 2, -3})</code> would return
+	 * (a MathML formatted version of) "x^2+2x-3". The returned {@link String} does not have any {@code <math>} tags.
 	 */
-	public static String quadratic(int[] abc) {
-		if(abc.length != 3)
-			throw new IllegalArgumentException();
-		return quadratic(abc[0], abc[1], abc[2]);
-	}
-	
-	/**
-	 * Returns a MathML formatted quadratic expression of the form ax^2 + bx + c
-	 */
-	public static String quadratic(int a, int b, int c) {
+	public static String polynomial(char variable, final int... coefficients) {
+		if(coefficients.length == 0)
+			throw new IllegalArgumentException("coefficients.length == 0");
 		StringBuilder sb = new StringBuilder();
-		if(a != 0) {
-			if(Math.abs(a) != 1)
-				sb.append(num(a));
-			sb.append(pow(variable('x'), 2));
-			if(b > 0)
+		for(int i = 0; i < coefficients.length; i++) {
+			int co = coefficients[i];
+			if(co == 0) continue;
+			int coAbs = Math.abs(co);
+			int exp = coefficients.length - i - 1;
+			if(co > 0 && sb.length() > 0)
 				sb.append(op('+'));
-		}
-		if(b != 0) {
-			if(b < 0)
+			else if(co < 0)
 				sb.append(op('-'));
-			sb.append(num(Math.abs(b))).append(variable('x'));
-			if(c > 0)
-				sb.append(op('+'));
-		}
-		if(c != 0) {
-			if(c < 0)
-				sb.append(op('-'));
-			sb.append(num(Math.abs(c)));
+			if(exp == 0 || coAbs != 1)
+				sb.append(num(coAbs));
+			if(exp > 0) {
+				if(exp > 1)
+					sb.append(pow(variable(variable), exp));
+				else
+					sb.append(variable(variable));
+			}
 		}
 		return sb.toString();
 	}
 	
-	public static String quadraticEqualsZero(int[] abc) {
-		if(abc.length != 3)
-			throw new IllegalArgumentException();
-		return quadraticEqualsZero(abc[0], abc[1], abc[2]);
-	}
-	
-	public static String quadraticEqualsZero(int a, int b, int c) {
-		return quadratic(a, b, c) + op('=') + num(0);
+	/**
+	 * Equivalent to: <pre><code>polynomial(variable, coefficients) + op('=') + num(0)}</code></pre>
+	 */
+	public static String polynomialEqualsZero(char variable, final int... coefficients) {
+		return polynomial(variable, coefficients) + op('=') + num(0);
 	}
 }
