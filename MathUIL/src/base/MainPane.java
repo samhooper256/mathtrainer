@@ -5,6 +5,7 @@ import javafx.animation.Animation.Status;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import suppliers.*;
+import suppliers.bases.*;
 import suppliers.divisors.*;
 import suppliers.factorials.*;
 import suppliers.fractions.*;
@@ -40,7 +41,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new FractionsToDecimalsSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new Base10FractionsToDecimalsSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();

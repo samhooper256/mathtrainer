@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
-import math.Complex;
+import math.*;
 import suppliers.*;
 import utils.*;
 import utils.refs.IntRange;
@@ -77,6 +77,14 @@ public interface Problem {
 		char[] dig = new char[digits];
 		for(int i = 0; i < dig.length; i++)
 			dig[i] = DIGIT_SUPPLIER_AS_CHAR.get();
+		return new String(dig);
+	}
+	
+	public static String stringOfDigits(final int digits, final int radix) {
+		char[] dig = new char[digits];
+		List<Character> subList = Utils.RADIX_CHARS.subList(0, radix);
+		for(int i = 0; i < dig.length; i++)
+			dig[i] = Colls.getRandom(subList);
 		return new String(dig);
 	}
 	

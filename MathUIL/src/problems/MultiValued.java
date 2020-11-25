@@ -163,18 +163,32 @@ public class MultiValued implements Problem {
 	}
 	
 	/**
-	 * <p>{@code number} in base 10 must be less than or equal to {@link Integer#MAX_VALUE}. {@code number} must be greater than or equal to zero.
-	 * {@code baseOfNumber} must be between 2 and 16 (inclusive).</p>
-	 * <p>Returns {@code this}</p>
+	 * <p>{@code number} must be real number greater than or equal to zero.
+	 * {@code baseOfNumber} must be between {@link Utils#MIN_RADIX} and {@link Utils#MAX_RADIX} (inclusive).
+	 * This method does not verify that {@code number} is a valid number in the specified radix.</p>
+	 * <p>Returns {@code this}.</p>
 	 * @param number
 	 * @param baseOfNumber
 	 * @throws NullPointerException if {@code number} is {@code null}
 	 */
-	public MultiValued addBaseResult(final String number, final int baseOfNumber) {
+	public MultiValued addBaseResult(String number, final int baseOfNumber) {
 		Objects.requireNonNull(number);
-		if(baseOfNumber < 2 || baseOfNumber > 16)
-			throw new IllegalArgumentException();
-		
+		if(baseOfNumber < Utils.MIN_RADIX || baseOfNumber > Utils.MAX_RADIX)
+			throw new IllegalArgumentException("Invalid radix: " + baseOfNumber);
+		number = Strings.stripLeading(number, '0');
+		if(number.contains("."))
+			number = Strings.stripTrailing(number, '0');
+		final String result = number;
+		resultMap.put(result, str -> {
+			if(isApproximateResult())
+				throw new UnsupportedOperationException("Base questions with approximate answers are not supported");
+			else {
+				String formattedAnswer = Strings.stripLeading(str, '0');
+				if(formattedAnswer.contains("."))
+					formattedAnswer = Strings.stripTrailing(formattedAnswer, '0');
+				return formattedAnswer.equalsIgnoreCase(result);
+			}
+		});
 		return this;
 	}
 	

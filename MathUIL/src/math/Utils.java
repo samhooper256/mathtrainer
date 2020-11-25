@@ -11,7 +11,7 @@ import utils.*;
  *
  */
 public class Utils {
-	
+	/*
 	public static void main(String[] args) {
 //		System.out.println(primeFactorization(12));
 //		System.out.println(convertBase("1000", 10, 8));
@@ -26,7 +26,7 @@ public class Utils {
 		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("-1/169"), 13));
 		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("0"), 16));
 	}
-	
+	*/
 	private Utils() {}
 	
 	
@@ -44,8 +44,8 @@ public class Utils {
 	public static final BigDecimal E_TO_PI = new BigDecimal("23.1406926328");
 	
 	public static final int MIN_RADIX = 2, MAX_RADIX = 16;
+	public static final List<Character> RADIX_CHARS = List.of('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
 	
-	private static final List<Character> RADIX_CHARS = List.of('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
 	private static final BigDecimal PI_INTERMEDIATE = new BigDecimal("3.14159265358979");
 	private static final BigDecimal E_INTERMEDIATE = new BigDecimal("2.71828182845905");
 	private static final int MAX_INTEGER_POWER_AS_INT = 999999999;
@@ -341,10 +341,11 @@ public class Utils {
 	}
 	
 	/**
-	 * {@code number} is assumed to be {@link #isInteger(String, int) an integer}.
+	 * {@code number} is assumed to be {@link #isInteger(String, int) an integer}. Any letters in the returned {@code String} will
+	 * be capitalized.
 	 */
 	public static String convertBase(String number, int startRadix, int endRadix) {
-		return new BigInteger(number, startRadix).toString(endRadix);
+		return new BigInteger(number, startRadix).toString(endRadix).toUpperCase();
 	}
 	
 	/**
