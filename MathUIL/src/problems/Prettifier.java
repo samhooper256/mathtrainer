@@ -182,8 +182,9 @@ public class Prettifier {
 	}
 	
 	public static String repeating(final RepeatingDecimal repeatingDecimal) {
+		final String term = stripTrailingZeros(repeatingDecimal.getTerminatingPart());
 		return String.format("<mn>%s</mn><menclose notation=\"top\"><mn>%s</mn></menclose>",
-				stripTrailingZeros(repeatingDecimal.getTerminatingPart()), repeatingDecimal.getRepeatingPart());
+				term + (!term.contains(".") ? "." : ""), repeatingDecimal.getRepeatingPart());
 	}
 	
 	public static String base(final String number, final int base) {
