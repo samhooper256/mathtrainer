@@ -351,6 +351,13 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	public int intValue() {
 		return toBigDecimal().intValue();
 	}
+	
+	public int intValueExact() {
+		if(!isInteger())
+			throw new ArithmeticException("This BigFraction is not an integer");
+		int num = getNumerator().intValueExact();
+		return sign * num;
+	}
 
 	@Override
 	public long longValue() {

@@ -11,22 +11,25 @@ import utils.*;
  *
  */
 public class Utils {
-	/*
+	
 	public static void main(String[] args) {
 //		System.out.println(primeFactorization(12));
 //		System.out.println(convertBase("1000", 10, 8));
-		System.out.printf("%s%n", toBase10Fraction(".163", 7));
-		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(1)));
-		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(3)));
-		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(9)));
-		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(27)));
-		System.out.printf("%n");
-		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("4/3"), 3));
-		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("1/169"), 13));
-		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("-1/169"), 13));
-		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("0"), 16));
+//		System.out.printf("%s%n", toBase10Fraction(".163", 7));
+//		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(1)));
+//		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(3)));
+//		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(9)));
+//		System.out.printf("%s%n", log(BigInteger.valueOf(3), BigInteger.valueOf(27)));
+//		System.out.printf("%n");
+//		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("4/3"), 3));
+//		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("1/169"), 13));
+//		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("-1/169"), 13));
+//		System.out.printf("%s%n", toDecimal(BigFraction.fromVulgar("0"), 16));
+		
+		System.out.printf("%s%n", Arrays.toString(intQuadraticFromRoots(BigFraction.of(1, 5), BigFraction.of(-1, 2))));
+		System.out.printf("%s%n", Arrays.toString(intQuadraticFromRoots(BigFraction.of(3, 1), BigFraction.of(1, 7))));
 	}
-	*/
+	
 	private Utils() {}
 	
 	
@@ -448,5 +451,35 @@ public class Utils {
 				break;
 		}
 		return x.compareTo(BigInteger.ONE) == 0;
+	}
+	
+	/**
+	 * Returns the a, b, and c values of a polynomial of the form ax^2+bx+c that has the given real roots.
+	 * The returned array will have length 3 and will contain a, b, and c in that order. The values of a, b, and c
+	 * are not guaranteed to be in lowest terms.
+	 * @param root1
+	 * @param root2
+	 * @return
+	 */
+	public static int[] intQuadraticFromRoots(BigFraction root1, BigFraction root2) {
+		BigFraction a = BigFraction.ONE, b = root1.add(root2).negate(), c = root1.multiply(root2);
+//		System.out.printf("starting (a,b,c)=(%s,%s,%s)%n", a, b, c);
+		if(!root1.isInteger()) {
+			final BigFraction mult = BigFraction.of(root1.getDenominator(), BigInteger.ONE);
+			a = a.multiply(mult);
+			b = b.multiply(mult);
+			c = c.multiply(mult);
+		}
+//		System.out.printf("mid (a,b,c)=(%s,%s,%s)%n", a, b, c);
+		if(!root2.isInteger()) {
+			final BigFraction mult = BigFraction.of(root2.getDenominator(), BigInteger.ONE);
+			a = a.multiply(mult);
+			b = b.multiply(mult);
+			c = c.multiply(mult);
+		}
+//		System.out.printf("after (a,b,c)=(%s,%s,%s)%n", a, b, c);
+		if(!a.isInteger() || !b.isInteger() || !c.isInteger())
+			throw new ArithmeticException();
+		return new int[] {a.intValueExact(), b.intValueExact(), c.intValueExact()};
 	}
 }

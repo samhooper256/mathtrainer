@@ -198,6 +198,10 @@ public class Prettifier {
 		return String.format("<msub><mn>%s</mn><mn>%d</mn></msub>", number, base);
 	}
 	
+	public static String pow(String text, final int power) {
+		return String.format("<msup>%s<mn>%d</mn></msup>", text, power);
+	}
+	
 	/**
 	 * Returns a greater-than-or-equal-to sign, formatted in MathML (the returned {@code String} does not contain {@code <math>} tags).
 	 */
@@ -224,5 +228,52 @@ public class Prettifier {
 	 */
 	public static String lt() {
 		return "<mo>&lt;</mo>";
+	}
+	
+	/**
+	 * Returns a MathML formatted quadratic expression of the form ax^2 + bx + c, where abc[0] is a, abc[1] is b, and abc[2] is c.
+	 * @throws IllegalArgumentException if {@code (abc.length != 3)}.
+	 */
+	public static String quadratic(int[] abc) {
+		if(abc.length != 3)
+			throw new IllegalArgumentException();
+		return quadratic(abc[0], abc[1], abc[2]);
+	}
+	
+	/**
+	 * Returns a MathML formatted quadratic expression of the form ax^2 + bx + c
+	 */
+	public static String quadratic(int a, int b, int c) {
+		StringBuilder sb = new StringBuilder();
+		if(a != 0) {
+			if(Math.abs(a) != 1)
+				sb.append(num(a));
+			sb.append(pow(variable('x'), 2));
+			if(b > 0)
+				sb.append(op('+'));
+		}
+		if(b != 0) {
+			if(b < 0)
+				sb.append(op('-'));
+			sb.append(num(Math.abs(b))).append(variable('x'));
+			if(c > 0)
+				sb.append(op('+'));
+		}
+		if(c != 0) {
+			if(c < 0)
+				sb.append(op('-'));
+			sb.append(num(Math.abs(c)));
+		}
+		return sb.toString();
+	}
+	
+	public static String quadraticEqualsZero(int[] abc) {
+		if(abc.length != 3)
+			throw new IllegalArgumentException();
+		return quadraticEqualsZero(abc[0], abc[1], abc[2]);
+	}
+	
+	public static String quadraticEqualsZero(int a, int b, int c) {
+		return quadratic(a, b, c) + op('=') + num(0);
 	}
 }
