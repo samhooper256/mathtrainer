@@ -7,6 +7,7 @@ import javafx.util.Duration;
 import suppliers.*;
 import suppliers.bases.*;
 import suppliers.divisors.*;
+import suppliers.equations.*;
 import suppliers.factorials.*;
 import suppliers.fractions.*;
 import suppliers.other.*;
@@ -41,7 +42,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new Base10FractionsToDecimalsSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new SolvingLinearEquationsSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();
