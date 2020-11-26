@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
+import suppliers.bases.BaseAToPowerOfASupplier;
 import suppliers.equations.*;
 import suppliers.exponentiation.*;
 import suppliers.fractions.*;
@@ -83,6 +84,7 @@ public final class ProblemSuppliers {
 		customName(ATimesAOverAPlusBSupplier.class, "Multiplying fractions of the form a*a/(a+b)");
 		customName(MultiplyingAAndNSupplier.class, "Multiplying fractions of the form a*(a+n)/(a+2n)");
 		customName(VietasFormulasSupplier.class, "Vieta's Formulas");
+		customName(BaseAToPowerOfASupplier.class, "Base a to a^n");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {
