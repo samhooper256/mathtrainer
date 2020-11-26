@@ -1,7 +1,8 @@
 package problems;
 
 import java.math.*;
-import java.util.Arrays;
+import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import math.*;
@@ -18,6 +19,7 @@ public class Prettifier {
 	public static final String PI_HTML = "<mi>&#x3C0;</mi>";
 	public static final String E_HTML = "<i>e</i>";
 	public static final String I_HTML = "<mi mathvariant=\"bold\">i</mi>";
+	public static final String SET_UNION = "<mo>&#x222A;</mo>", SET_INTERSECTION = "<mo>&#x2229;</mo>";
 	private static final Pattern WHITESPACE = Pattern.compile("\\s+");
 	
 	public static String stripMath(String html) {
@@ -166,6 +168,13 @@ public class Prettifier {
 	 * The returned {@code String} does not have {@code <math>} tags.
 	 */
 	public static String variable(final char variable) {
+		return variable(Character.toString(variable));
+	}
+	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
+	public static String variable(final String variable) {
 		return "<mi>" + variable + "</mi>";
 	}
 	
@@ -271,5 +280,34 @@ public class Prettifier {
 	
 	public static String polynomialEqualsZero(char variable, final int... coefficients) {
 		return polynomialEqualsZero(variable, Arrays.stream(coefficients).mapToObj(i -> BigFraction.of(i, 1)).toArray(BigFraction[]::new));
+	}
+	
+	/**
+	 * Returns a MathML formatted set representation of the given {@link Collection}, using the given {@link Function} to produce the MathML formatted {@code Strings}
+	 * that will be the elements. The order of the elements in the formatted set will be the same as the order returned by the {@code Collection's}
+	 * {@link Collection#iterator() iterator}. The returned {@link String} does not have any {@code <math>} tags.
+	 */
+	public static <T> String set(final Collection<T> set, Function<? super T, String> function) {
+		StringBuilder sb = new StringBuilder("<mfenced open=\"{\" close=\"}\">");
+		if(set.size() == 0)
+			return sb.append("<mrow/></mfenced>").toString();
+		Iterator<T> itr = set.iterator();
+		if(set.size() == 1)
+			return sb.append(function.apply(itr.next())).append("</mfenced>").toString();
+		sb.append("<mrow>");
+		while(itr.hasNext()) {
+			sb.append(function.apply(itr.next()));
+			if(itr.hasNext())
+				sb.append(op(','));
+		}
+		return sb.append("</mrow></mfenced>").toString();
+	}
+	
+	public static String union(final String set1, final String set2) {
+		return set1 + SET_UNION + set2;
+	}
+	
+	public static String intersection(final String set1, final String set2) {
+		return set1 + SET_INTERSECTION + set2;
 	}
 }

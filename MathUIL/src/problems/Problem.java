@@ -34,8 +34,8 @@ public interface Problem {
 	
 	/** Returns an {@code int} between 0 (inclusive) and max (exclusive). */
 	public static int intExclusive(int max) {
-		if(max == 0)
-			throw new IllegalArgumentException(); //TODO message
+		if(max <= 0)
+			throw new IllegalArgumentException("max <= 0");
 		return intInclusive(0, max - 1);
 	}
 	public static int intInclusive(int min, int max) {

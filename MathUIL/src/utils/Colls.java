@@ -130,4 +130,13 @@ public class Colls {
 			}
 		}
 	}
+	
+	/**
+	 * Returns a new {@link List} with the same elements as {@code list} but in a random order.
+	 */
+	public static <T> List<T> shuffled(final List<T> list) {
+		List<T> shuf = new ArrayList<>(list);
+		Collections.shuffle(shuf);
+		return shuf;
+	}
 }

@@ -160,10 +160,9 @@ public class SettingTitledPane extends TitledPane {
 			});
 			
 			slider.setShowTickLabels(true);
-			slider.setMajorTickUnit(range.maxValueRange() / 3);
+			slider.setMajorTickUnit(1);
 			slider.setMinorTickCount(0);
 			slider.setSnapToTicks(true);
-			
 			range.lowRef().addChangeListener((ov, nv) -> {
 				slider.setLowValue(nv);
 			});

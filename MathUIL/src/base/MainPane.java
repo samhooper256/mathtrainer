@@ -13,6 +13,7 @@ import suppliers.fractions.*;
 import suppliers.other.*;
 import suppliers.pemdas.*;
 import suppliers.sequences.*;
+import suppliers.sets.*;
 import utils.*;
 
 /**
@@ -42,7 +43,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new VietasFormulasSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new CartesianProductSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();
