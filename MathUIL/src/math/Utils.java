@@ -80,6 +80,7 @@ public class Utils {
 	
 	/** {@code exponent} must be >= 0. Returns 1 for 0^0*/
 	public static long pow(final long base, final long exponent) {
+		//TODO make running time O(log(n)) instead of O(n)
 		if(exponent < 0)
 			throw new IllegalArgumentException("exponent must be greater than or equal to 0");
 		long result = 1;

@@ -43,7 +43,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new CartesianProductSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new LogarithmExpressionsAndEquationsSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();

@@ -114,6 +114,13 @@ public class Prettifier {
 	/**
 	 * The returned {@code String} does not have {@code <math>} tags.
 	 */
+	public static String num(final long num) {
+		return num(Long.toString(num));
+	}
+	
+	/**
+	 * The returned {@code String} does not have {@code <math>} tags.
+	 */
 	public static String num(final BigInteger num) {
 		return num(stripTrailingZeros(num));
 	}
@@ -309,5 +316,9 @@ public class Prettifier {
 	
 	public static String intersection(final String set1, final String set2) {
 		return set1 + SET_INTERSECTION + set2;
+	}
+	
+	public static String log(String base, String argument) {
+		return String.format("<msub><mi>log</mi><mrow>%s</mrow></msub><mfenced><mrow>%s</mrow></mfenced>", base, argument);
 	}
 }
