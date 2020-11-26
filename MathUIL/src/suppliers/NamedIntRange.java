@@ -64,5 +64,11 @@ public class NamedIntRange implements NamedSetting<IntRange> {
 	public int max() {
 		return ref().getMax();
 	}
+
+	@Override
+	public String toString() {
+		return String.format("NamedIntRange[min=%d, max=%d, low=%d, high=%d]", min(), max(), low(), high());
+	}
+	
 	
 }

@@ -40,6 +40,21 @@ public class Matrix {
 				elems[row][col] = elementSupplier.get();
 		return new Matrix(elems);
 	}
+	
+
+	/**
+	 * Returns a new {@link Matrix} of {@code rowCount} rows and {@code colCount} columns where each element is supplied by the given {@link CellMapper}. There
+	 * is no guarantee as to which spots in the {@code Matrix} are filled first. {@code rowCount} and {@code colCount} must be strictly greater than {@code 0}.
+	 */
+	public static Matrix from(final int rowCount, final int colCount, final CellMapper<BigFraction> elementSupplier) {
+		Objects.requireNonNull(elementSupplier);
+		ensureValidDimensions(rowCount, colCount);
+		BigFraction[][] elems = new BigFraction[rowCount][colCount];
+		for(int row = 0; row < rowCount; row++)
+			for(int col = 0; col < colCount; col++)
+				elems[row][col] = elementSupplier.apply(row, col);
+		return new Matrix(elems);
+	}
 	/**
 	 * Ensures that {@code (elements.length > 0)} and every row in {@code elements} has the same length.
 	 * @param elements
@@ -178,7 +193,8 @@ public class Matrix {
 		Objects.requireNonNull(val);
 		if(rowCount() != val.colCount() || colCount() != val.rowCount())
 			throw new ArithmeticException("this and val do not have compatible dimensions");
-		return map((r, c) -> {
+//		System.out.printf("Multiplying %s and %s%n",this, val);
+		return from(rowCount(), rowCount(), (r, c) -> {
 			BigFraction total = BigFraction.ZERO;
 			for(int i = 0; i < colCount(); i++)
 				total = total.add(get(r, i).multiply(val.get(i, c)));

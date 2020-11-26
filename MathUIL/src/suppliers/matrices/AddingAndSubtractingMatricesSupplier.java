@@ -46,12 +46,12 @@ public class AddingAndSubtractingMatricesSupplier extends SettingsProblemSupplie
 			int letterRow = intExclusive(r), letterCol = intExclusive(c);
 			String letter = letterMat[letterRow][letterCol];
 			BigFraction answer = resultMatrix.get(letterRow, letterCol);
-			return MultiValued.of(String.format("%s. Find %s:", display, ensureMath(variable(letter)))).setLines(3).addResult(answer);
+			return MultiValued.of(String.format("%s. Find %s:", display, ensureMath(variable(letter)))).setLines(r).addResult(answer);
 		}
 		else { //ask for the sum of all elements in the result matrix
 			String letterSum = ensureMath(Arrays.stream(letterMat).flatMap(Arrays::stream).map(Prettifier::variable).collect(Collectors.joining(op('+'))));
 			BigFraction answer = resultMatrix.reduce(BigFraction::sum);
-			return MultiValued.of(String.format("%s. Find %s:", display, letterSum)).setLines(3).addResult(answer);
+			return MultiValued.of(String.format("%s. Find %s:", display, letterSum)).setLines(r).addResult(answer);
 			
 		}
 	}

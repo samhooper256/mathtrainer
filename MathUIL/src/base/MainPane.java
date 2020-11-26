@@ -10,7 +10,7 @@ import suppliers.divisors.*;
 import suppliers.equations.*;
 import suppliers.factorials.*;
 import suppliers.fractions.*;
-import suppliers.matrices.AddingAndSubtractingMatricesSupplier;
+import suppliers.matrices.*;
 import suppliers.other.*;
 import suppliers.pemdas.*;
 import suppliers.sequences.*;
@@ -44,7 +44,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new AddingAndSubtractingMatricesSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new MultiplyingMatricesSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();
