@@ -1,6 +1,7 @@
 package problems;
 
 import java.math.*;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import math.*;
@@ -233,24 +234,24 @@ public class Prettifier {
 	/**
 	 * Returns a MathML-formatted polynomial of degree {@code (coefficients.length - 1)} where the coefficients are
 	 * given in left to right order in the {@code coefficients} array (that is, the coefficient of the variable with
-	 * the highest power is first). For example, <code>polynomial('x', new int[] {1, 2, -3})</code> would return
-	 * (a MathML formatted version of) "x^2+2x-3". The returned {@link String} does not have any {@code <math>} tags.
+	 * the highest power is first). For example, <code>polynomial('x', new int[] {BigFraction.ONE, BigFraction.of(4,2), BigFraction.of(3,1})</code>
+	 * would return (a MathML formatted version of) "x^2+2x-3". The returned {@link String} does not have any {@code <math>} tags.
 	 */
-	public static String polynomial(char variable, final int... coefficients) {
+	public static String polynomial(char variable, final BigFraction... coefficients) {
 		if(coefficients.length == 0)
 			throw new IllegalArgumentException("coefficients.length == 0");
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < coefficients.length; i++) {
-			int co = coefficients[i];
-			if(co == 0) continue;
-			int coAbs = Math.abs(co);
+			BigFraction co = coefficients[i];
+			if(co.isZero()) continue;
+			BigFraction coAbs = co.abs();
 			int exp = coefficients.length - i - 1;
-			if(co > 0 && sb.length() > 0)
+			if(co.isPositive() && sb.length() > 0)
 				sb.append(op('+'));
-			else if(co < 0)
+			else if(co.isNegative())
 				sb.append(op('-'));
-			if(exp == 0 || coAbs != 1)
-				sb.append(num(coAbs));
+			if(exp == 0 || !coAbs.equals(BigFraction.ONE))
+				sb.append(frac(coAbs));
 			if(exp > 0) {
 				if(exp > 1)
 					sb.append(pow(variable(variable), exp));
@@ -264,7 +265,11 @@ public class Prettifier {
 	/**
 	 * Equivalent to: <pre><code>polynomial(variable, coefficients) + op('=') + num(0)}</code></pre>
 	 */
-	public static String polynomialEqualsZero(char variable, final int... coefficients) {
+	public static String polynomialEqualsZero(char variable, final BigFraction... coefficients) {
 		return polynomial(variable, coefficients) + op('=') + num(0);
+	}
+	
+	public static String polynomialEqualsZero(char variable, final int... coefficients) {
+		return polynomialEqualsZero(variable, Arrays.stream(coefficients).mapToObj(i -> BigFraction.of(i, 1)).toArray(BigFraction[]::new));
 	}
 }

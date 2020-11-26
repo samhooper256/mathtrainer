@@ -29,13 +29,12 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	public static final BigFraction NEGATIVE_ONE = BigFraction.of(1, -1);
 	public static final BigFraction HALF = BigFraction.of(1, 2);
 	
-	public static BigInteger setSign(BigInteger i, int sign) {
+	private static BigInteger setSign(BigInteger i, int sign) {
 		final BigInteger result;
 		if(sign == 1 && BigNumbers.isNegative(i) || sign == -1 && BigNumbers.isPositive(i))
 			result = i.negate();
 		else
 			result = i;
-//		System.out.printf("setSign(%s, %d) => %s%n", i, sign, result);
 		return result;
 		
 	}
@@ -272,6 +271,10 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 		return BigFraction.of(num, denom, -sign);
 	}
 	
+	public BigFraction abs() {
+		return isNegative() ? negate() : this;
+	}
+	
 	public BigFraction multiplicativeInverse() {
 		return BigFraction.of(denom, num, sign);
 	}
@@ -282,6 +285,10 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
 	
 	public final BigDecimal toBigDecimal(MathContext mc) {
 		return new BigDecimal(num, mc).divide(new BigDecimal(denom, mc), mc);
+	}
+	
+	public boolean isPositive() {
+		return isNonnegative() && !isZero();
 	}
 	
 	public boolean isNonnegative() {

@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
-import suppliers.equations.SlopeOfLineFromEquationSupplier;
+import suppliers.equations.*;
 import suppliers.exponentiation.*;
 import suppliers.fractions.*;
 import suppliers.gcd.*;
@@ -82,6 +82,7 @@ public final class ProblemSuppliers {
 		customName(WholeNumbersSameFractionsAddTo1Supplier.class, "Multiplying fractions with same whole part and fractional parts adding to 1");
 		customName(ATimesAOverAPlusBSupplier.class, "Multiplying fractions of the form a*a/(a+b)");
 		customName(MultiplyingAAndNSupplier.class, "Multiplying fractions of the form a*(a+n)/(a+2n)");
+		customName(VietasFormulasSupplier.class, "Vieta's Formulas");
 	}
 	
 	private static void customName(Class<? extends ProblemSupplier> clazz, String name) {

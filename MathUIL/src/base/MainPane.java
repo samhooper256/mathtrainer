@@ -42,7 +42,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new RootsOfQuadraticsSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new VietasFormulasSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();
