@@ -190,8 +190,8 @@ public class Prettifier {
 	 */
 	public static String frac(final BigFraction f) {
 		if(f.getDenominator().compareTo(BigInteger.ONE) == 0)
-			return num(f.getNumerator());
-		return String.format("<mfrac>%s%s</mfrac>", num(f.getNumerator()), num(f.getDenominator()));
+			return num((f.isNegative() ? "-" : "") + stripTrailingZeros(f.getNumerator()));
+		return String.format("<mfrac>%s%s%s</mfrac>", f.isNegative() ? "-" : "", num(f.getNumerator()), num(f.getDenominator()));
 	}
 	
 	/**
@@ -320,5 +320,31 @@ public class Prettifier {
 	
 	public static String log(String base, String argument) {
 		return String.format("<msub><mi>log</mi><mrow>%s</mrow></msub><mfenced><mrow>%s</mrow></mfenced>", base, argument);
+	}
+	
+	public static String matrix(final Matrix matrix) {
+		return matrix(matrix.mapTo(Prettifier::frac, String[]::new, String[][]::new));
+	}
+	
+	public static String matrix(final String[][] matrix) {
+		StringBuilder sb = new StringBuilder("<mfenced open=\"[\" close=\"]\"><mtable>");
+		for(String[] row : matrix)
+			sb.append(matrixRow(row));
+		return sb.append("</mtable></mfenced>").toString();
+	}
+	
+	private static String matrixRow(final String[] row) {
+		StringBuilder sb = new StringBuilder("<mtr>");
+		for(String s : row)
+			sb.append("<mtd>").append(s).append("</mtd>");
+		return sb.append("</mtr>").toString();
+	}
+	
+	/**
+	 * Wraps the argument in {@code <mrow>} tags
+	 * @param s
+	 */
+	public static String row(final String s) {
+		return "<mrow>" + s + "</mrow>";
 	}
 }

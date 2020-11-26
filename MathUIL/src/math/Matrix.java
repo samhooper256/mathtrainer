@@ -14,8 +14,8 @@ public class Matrix {
 		void accept(final int row, final int col);
 	}
 	
-	public interface CellMapper {
-		BigFraction apply(final int row, final int col);
+	public interface CellMapper<T> {
+		T apply(final int row, final int col);
 	}
 	
 	/**
@@ -28,16 +28,40 @@ public class Matrix {
 	}
 	
 	/**
+	 * Returns a new {@link Matrix} of {@code rowCount} rows and {@code colCount} columns where each element is supplied by the given {@link Supplier}. There
+	 * is no guarantee as to which spots in the {@code Matrix} are filled first. {@code rowCount} and {@code colCount} must be strictly greater than {@code 0}.
+	 */
+	public static Matrix from(final int rowCount, final int colCount, final Supplier<BigFraction> elementSupplier) {
+		Objects.requireNonNull(elementSupplier);
+		ensureValidDimensions(rowCount, colCount);
+		BigFraction[][] elems = new BigFraction[rowCount][colCount];
+		for(int row = 0; row < rowCount; row++)
+			for(int col = 0; col < colCount; col++)
+				elems[row][col] = elementSupplier.get();
+		return new Matrix(elems);
+	}
+	/**
 	 * Ensures that {@code (elements.length > 0)} and every row in {@code elements} has the same length.
 	 * @param elements
 	 */
-	private static void ensureValidDimensions(BigFraction[][] elements) {
+	private static void ensureValidDimensions(final BigFraction[][] elements) {
 		if(elements.length == 0)
 			throw new IllegalArgumentException("elements.length == 0");
 		int length = elements[0].length;
 		for(BigFraction[] row : elements)
 			if(row.length != length)
 				throw new IllegalArgumentException("The elements array has rows of different lengths");
+	}
+	
+	/**
+	 * Ensures that {@code (rows > 0)} and {@code (cos > 0)}.
+	 * @param elements
+	 */
+	private static void ensureValidDimensions(final int rows, final int cols) {
+		if(rows <= 0)
+			throw new IllegalArgumentException("rows must be greater than 0. Was: " + rows);
+		if(cols <= 0)
+			throw new IllegalArgumentException("cols must be greater than 0. Was: " + cols);
 	}
 	
 	private static BigFraction[][] copyOf(BigFraction[][] elements) {
@@ -81,10 +105,36 @@ public class Matrix {
 		return map((r, c) -> mapper.apply(get(r, c)));
 	}
 	
-	public Matrix map(CellMapper mapper) {
+	public Matrix map(CellMapper<BigFraction> mapper) {
 		BigFraction[][] newElements = new BigFraction[rowCount()][colCount()];
 		forEachCell((r, c) -> newElements[r][c] = mapper.apply(r, c));
 		return new Matrix(newElements);
+	}
+	
+	/**
+	 * Maps this {@link Matrix} to a 2D array of some type, where each element in the returned array is computed from the corresponding {@link BigFraction}
+	 * in this {@code Matrix} by the given {@link Function}.
+	 */
+	public <T> T[][] mapTo(Function<BigFraction, T> mapper, IntFunction<T[]> rowFactory, IntFunction<T[][]> arrayFactory) {
+		T[][] result = arrayFactory.apply(rowCount());
+		for(int i = 0; i < result.length; i++)
+			result[i] = rowFactory.apply(colCount());
+		forEachCell((r, c) -> result[r][c] = mapper.apply(get(r, c)));
+		return result;
+	}
+	
+	/**
+	 * Reduces this {@link Matrix} into a single {@link BigFraction} using the specified {@link BinaryOperator}, which is assumed to be associative and commutative.
+	 * If this {@code Matrix} only have one {@link #elementCount() element}, returns that element.
+	 */
+	public BigFraction reduce(BinaryOperator<BigFraction> op) {
+		BigFraction result = get(0, 0);
+		for(int c = 1; c < colCount(); c++) //start at (0, 1) and move right so that we don't accidentally count (0, 0) twice.
+			result = op.apply(result, get(0, c));
+		for(int r = 1; r < rowCount(); r++) //then continue from row 1 (the second row) at (1, 0).
+			for(int c = 0; c < colCount(); c++)
+				result = op.apply(result, get(r, c));
+		return result;
 	}
 	
 	/**
@@ -183,6 +233,14 @@ public class Matrix {
 	}
 	
 	/**
+	 * Returns an array of all the {@link #getRow(int) rows} in this {@link Matrix}. This method runs in O(r*c) where r is the {@link #rowCount() number of rows}
+	 * and c is the {@link #colCount() number of columns} in this {@code Matrix}. Modifying the returned array in any way will not affect this {@code Matrix}.
+	 */
+	public BigFraction[][] getRows() {
+		return copyOf(elements);
+	}
+	
+	/**
 	 * Returns the column at index {@code col}. The elements in the returned array are ordered from least row to greatest row.
 	 * Runs in O({@link #rowCount()}) since the returned array is a copy of the internal one. The returned array has length
 	 * {@code rowCount()}.
@@ -208,6 +266,9 @@ public class Matrix {
 		return elements[0].length;
 	}
 	
+	public int elementCount() {
+		return rowCount() * colCount();
+	}
 	/**
 	 * Returns {@code true} if {@code this} is a square {@link Matrix} (a matrix with the same number of rows as columns), {@code false}
 	 * otherwise.
