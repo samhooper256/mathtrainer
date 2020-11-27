@@ -432,7 +432,7 @@ public class Evaluator {
 		}
 		
 	}
-	
+	/*
 	public static void main(String[] args) {
 		String[] tests = {"4/3*2-1+100", "3*-4^2", "3-(-3)+4(2)", "2+((3)(2)(--1))"};
 //		System.out.println("RUNNING TESTS:");
@@ -451,6 +451,7 @@ public class Evaluator {
 			}
 		}
 	}
+	*/
 	
 	public static Complex evaluateAsComplex(final String expression) {
 		return evaluateAsComplex(expression, DEFAULT_RESULT_CONTEXT);

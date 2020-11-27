@@ -12,6 +12,7 @@ import utils.*;
  */
 public class Utils {
 	
+	/*
 	public static void main(String[] args) {
 //		System.out.println(primeFactorization(12));
 //		System.out.println(convertBase("1000", 10, 8));
@@ -29,7 +30,7 @@ public class Utils {
 		System.out.printf("%s%n", Arrays.toString(intQuadraticFromRoots(BigFraction.of(1, 5), BigFraction.of(-1, 2))));
 		System.out.printf("%s%n", Arrays.toString(intQuadraticFromRoots(BigFraction.of(3, 1), BigFraction.of(1, 7))));
 	}
-	
+	*/
 	private Utils() {}
 	
 	

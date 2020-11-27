@@ -7,7 +7,7 @@ import java.util.Scanner;
  *
  */
 public class RomanNumerals {
-	
+	/*
 	public static void main(String[] args) {
 		
 		Scanner in = new Scanner(System.in);
@@ -20,7 +20,7 @@ public class RomanNumerals {
 				System.out.println(fromRomanNumerals(line));
 			}
 		}
-	}
+	}*/
 	
 	private RomanNumerals() {}
 	

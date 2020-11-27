@@ -9,7 +9,7 @@ import java.util.function.BinaryOperator;
  */
 public class SpecialSequences {
 	
-	
+	/*
 	public static void main(String[] args) {
 		System.out.println(Squares.INFINITE.sum(2, 5) + " " + Squares.INFINITE.subSequence(2, 5).sum());
 		System.out.println(Squares.INFINITE.sum(1, 3) + " " + Squares.INFINITE.subSequence(1, 3).sum());
@@ -30,6 +30,7 @@ public class SpecialSequences {
 		System.out.println(Triangles.INFINITE.sum(6, 6) + " " + Triangles.INFINITE.subSequence(6, 6).sum());
 		System.out.println(Triangles.INFINITE.sum(6, 7) + " " + Triangles.INFINITE.subSequence(6, 7).sum());
 	}
+	*/
 	
 	
 	public enum Squares implements SummableSequence<BigInteger> {
