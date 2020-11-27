@@ -458,7 +458,7 @@ public class Evaluator {
 	}
 	
 	public static Complex evaluateAsComplex(final String expression, final MathContext resultContext) {
-		System.out.printf("evaluateAsComplex(%s)%n", expression);
+//		System.out.printf("evaluateAsComplex(%s)%n", expression);
 		final List<Token> tokens = tokenize(WHITESPACE.matcher(expression).replaceAll(""));
 		final List<Token> postfixTokens = toPostfix(tokens);
 		Expression exp = makeTree(postfixTokens);
