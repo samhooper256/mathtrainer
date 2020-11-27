@@ -327,13 +327,31 @@ public class Prettifier {
 	}
 	
 	public static String matrix(final String[][] matrix) {
-		StringBuilder sb = new StringBuilder("<mfenced open=\"[\" close=\"]\"><mtable>");
-		for(String[] row : matrix)
-			sb.append(matrixRow(row));
-		return sb.append("</mtable></mfenced>").toString();
+		return "<mfenced open=\"[\" close=\"]\">" + table(matrix) + "</mfenced>";
 	}
 	
-	private static String matrixRow(final String[] row) {
+	/**
+	 * Determinant of the matrix
+	 */
+	public static String det(final Matrix matrix) {
+		return det(matrix.mapTo(Prettifier::frac, String[]::new, String[][]::new));
+	}
+	
+	/**
+	 * Determinant of the matrix
+	 */
+	public static String det(final String[][] matrix) {
+		return "<mfenced open=\"|\" close=\"|\">" + table(matrix) + "</mfenced>";
+	}
+	
+	private static String table(final String[][] matrix) {
+		StringBuilder sb = new StringBuilder("<mtable>");
+		for(String[] row : matrix)
+			sb.append(tableRow(row));
+		return sb.append("</mtable>").toString();
+	}
+	
+	private static String tableRow(final String[] row) {
 		StringBuilder sb = new StringBuilder("<mtr>");
 		for(String s : row)
 			sb.append("<mtd>").append(s).append("</mtd>");

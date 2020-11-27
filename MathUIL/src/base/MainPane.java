@@ -44,7 +44,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new MultiplyingMatricesSupplier()));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new MatrixDeterminantSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();
