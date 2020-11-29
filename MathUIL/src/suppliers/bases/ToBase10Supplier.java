@@ -18,7 +18,7 @@ public class ToBase10Supplier extends SettingsProblemSupplier {
 	private final NamedIntRange base = of(BASE, "Base of original number"), value = of(VALUE, "Base 10 value of original number");
 	
 	public ToBase10Supplier() {
-		settings(base);
+		settings(base, value);
 	}
 
 	@Override
