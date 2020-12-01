@@ -1,6 +1,5 @@
 package suppliers.gcd;
 
-import static problems.Problem.*;
 import static suppliers.NamedIntRange.*;
 
 import java.util.List;
@@ -13,6 +12,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Find term given GCD and LCM")
 public class BackwardsGCDLCMSupplier extends SettingsProblemSupplier {
 	private static final RangeStore DIGITS = RangeStore.of(1, 3, 1, 2);
 	private final NamedIntRange digits;

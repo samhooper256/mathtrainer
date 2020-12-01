@@ -1,6 +1,6 @@
 package base;
 
-import java.util.Objects;
+import java.util.*;
 
 import fxutils.*;
 import javafx.collections.ObservableList;
@@ -25,15 +25,6 @@ public class SupplierChooser extends StackPane {
 	 * CSS Style class name
 	 */
 	private static final String STYLE_CLASS_NAME = "supplier-chooser";
-	
-	/** The bottom and only layer of this {@link StackPane}.*/
-	private final VBox rootVBox;
-	private final ScrollPane scroll;
-	private final FlowPane flowPane;
-	private final HBox bottomBox;
-	private final Button addSelectedButton, selectAllButton, cancelButton;
-	private final Label title;
-	private final MainPane mainPane;
 	
 	private class SupplierButton extends Button {
 		
@@ -86,28 +77,80 @@ public class SupplierChooser extends StackPane {
 				setDesired(b);
 		}
 		
+	}
+	
+	private class CategoryPane extends TitledPane {
+		
+		private final Category category;
+		private final FlowPane flowPane;
+		
+		public CategoryPane(final Category category) {
+			super();
+			this.category = category;
+			this.flowPane = new FlowPane();
+			setContent(flowPane);
+			flowPane.getStyleClass().add(FLOW_PANE_STYLE);
+			setText(category.display());
+		}
+		
+		public Category getCategory() {
+			return category;
+		}
+		
+		public void addSupplierButton(final SupplierButton button) {
+			flowPane.getChildren().add(button);
+		}
+		
+		public ObservableList<Node> buttonList() {
+			return flowPane.getChildren();
+		}
 		
 	}
+	
+	private final TreeMap<Category, CategoryPane> categoryPaneMap;
+	/** The bottom and only layer of this {@link StackPane}.*/
+	private final VBox rootVBox;
+	private final ScrollPane scroll;
+	private final VBox scrollContent;
+	private final HBox bottomBox;
+	private final Button addSelectedButton, selectAllButton, cancelButton;
+	private final Label title;
+	private final MainPane mainPane;
+	
 	public SupplierChooser(MainPane mainPane) {
 		this.mainPane = Objects.requireNonNull(mainPane);
 		title = new Label(TITLE_TEXT);
 		rootVBox = new VBox();
-		flowPane = new FlowPane();
-		scroll = new ScrollPane(flowPane);
+		scrollContent = new VBox();
+		scroll = new ScrollPane(scrollContent);
 		addSelectedButton = Buttons.of("Add Selected", this::addDesired);
 		selectAllButton = Buttons.of("Select all", this::desireAll);
 		cancelButton = Buttons.of("Cancel", this::cancelButtonAction);
 		bottomBox = new HBox(addSelectedButton, selectAllButton, cancelButton);
-		createSupplierButtons();
+		categoryPaneMap = new TreeMap<>();
+		createAndAddSupplierButtons();
 		initStyles();
 		finishInit();
 	}
 
-	private void createSupplierButtons() {
-		for(ProblemSuppliers.Info info : ProblemSuppliers.getRegisteredInfos()) {
-			final Button b = new SupplierButton(info);
-			flowPane.getChildren().add(b);
-		}
+	private void createAndAddSupplierButtons() {
+		for(ProblemSuppliers.Info info : ProblemSuppliers.getRegisteredInfos())
+			addSupplierButton(new SupplierButton(info));
+		for(CategoryPane pane : getCategoryPanes())
+			scrollContent.getChildren().add(pane);
+	}
+
+	private void addSupplierButton(final SupplierButton button) {
+		categoryPaneFor(button.getInfo().getCategory()).addSupplierButton(button);
+	}
+	
+	private CategoryPane categoryPaneFor(Category category) {
+		categoryPaneMap.putIfAbsent(category, new CategoryPane(category));
+		return categoryPaneMap.get(category);
+	}
+	
+	private Collection<CategoryPane> getCategoryPanes() {
+		return categoryPaneMap.values();
 	}
 
 	private void finishInit() {
@@ -119,7 +162,6 @@ public class SupplierChooser extends StackPane {
 		getStyleClass().add(STYLE_CLASS_NAME);
 		title.getStyleClass().add(TITLE_STYLE);
 		rootVBox.getStyleClass().add(VBOX_STYLE);
-		flowPane.getStyleClass().add(FLOW_PANE_STYLE);
 		scroll.getStyleClass().add(SCROLL_PANE_STYLE);
 		addSelectedButton.getStyleClass().add(UI_BUTTON_STYLE);
 		addSelectedButton.getStyleClass().add(UI_BUTTON_STYLE);
@@ -129,7 +171,7 @@ public class SupplierChooser extends StackPane {
 	
 	private void addDesired() {
 		mainPane.hideChooser();
-		for(Node n : flowPane.getChildren()) {
+		for(Node n : scrollContent.getChildren()) {
 			SupplierButton sb = (SupplierButton) n;
 			if(sb.isDesired()) {
 				mainPane.addSupplierOrThrow(sb.getInfo().getFactory().get());
@@ -160,8 +202,11 @@ public class SupplierChooser extends StackPane {
 		}
 	}
 	
-	private ObservableList<Node> buttonList() {
-		return flowPane.getChildren();
+	private List<Node> buttonList() {
+		ArrayList<Node> list = new ArrayList<>();
+		for(CategoryPane categoryPane : getCategoryPanes())
+			list.addAll(categoryPane.buttonList());
+		return list;
 	}
 	
 	public void hide() {

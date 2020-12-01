@@ -12,6 +12,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Multiplying fractions of the form a*a/(a+b)")
 public class ATimesAOverAPlusBSupplier extends SettingsProblemSupplier {
 	
 private static final RangeStore A_VALUE = RangeStore.of(1, 30), B_VALUE = RangeStore.of(-10, 10, -5, 5);

@@ -12,6 +12,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Multiplying fractions of the form a*(a+n)/(a+2n)")
 public class MultiplyingAAndNSupplier extends SettingsProblemSupplier {
 	private static final RangeStore A_VALUE = RangeStore.of(1, 30), N_VALUE = RangeStore.of(-10, 10, -5, 5);
 	private final NamedIntRange aValue = of(A_VALUE, "Value of a"), nValue = of(N_VALUE, "Value of n");

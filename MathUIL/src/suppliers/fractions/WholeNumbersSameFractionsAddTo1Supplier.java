@@ -11,6 +11,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Multiplying fractions with same whole part and fractional parts adding to 1")
 public class WholeNumbersSameFractionsAddTo1Supplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore WHOLE = RangeStore.of(1, 25, 1, 20), DENOM = RangeStore.of(2, 20, 2, 10);

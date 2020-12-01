@@ -12,6 +12,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Sum of two consecutive squares")
 public class SumConsecutiveSquaresSupplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore SMALL = RangeStore.of(0, 200, 1, 50);

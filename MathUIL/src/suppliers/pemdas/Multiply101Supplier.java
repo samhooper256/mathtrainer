@@ -10,6 +10,7 @@ import utils.refs.IntRange;
  * @author Sam Hooper
  *
  */
+@Named("Multiply by 101 and like")
 public class Multiply101Supplier extends SettingsProblemSupplier {
 	
 	private static final int MIN_DIGITS101 = 3, MAX_DIGITS101 = 4, MIN_DIGITS = 1, MAX_DIGITS = 5, LOW_DIGITS101 = 3, HIGH_DIGITS101 = 4, LOW_DIGITS = 1, HIGH_DIGITS = 4;

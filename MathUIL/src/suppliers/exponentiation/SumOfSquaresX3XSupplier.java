@@ -12,6 +12,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Sum of squares with bases x and 3x")
 public class SumOfSquaresX3XSupplier extends SettingsProblemSupplier {
 	
 	/**

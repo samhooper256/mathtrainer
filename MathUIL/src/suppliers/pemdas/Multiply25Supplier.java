@@ -2,16 +2,15 @@ package suppliers.pemdas;
 
 import java.util.List;
 
-import base.*;
 import problems.*;
 import suppliers.*;
-import utils.*;
 import utils.refs.IntRange;
 
 /**
  * @author Sam Hooper
  *
  */
+@Named("Multiply by 25")
 public class Multiply25Supplier extends SettingsProblemSupplier {
 	
 	private static final int MIN_DIGITS = 1, MAX_DIGITS = 4, LOW_DIGITS = 1, HIGH_DIGITS = 3;

@@ -13,6 +13,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Powers of e")
 public class PowersOfESupplier extends SettingsProblemSupplier {
 	public static final boolean DEFAULT_INCLUDE_E_TO_PI = true;
 	public static final Problem TO_PI_PROBLEM = new SimpleApproximation(

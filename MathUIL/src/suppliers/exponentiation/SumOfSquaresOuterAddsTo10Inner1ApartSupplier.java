@@ -1,18 +1,15 @@
 package suppliers.exponentiation;
 
-import static problems.Problem.*;
-import static suppliers.NamedIntRange.*;
-
 import problems.*;
-import suppliers.ProblemSupplier;
+import suppliers.*;
 
 /**
  * @author Sam Hooper
  *
  */
+@Named("Sum of squares when outer digits add to 10 and inner digits are 1 apart")
 public class SumOfSquaresOuterAddsTo10Inner1ApartSupplier implements ProblemSupplier {
 	
-
 	public SumOfSquaresOuterAddsTo10Inner1ApartSupplier() {}
 	
 	@Override

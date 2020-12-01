@@ -12,6 +12,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Vieta's Formulas")
 public class VietasFormulasSupplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore VALUES = RangeStore.of(-50, 50, -10, 10), DEGREE = RangeStore.of(2, 5, 2, 4);

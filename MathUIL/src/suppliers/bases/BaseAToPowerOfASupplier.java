@@ -13,6 +13,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Base a to a^n")
 public class BaseAToPowerOfASupplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore VALUE = RangeStore.of(1, 10_000, 2, 200);

@@ -11,6 +11,7 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
+@Named("Remainder when divided by 11")
 public class Mod11Supplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore DIGITS = RangeStore.of(1, 5);
