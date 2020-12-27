@@ -27,6 +27,27 @@ public class Builder {
 		return of(htmlFormattedText).setApproximate(true).setApproximationPercent(approximationPercent).addResult(result).build();
 	}
 	
+	public static Problem ofString(final String htmlFormattedText, final String result) {
+		return new Problem() {
+
+			@Override
+			public String displayString() {
+				return htmlFormattedText;
+			}
+
+			@Override
+			public boolean isCorrect(String input) {
+				return Objects.equals(input, result);
+			}
+
+			@Override
+			public String answerAsString() {
+				return result;
+			}
+			
+		};
+	}
+	
 	public static Builder of(final String htmlFormattedText) {
 		return new Builder(htmlFormattedText);
 	}

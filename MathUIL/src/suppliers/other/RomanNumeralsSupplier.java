@@ -23,7 +23,7 @@ public class RomanNumeralsSupplier extends SettingsProblemSupplier {
 		int intValue = Problem.intInclusive(value);
 		if(Math.random() <= 0.5)
 			return ComplexValued.of(String.format("%s as an Arabic number is:", RomanNumerals.toRomanNumerals(intValue)), new Complex(intValue));
-		return StringValued.of(String.format("%d as a Roman Numeral is:", intValue), RomanNumerals.toRomanNumerals(intValue));
+		return Builder.ofString(String.format("%d as a Roman Numeral is:", intValue), RomanNumerals.toRomanNumerals(intValue));
 		
 	}
 	

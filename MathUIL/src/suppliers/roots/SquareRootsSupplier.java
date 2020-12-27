@@ -1,7 +1,5 @@
 package suppliers.roots;
 
-import static problems.Problem.*;
-import static suppliers.NamedBooleanRef.*;
 import static suppliers.NamedIntRange.*;
 
 import java.math.BigDecimal;
