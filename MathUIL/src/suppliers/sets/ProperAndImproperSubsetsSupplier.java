@@ -30,9 +30,9 @@ public class ProperAndImproperSubsetsSupplier extends SettingsProblemSupplier {
 		List<Character> chars = SetSupUtils.letterList(intInclusive(size));
 		final String displaySet = Prettifier.ensureMath(Prettifier.set(chars, Prettifier::variable));
 		if(Math.random() <= 0.5)
-			return MultiValued.of(String.format("How many improper subsets does the set %s have?", displaySet)).addResult(new Complex(Sets.numImproperSubsets(chars)));
+			return Builder.of(String.format("How many improper subsets does the set %s have?", displaySet)).addResult(new Complex(Sets.numImproperSubsets(chars))).build();
 		else
-			return MultiValued.of(String.format("How many proper subsets does the set %s have?", displaySet)).addResult(new Complex(Sets.numProperSubsets(chars)));
+			return Builder.of(String.format("How many proper subsets does the set %s have?", displaySet)).addResult(new Complex(Sets.numProperSubsets(chars))).build();
 			
 	}
 

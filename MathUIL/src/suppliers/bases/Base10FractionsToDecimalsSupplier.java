@@ -30,7 +30,7 @@ public class Base10FractionsToDecimalsSupplier extends SettingsProblemSupplier {
 		int dig = intInclusive(digits);
 		String dec = "." + Problem.stringOfDigits(dig, b);
 		BigFraction frac = Utils.toBase10Fraction(dec, b);
-		return MultiValued.of(String.format("Convert %s to a base %d decimal", ensureMath(frac(frac)), b)).addBaseResult(dec, b);
+		return Builder.of(String.format("Convert %s to a base %d decimal", ensureMath(frac(frac)), b)).addBaseResult(dec, b).build();
 	}
 	
 	

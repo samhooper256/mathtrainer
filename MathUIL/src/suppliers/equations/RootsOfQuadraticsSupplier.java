@@ -26,12 +26,12 @@ public class RootsOfQuadraticsSupplier extends SettingsProblemSupplier {
 		BigFraction a = makeRoot(), b = makeRoot();
 		String quad = Prettifier.polynomialEqualsZero('x', Utils.intQuadraticFromRoots(a, b));
 		if(Math.random() <= 0.5) {
-			return MultiValued.of(String.format("What is the larger root of %s:", Prettifier.ensureMath(quad)))
-					.addResult(BigFraction.max(a, b));
+			return Builder.of(String.format("What is the larger root of %s:", Prettifier.ensureMath(quad)))
+					.addResult(BigFraction.max(a, b)).build();
 		}
 		else {
-			return MultiValued.of(String.format("What is the smaller root of %s:", Prettifier.ensureMath(quad)))
-					.addResult(BigFraction.min(a, b));
+			return Builder.of(String.format("What is the smaller root of %s:", Prettifier.ensureMath(quad)))
+					.addResult(BigFraction.min(a, b)).build();
 		}
 	}
 

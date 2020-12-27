@@ -25,8 +25,8 @@ public class ToBase10Supplier extends SettingsProblemSupplier {
 	public Problem get() {
 		int b = base.low() == 10 && base.high() == 10 ? 10 : RAND.ints(base.low(), base.high() + 1).filter(i -> i != 10).findFirst().getAsInt();
 		int v = intInclusive(value);
-		return MultiValued.of(String.format("What is %s in base 10?", Prettifier.ensureMath(Prettifier.base(Utils.convertBase(Integer.toString(v), 10, b), b))))
-				.addBaseResult(Integer.toString(v), 10);
+		return Builder.of(String.format("What is %s in base 10?", Prettifier.ensureMath(Prettifier.base(Utils.convertBase(Integer.toString(v), 10, b), b))))
+				.addBaseResult(Integer.toString(v), 10).build();
 	}
 	
 }

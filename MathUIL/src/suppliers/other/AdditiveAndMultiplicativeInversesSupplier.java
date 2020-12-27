@@ -25,9 +25,9 @@ public class AdditiveAndMultiplicativeInversesSupplier extends SettingsProblemSu
 	public Problem get() {
 		BigFraction frac = BigFraction.of(intInclusive(values), intInclusive(values));
 		if(Math.random() < 0.5)
-			return MultiValued.of(String.format("What is the additive inverse of %s:", Prettifier.ensureMath(Prettifier.frac(frac)))).addResult(frac.negate());
+			return Builder.of(String.format("What is the additive inverse of %s:", Prettifier.ensureMath(Prettifier.frac(frac)))).addResult(frac.negate()).build();
 		else
-			return MultiValued.of(String.format("What is the multiplicative inverse of %s:", Prettifier.ensureMath(Prettifier.frac(frac)))).addResult(frac.multiplicativeInverse());
+			return Builder.of(String.format("What is the multiplicative inverse of %s:", Prettifier.ensureMath(Prettifier.frac(frac)))).addResult(frac.multiplicativeInverse()).build();
 	}
 	
 	

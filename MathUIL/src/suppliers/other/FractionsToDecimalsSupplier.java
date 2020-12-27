@@ -28,8 +28,8 @@ public class FractionsToDecimalsSupplier extends SettingsProblemSupplier {
 		int den = intInclusive(denom), num = intInclusive(1, den - 1), dig = intInclusive(digits);
 		BigFraction frac = BigFraction.of(num, den);
 		BigDecimal decimal = frac.toBigDecimal(new MathContext(dig + 1));
-		return MultiValued.of(String.format("What is %s accurate to %d decimal places?%n", Prettifier.ensureMath(Prettifier.frac(frac)), dig))
-				.addMinimumDigitsAfterDecimalResult(decimal.toPlainString(), dig);
+		return Builder.of(String.format("What is %s accurate to %d decimal places?%n", Prettifier.ensureMath(Prettifier.frac(frac)), dig))
+				.addMinimumDigitsAfterDecimalResult(decimal.toPlainString(), dig).build();
 	}
 	
 }

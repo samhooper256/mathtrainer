@@ -29,12 +29,13 @@ public class VietasFormulasSupplier extends SettingsProblemSupplier {
 		if(cos[0] == 0) cos[0] = 1;
 		String displayExpr = Prettifier.polynomialEqualsZero('x', cos);
 		if(Math.random() <= 0.5)
-			return MultiValued.of(String.format("Find the sum of the roots of %s:", Prettifier.ensureMath(displayExpr))).addResult(BigFraction.of(cos[1], -1).divide(BigFraction.of(cos[0], 1)));
+			return Builder.of(String.format("Find the sum of the roots of %s:", Prettifier.ensureMath(displayExpr))).addResult(BigFraction.of(cos[1], -1)
+					.divide(BigFraction.of(cos[0], 1))).build();
 		else {
 			BigFraction p = BigFraction.of(cos[cos.length - 1], cos[0]);
 			if((cos.length - 1) % 2 != 0)
 				p = p.negate();
-			return MultiValued.of(String.format("Find the product of the roots of %s:", Prettifier.ensureMath(displayExpr))).addResult(p);
+			return Builder.of(String.format("Find the product of the roots of %s:", Prettifier.ensureMath(displayExpr))).addResult(p).build();
 		}
 	}
 

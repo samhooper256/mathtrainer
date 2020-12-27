@@ -36,24 +36,24 @@ public class UnionAndIntersectionSupplier extends SettingsProblemSupplier {
 	private Problem literalProblem() {
 		List<Character> set1 = SetSupUtils.letterList(intInclusive(size)), set2 = SetSupUtils.letterList(intInclusive(size));
 		if(Math.random() <= 0.5)
-			return MultiValued.of(String.format("The number of distinct elements in %s is:", ensureMath(union(set(set1, Prettifier::variable), set(set2, Prettifier::variable)))))
-					.addResult(new Complex(Sets.union(set1, set2).size()));
+			return Builder.of(String.format("The number of distinct elements in %s is:", ensureMath(union(set(set1, Prettifier::variable), set(set2, Prettifier::variable)))))
+					.addResult(new Complex(Sets.union(set1, set2).size())).build();
 		else
-			return MultiValued.of(String.format("The number of distinct elements in %s is:", ensureMath(intersection(set(set1, Prettifier::variable), set(set2, Prettifier::variable)))))
-					.addResult(new Complex(Sets.intersection(set1, set2).size()));
+			return Builder.of(String.format("The number of distinct elements in %s is:", ensureMath(intersection(set(set1, Prettifier::variable), set(set2, Prettifier::variable)))))
+					.addResult(new Complex(Sets.intersection(set1, set2).size())).build();
 	}
 	
 	private Problem wordProblem() {
 		int a = intInclusive(size), b = intInclusive(size), intersection = intInclusive(0, Math.min(a, b)), union = intersection + (a - intersection) + (b - intersection);
 		String uDisp = union(variable("A"), variable("B")), iDisp = intersection(variable("A"), variable("B"));
 		if(Math.random() <= 0.5)
-			return MultiValued.of(String.format("There %s %d element%s in set A, %d in set B, and %d in %s. %s has how many elements:",
+			return Builder.of(String.format("There %s %d element%s in set A, %d in set B, and %d in %s. %s has how many elements:",
 					a == 1 ? "is" : "are", a, a == 1 ? "" : "s", b, intersection, iDisp, uDisp))
-					.addResult(new Complex(union));
+					.addResult(new Complex(union)).build();
 		else
-			return MultiValued.of(String.format("There %s %d element%s in set A, %d in set B, and %d in %s. %s has how many elements:",
+			return Builder.of(String.format("There %s %d element%s in set A, %d in set B, and %d in %s. %s has how many elements:",
 					a == 1 ? "is" : "are", a, a == 1 ? "" : "s", b, union, uDisp, iDisp))
-					.addResult(new Complex(intersection));
+					.addResult(new Complex(intersection)).build();
 	}
 	
 }

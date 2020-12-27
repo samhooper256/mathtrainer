@@ -26,7 +26,7 @@ public class RepeatingDecimalsToFractionsSupplier implements ProblemSupplier {
 	public Problem get() {
 		String beforeDecimalPoint = Math.random() <= 0.5 ? Integer.toString(intInclusive(1, 9)) : "0";
 		RepeatingDecimal dec = getDecimal(beforeDecimalPoint);
-		return MultiValued.of(Prettifier.ensureMath(Prettifier.repeating(dec))).addResult(dec.toBigFraction());
+		return Builder.of(Prettifier.ensureMath(Prettifier.repeating(dec))).addResult(dec.toBigFraction()).build();
 	}
 	
 	private static RepeatingDecimal getDecimal(final String beforeDecimalPoint) {

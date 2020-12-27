@@ -27,8 +27,8 @@ public class DecimalsToBase10FractionsSupplier extends SettingsProblemSupplier {
 		int b = base.low() == 10 && base.high() == 10 ? 10 : RAND.ints(base.low(), base.high() + 1).filter(i -> i != 10).findAny().getAsInt();
 		int dig = intInclusive(digits);
 		String dec = "." + Problem.stringOfDigits(dig, b);
-		return MultiValued.of(String.format("Convert %s to a base 10 fraction:", ensureMath(base(dec, b))))
-				.addResult(Utils.toBase10Fraction(dec, b));
+		return Builder.of(String.format("Convert %s to a base 10 fraction:", ensureMath(base(dec, b))))
+				.addResult(Utils.toBase10Fraction(dec, b)).build();
 	}
 	
 }

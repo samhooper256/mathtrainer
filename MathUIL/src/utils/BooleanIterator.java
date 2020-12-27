@@ -3,6 +3,8 @@ package utils;
 import java.util.*;
 import java.util.function.*;
 
+import utils.function.BooleanConsumer;
+
 /**
  * @author Sam Hooper
  *
@@ -15,7 +17,7 @@ public interface BooleanIterator extends PrimitiveIterator<Boolean, BooleanConsu
 	default void forEachRemaining(BooleanConsumer action) {
         Objects.requireNonNull(action);
         while (hasNext())
-            action.accept(nextBoolean());
+            action.acceptBoolean(nextBoolean());
     }
 	
 	@Override
@@ -25,11 +27,9 @@ public interface BooleanIterator extends PrimitiveIterator<Boolean, BooleanConsu
 	
 	@Override
     default void forEachRemaining(Consumer<? super Boolean> action) {
-        if (action instanceof BooleanConsumer) {
+        if (action instanceof BooleanConsumer)
             forEachRemaining((BooleanConsumer) action);
-        }
         else {
-            // The method reference action::accept is never null
             Objects.requireNonNull(action);
             forEachRemaining((BooleanConsumer) action::accept);
         }

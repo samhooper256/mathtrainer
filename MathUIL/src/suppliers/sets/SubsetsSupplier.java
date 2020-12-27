@@ -29,8 +29,8 @@ public class SubsetsSupplier extends SettingsProblemSupplier {
 	public Problem get() {
 		List<Character> chars = SetSupUtils.letterList(intInclusive(size));
 		long sub = Sets.numSubsets(chars);
-		return MultiValued.of(String.format("How many subsets does the set %s have?%n", Prettifier.ensureMath(Prettifier.set(chars, Prettifier::variable))))
-				.addResult(new Complex(sub));
+		return Builder.of(String.format("How many subsets does the set %s have?%n", Prettifier.ensureMath(Prettifier.set(chars, Prettifier::variable))))
+				.addResult(new Complex(sub)).build();
 	}
 
 }

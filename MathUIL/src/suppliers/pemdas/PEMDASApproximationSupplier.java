@@ -2,6 +2,7 @@ package suppliers.pemdas;
 
 import java.util.*;
 
+import math.Evaluator;
 import problems.*;
 import suppliers.*;
 import utils.*;
@@ -38,7 +39,8 @@ public class PEMDASApproximationSupplier extends SettingsProblemSupplier {
 
 	@Override
 	public Problem get() {
-		return new SimpleApproximation(Problem.intInclusive(minTerms(), maxTerms()), minDigits(), maxDigits(), operators);
+		String exp = Problem.makeExpr(Problem.intInclusive(minTerms(), maxTerms()), minDigits(), maxDigits(), operators);
+		return Builder.approximation(Prettifier.pretty(exp), Evaluator.evaluateAsBigDecimalExact(exp));
 	}
 	
 	

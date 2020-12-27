@@ -27,9 +27,9 @@ public class CartesianProductSupplier extends SettingsProblemSupplier {
 	@Override
 	public Problem get() {
 		List<Character> set1 = SetSupUtils.letterList(intInclusive(size)), set2 = SetSupUtils.letterList(intInclusive(size));
-		return MultiValued.of(String.format("The Cartesian product of the sets %s and %s contains how many ordered paris:",
+		return Builder.of(String.format("The Cartesian product of the sets %s and %s contains how many ordered paris:",
 				ensureMath(set(set1, Prettifier::variable)), ensureMath(set(set2, Prettifier::variable))))
-				.addResult(new Complex(set1.size() * set2.size()));
+				.addResult(new Complex(set1.size() * set2.size())).build();
 	}
 	
 }

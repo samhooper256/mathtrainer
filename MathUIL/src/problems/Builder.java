@@ -2,6 +2,7 @@ package problems;
 
 import java.math.*;
 import java.util.*;
+import java.util.function.Predicate;
 
 import math.*;
 import utils.Strings;
@@ -10,16 +11,24 @@ import utils.Strings;
  * A {@link Problem} with multiple correct answers. Correct answers can be added via the various {@code addResult} methods.
  * A {@link #isCorrect(String) correct} answer must match <i>one or more</i> of the {@link #allAnswers() answers} to this {@code Problem}.
  * {@link #answerAsString()} returns a {@code String} containing all the correct answers, separated by {@code ", "}. By default, {@code MultiValued}
- * {@code Problems} are not {@link #isApproximateResult() approximations}, but that can be changed via {@link #setApproximate(boolean)}.
+ * {@code Problems} are not {@link #isApproximate() approximations}, but that can be changed via {@link #setApproximate(boolean)}.
  * @author Sam Hooper
  *
  */
-public class MultiValued implements Problem {
+public class Builder {
 	
 	public static final BigDecimal DEFAULT_APPROXIMATION_PERCENT = new BigDecimal("0.05");
 	
-	public static MultiValued of(final String htmlFormattedText) {
-		return new MultiValued(htmlFormattedText);
+	public static NumericProblem approximation(String htmlFormattedText, final BigDecimal result) {
+		return approximation(DEFAULT_APPROXIMATION_PERCENT, htmlFormattedText, result);
+	}
+	
+	public static NumericProblem approximation(final BigDecimal approximationPercent, String htmlFormattedText, final BigDecimal result) {
+		return of(htmlFormattedText).setApproximate(true).setApproximationPercent(approximationPercent).addResult(result).build();
+	}
+	
+	public static Builder of(final String htmlFormattedText) {
+		return new Builder(htmlFormattedText);
 	}
 	
 	private final String display;
@@ -30,11 +39,15 @@ public class MultiValued implements Problem {
 	/**
 	 * A functional interface that provides a method to verify that some result, given as a {@code String}, is correct.
 	 */
-	public interface Verifier {
-		boolean isValid(String input);
+	@FunctionalInterface
+	public interface Verifier extends Predicate<String> {
+		
+		@Override
+		boolean test(String input);
+		
 	}
 	
-	private MultiValued(final String htmlFormattedDisplayText) {
+	private Builder(final String htmlFormattedDisplayText) {
 		this.display = htmlFormattedDisplayText;
 		this.resultMap = new LinkedHashMap<>();
 		this.isApproximate = false;
@@ -45,10 +58,10 @@ public class MultiValued implements Problem {
 	 * Returns {@code this}.
 	 * @throws NullPointerException if {@code result} is {@code null}.
 	 */
-	public MultiValued addResult(final Complex result) {
+	public Builder addResult(final Complex result) {
 		Objects.requireNonNull(result);
 		resultMap.put(result, input -> {
-			if(isApproximateResult()) {
+			if(isApproximate()) {
 				if(result.hasImaginaryPart())
 					throw new UnsupportedOperationException("Approximation problems whose results have imaginary parts are not supported by MulitValued");
 				return Utils.isBigDecimal(input) && Problem.within(approximationPercent, result.bigDecimalValueExact(), new BigDecimal(input));
@@ -63,10 +76,20 @@ public class MultiValued implements Problem {
 	 * Returns {@code this}.
 	 * @throws NullPointerException if {@code result} is {@code null}.
 	 */
-	public MultiValued addResult(final BigFraction result) {
+	public Builder addResult(final BigDecimal result) {
+		Objects.requireNonNull(result);
+		resultMap.put(result, input -> Utils.isBigDecimal(input) && Problem.within(getApproximationPercent(), result, new BigDecimal(input)));
+		return this;
+	}
+	
+	/**
+	 * Returns {@code this}.
+	 * @throws NullPointerException if {@code result} is {@code null}.
+	 */
+	public Builder addResult(final BigFraction result) {
 		Objects.requireNonNull(result);
 		resultMap.put(result, input -> {
-			if(isApproximateResult())
+			if(isApproximate())
 				throw new UnsupportedOperationException("Approximations with fractional answers are not supported");
 			else
 				return BigFraction.isValidVulgar(input) && BigFraction.fromVulgar(input).equals(result);
@@ -78,10 +101,10 @@ public class MultiValued implements Problem {
 	 * Returns {@code this}.
 	 * @throws NullPointerException if {@code result} is {@code null}.
 	 */
-	public MultiValued addResult(final MixedNumber result) {
+	public Builder addResult(final MixedNumber result) {
 		Objects.requireNonNull(result);
 		resultMap.put(result, input -> {
-			if(isApproximateResult())
+			if(isApproximate())
 				throw new UnsupportedOperationException("Approximations with fractional answers are not supported");
 			else {
 				String[] split = input.split(" +");
@@ -100,7 +123,7 @@ public class MultiValued implements Problem {
 	 * @param verifier a function that will verify whether a user's guess "matches" (however that may be defined) {@code result}.
 	 * @throws NullPointerException if {@code result} or {@code verifier} is {@code null}.
 	 */
-	public MultiValued addResult(final String result, Verifier verifier) {
+	public Builder addResult(final String result, Verifier verifier) {
 		Objects.requireNonNull(result);
 		Objects.requireNonNull(verifier);
 		resultMap.put(result, verifier);
@@ -112,7 +135,7 @@ public class MultiValued implements Problem {
 	 * @param result that {@code String} that will be displayed to the user as part of the {@link #answerAsString()}.
 	 * @throws NullPointerException if {@code result} or {@code verifier} is {@code null}.
 	 */
-	public MultiValued addResult(final String result) {
+	public Builder addResult(final String result) {
 		Objects.requireNonNull(result);
 		resultMap.put(result, str -> result.equals(str));
 		return this;
@@ -129,7 +152,7 @@ public class MultiValued implements Problem {
 	 * @throws IllegalArgumentException if {@code (numDigits <= 0)}.
 	 * @throws IllegalArgumentException if the {@code String} does not contain a decimal point ('.').
 	 */
-	public MultiValued addMinimumDigitsAfterDecimalResult(String s, final int numDigits) {
+	public Builder addMinimumDigitsAfterDecimalResult(String s, final int numDigits) {
 		Objects.requireNonNull(s);
 		if(numDigits <= 0)
 			throw new IllegalArgumentException("numDigits <= 0");
@@ -144,7 +167,7 @@ public class MultiValued implements Problem {
 		String beforeDecimal = Strings.stripLeading(result.substring(0, dotIndex), '0');
 		String decimalDigits = Strings.stripTrailing(result.substring(dotIndex + 1, dotIndex + numDigits + 1), '0');
 		resultMap.put(s, str -> {
-			if(isApproximateResult())
+			if(isApproximate())
 				throw new UnsupportedOperationException("Minimum digits after decimal answers are not supported for approximate result Problems");
 			else {
 				final int strDot = str.indexOf('.');
@@ -166,7 +189,7 @@ public class MultiValued implements Problem {
 	 * @param baseOfNumber
 	 * @throws NullPointerException if {@code number} is {@code null}
 	 */
-	public MultiValued addBaseResult(String number, final int baseOfNumber) {
+	public Builder addBaseResult(String number, final int baseOfNumber) {
 		Objects.requireNonNull(number);
 		if(baseOfNumber < Utils.MIN_RADIX || baseOfNumber > Utils.MAX_RADIX)
 			throw new IllegalArgumentException("Invalid radix: " + baseOfNumber);
@@ -175,7 +198,7 @@ public class MultiValued implements Problem {
 			number = Strings.stripTrailing(number, '0');
 		final String result = number;
 		resultMap.put(result, str -> {
-			if(isApproximateResult())
+			if(isApproximate())
 				throw new UnsupportedOperationException("Base questions with approximate answers are not supported");
 			else {
 				String formattedAnswer = Strings.stripLeading(str, '0');
@@ -187,7 +210,14 @@ public class MultiValued implements Problem {
 		return this;
 	}
 	
-	public MultiValued setApproximate(final boolean isApproximate) {
+	/**
+	 * Returns {@code true} if the {@link Problem} that would be built by a call to {@link #build()} would
+	 */
+	private boolean isApproximate() {
+		return isApproximate;
+	}
+
+	public Builder setApproximate(final boolean isApproximate) {
 		this.isApproximate = isApproximate;
 		return this;
 	}
@@ -197,49 +227,62 @@ public class MultiValued implements Problem {
 	 * @param percent
 	 * @return
 	 */
-	public MultiValued setApproximationPercent(final BigDecimal percent) {
+	public Builder setApproximationPercent(final BigDecimal percent) {
 		if(BigNumbers.isNegative(percent))
 			throw new IllegalArgumentException("Percent cannot be negative");
 		this.approximationPercent = percent;
 		return this;
 	}
+	
+	public BigDecimal getApproximationPercent() {
+		return approximationPercent;
+	}
 
 	/**
-	 * Returns a {@link Set} containing all the correct answers to this {@link MultiValued} {@link Problem}.
+	 * Returns a {@link Set} containing all the correct answers to this {@link Builder} {@link Problem}.
 	 */
 	public Set<Object> allAnswers() {
 		return resultMap.keySet();
 	}
 	
-	@Override
-	public String displayString() {
-		return display;
-	}
-
-	@Override
-	public boolean isCorrect(String input) {
-		for(Verifier v : resultMap.values())
-			if(v.isValid(input))
-				return true;
-		return false;
-	}
-
-	@Override
-	public String answerAsString() {
-		StringJoiner j = new StringJoiner(", ");
-		for(Object o : resultMap.keySet())
-			j.add(o.toString());
-		return j.toString();
-	}
 	
-	@Override
-	public boolean isApproximateResult() {
-		return isApproximate;
-	}
-	@Override
-	public BigDecimal approximationPercentAsBigDecimal() {
-		return approximationPercent;
-	}
 	
+	public NumericProblem build() {
+		
+		return new NumericProblem() {
+			@Override
+			public String displayString() {
+				return display;
+			}
+
+			@Override
+			public boolean isCorrect(String input) {
+				for(Verifier v : resultMap.values())
+					if(v.test(input))
+						return true;
+				return false;
+			}
+
+			@Override
+			public String answerAsString() {
+				StringJoiner j = new StringJoiner(", ");
+				for(Object o : resultMap.keySet())
+					j.add(o.toString());
+				return j.toString();
+			}
+			
+			@Override
+			public boolean isApproximateResult() {
+				return isApproximate;
+			}
+			
+			@Override
+			public BigDecimal approximationPercentAsBigDecimal() {
+				return approximationPercent;
+			}
+			
+		};
+		
+	}
 	
 }

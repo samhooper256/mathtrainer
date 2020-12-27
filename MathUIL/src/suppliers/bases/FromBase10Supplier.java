@@ -24,7 +24,7 @@ private static final RangeStore BASE = RangeStore.of(Utils.MIN_RADIX, Utils.MAX_
 	public Problem get() {
 		int b = base.low() == 10 && base.high() == 10 ? 10 : RAND.ints(base.low(), base.high() + 1).filter(i -> i != 10).findAny().getAsInt();
 		int v = intInclusive(value);
-		return MultiValued.of(String.format("What is %s in base %d?", Prettifier.ensureMath(Prettifier.base(Integer.toString(v), 10)), b))
-				.addBaseResult(Utils.convertBase(Integer.toString(v), 10, b), b);
+		return Builder.of(String.format("What is %s in base %d?", Prettifier.ensureMath(Prettifier.base(Integer.toString(v), 10)), b))
+				.addBaseResult(Utils.convertBase(Integer.toString(v), 10, b), b).build();
 	}
 }

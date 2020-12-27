@@ -33,7 +33,7 @@ public class ApproximationsWithRationalsSupplier extends SettingsProblemSupplier
 			if(i < ts)
 				exp.addOperator(OP_SUPPLIER.get());
 		}
-		return MultiValued.of(exp.toMathML()).addResult(exp.evaluateAsComplex()).setApproximate(true);
+		return Builder.of(exp.toMathML()).addResult(exp.evaluateAsComplex()).setApproximate(true).build();
 	}
 	
 	/**

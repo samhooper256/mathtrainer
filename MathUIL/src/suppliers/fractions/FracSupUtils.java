@@ -92,12 +92,12 @@ public class FracSupUtils {
 		BigFraction result = op.apply(a, b);
 		Number n1 = Math.random() <= 0.5 && a.isImproper() ? a.toMixedNumber() : a;
 		Number n2 = Math.random() <= 0.5 && b.isImproper() ? b.toMixedNumber() : b;
-		final MultiValued exp = MultiValued.of(new DisplayExpression().addTerm(n1).addOperator(opString).addTerm(n2).toMathML());
+		final Builder exp = Builder.of(new DisplayExpression().addTerm(n1).addOperator(opString).addTerm(n2).toMathML());
 		if(acceptFraction)
 			exp.addResult(result);
 		if(acceptMixed)
 			exp.addResult(result.toMixedNumber());
-		return exp;
+		return exp.build();
 	}
 	
 	/**
@@ -118,11 +118,11 @@ public class FracSupUtils {
 		BigFraction shuf1 = shuffled.get(0), shuf2 = shuffled.get(1);
 		Number num1 = shuf1.isImproper() && Math.random() <= 0.5 ? shuf1.toMixedNumber() : shuf1;
 		Number num2 = shuf2.isImproper() && Math.random() <= 0.5 ? shuf2.toMixedNumber() : shuf2;
-		MultiValued prob = MultiValued.of(new DisplayExpression().addTerm(num1).addOperator(opString).addTerm(num2).toMathML());
+		Builder prob = Builder.of(new DisplayExpression().addTerm(num1).addOperator(opString).addTerm(num2).toMathML());
 		if(acceptFraction)
 			prob.addResult(result);
 		if(acceptMixed && result.isImproper())
 			prob.addResult(result.toMixedNumber());
-		return prob;
+		return prob.build();
 	}
 }

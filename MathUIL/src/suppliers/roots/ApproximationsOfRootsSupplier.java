@@ -50,7 +50,7 @@ public class ApproximationsOfRootsSupplier extends SettingsProblemSupplier {
 				sb.append(op('*'));
 		}
 		sb.append("</math>");
-		return new SimpleApproximation(sb.toString(), product);
+		return Builder.approximation(sb.toString(), product);
 	}
 	
 }

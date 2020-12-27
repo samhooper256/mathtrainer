@@ -33,7 +33,7 @@ public class MultiplyingMatricesSupplier extends SettingsProblemSupplier {
 		int varRow = intExclusive(r), varCol = intExclusive(r);
 		String varName = variableMatrix[varRow][varCol];
 		BigFraction varValue = resultMatrix.get(varRow, varCol);
-		return MultiValued.of(String.format("%s. Find %s:", displayExp, ensureMath(variable(varName)))).addResult(varValue);
+		return Builder.of(String.format("%s. Find %s:", displayExp, ensureMath(variable(varName)))).addResult(varValue).build();
 	}
 	
 }

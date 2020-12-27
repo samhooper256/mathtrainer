@@ -34,21 +34,14 @@ public class GeometricSequencesSupplier extends SettingsProblemSupplier {
 			return termProblem(seq);
 	}
 
-	/**
-	 * @param seq
-	 * @return
-	 */
 	private Problem termProblem(GeometricSequence seq) {
 		int termIndex = intInclusive(MIN_NTH_TERM, MAX_NTH_TERM);
-		return MultiValued.of(String.format("What is the %d%s term of the sequence %s?", termIndex, Prettifier.ordinalSuffix(termIndex), seq.toPartialString(4))).addResult(seq.nthTerm(termIndex));
+		return Builder.of(String.format("What is the %d%s term of the sequence %s?", termIndex, Prettifier.ordinalSuffix(termIndex), seq.toPartialString(4)))
+				.addResult(seq.nthTerm(termIndex)).build();
 	}
-
-	/**
-	 * @param seq
-	 * @return
-	 */
+	
 	private Problem sumProblem(GeometricSequence seq) {
-		return MultiValued.of(String.format("What is the sum of the sequence %s?", seq.toPartialString(3))).addResult(seq.sum());
+		return Builder.of(String.format("What is the sum of the sequence %s?", seq.toPartialString(3))).addResult(seq.sum()).build();
 	}
 	
 	

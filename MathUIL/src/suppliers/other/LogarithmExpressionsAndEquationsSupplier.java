@@ -40,21 +40,21 @@ public class LogarithmExpressionsAndEquationsSupplier extends SettingsProblemSup
 		if(ran == 0) { //simple evaluation
 			int exponent = intInclusive(values);
 			long result = Utils.pow(base, exponent);
-			return MultiValued.of(ensureMath(log(num(base), num(result)) + op('='))).addResult(new Complex(exponent));
+			return Builder.of(ensureMath(log(num(base), num(result)) + op('='))).addResult(new Complex(exponent)).build();
 		}
 		else if(ran == 1) { //adding two log terms with the same base
 			int exponent = intInclusive(values);
 			int result = Math.toIntExact(Utils.pow(base, exponent));
 			IntList factors = Utils.factorsUnsorted(result);
 			int factor1 = factors.get(intExclusive(factors.size())), factor2 = result / factor1;
-			return MultiValued.of(ensureMath(log(num(base), num(factor1)) + op('+') + log(num(base), num(factor2)) + op('='))).addResult(new Complex(exponent));
+			return Builder.of(ensureMath(log(num(base), num(factor1)) + op('+') + log(num(base), num(factor2)) + op('='))).addResult(new Complex(exponent)).build();
 		}
 		else {
 			int exponent = intInclusive(values);
 			int result = Math.toIntExact(Utils.pow(base, exponent));
 			int b = intInclusive(2, 10);
 			int arg1 = result * b, arg2 = b;
-			return MultiValued.of(ensureMath(log(num(base), num(arg1)) + op('-') + log(num(base), num(arg2)) + op('='))).addResult(new Complex(exponent));
+			return Builder.of(ensureMath(log(num(base), num(arg1)) + op('-') + log(num(base), num(arg2)) + op('='))).addResult(new Complex(exponent)).build();
 		}
 	}
 	
@@ -68,11 +68,11 @@ public class LogarithmExpressionsAndEquationsSupplier extends SettingsProblemSup
 				logArg = Math.toIntExact(Utils.pow(base, exponent));
 			}
 			String s = String.format("If %s, then %c = ", ensureMath(log(variable(variable), num(logArg)) + op('=') + num(exponent)), variable);
-			return MultiValued.of(s).addResult(new Complex(base));
+			return Builder.of(s).addResult(new Complex(base)).build();
 		}
 		else { //the argument to the log function is a variable
 			String s = String.format("If %s, then %c = ", ensureMath(log(num(base), variable(variable)) + op('=') + num(exponent)), variable);
-			return MultiValued.of(s).addResult(new Complex(logArg));
+			return Builder.of(s).addResult(new Complex(logArg)).build();
 		}
 	}
 

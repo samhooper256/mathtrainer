@@ -29,11 +29,11 @@ public class CompareFractionsSupplier extends SettingsProblemSupplier {
 		List<BigFraction> shuf = Problem.shuffled(BigFraction.of(n1, d1), BigFraction.of(n2, d2));
 		BigFraction f1 = shuf.get(0), f2 = shuf.get(1);
 		if(Math.random() <= 0.5)
-			return MultiValued.of(String.format("Which is larger, %s or %s?", Prettifier.ensureMath(Prettifier.frac(f1)),
-					Prettifier.ensureMath(Prettifier.frac(f2)))).addResult(BigFraction.max(f1, f2));
+			return Builder.of(String.format("Which is larger, %s or %s?", Prettifier.ensureMath(Prettifier.frac(f1)),
+					Prettifier.ensureMath(Prettifier.frac(f2)))).addResult(BigFraction.max(f1, f2)).build();
 		else
-			return MultiValued.of(String.format("Which is smaller, %s or %s?", Prettifier.ensureMath(Prettifier.frac(f1)),
-					Prettifier.ensureMath(Prettifier.frac(f2)))).addResult(BigFraction.min(f1, f2));
+			return Builder.of(String.format("Which is smaller, %s or %s?", Prettifier.ensureMath(Prettifier.frac(f1)),
+					Prettifier.ensureMath(Prettifier.frac(f2)))).addResult(BigFraction.min(f1, f2)).build();
 	}
 	
 }

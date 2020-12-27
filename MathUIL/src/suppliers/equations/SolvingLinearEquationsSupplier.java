@@ -31,7 +31,7 @@ public class SolvingLinearEquationsSupplier extends SettingsProblemSupplier {
 		int axCo = intInclusive(xCoefficient);
 		int aconstTerm = intInclusive(constant);
 		String qDisplay = displayExp(qxCo, qconstTerm), aDisplay = displayExp(axCo, aconstTerm);
-		return MultiValued.of(String.format("Given that %s = %d, find %s:", qDisplay, result, aDisplay)).addResult(new Complex(axCo * x + aconstTerm));
+		return Builder.of(String.format("Given that %s = %d, find %s:", qDisplay, result, aDisplay)).addResult(new Complex(axCo * x + aconstTerm)).build();
 	}
 	
 	private String displayExp(int xCo, int constTerm) {

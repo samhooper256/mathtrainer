@@ -27,7 +27,7 @@ public class SquareRootsSupplier extends SettingsProblemSupplier {
 	@Override
 	public Problem get() {
 		int rc = Problem.intInclusive(radicand);
-		return new SimpleApproximation(APPROX_PERCENT, sqrtFormatted(rc), BigDecimal.valueOf(Math.sqrt(rc)));
+		return Builder.approximation(APPROX_PERCENT, sqrtFormatted(rc), BigDecimal.valueOf(Math.sqrt(rc)));
 	}
 	
 	private static String sqrtFormatted(final int radicand) {

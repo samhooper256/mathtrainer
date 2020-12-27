@@ -1,7 +1,6 @@
 package suppliers.bases;
 
 import static problems.Problem.*;
-import static suppliers.NamedBooleanRef.*;
 import static suppliers.NamedIntRange.*;
 
 import math.Utils;
@@ -29,8 +28,8 @@ public class BaseAToPowerOfASupplier extends SettingsProblemSupplier {
 		String v = Integer.toString(intInclusive(value));
 		int[] bases = generateBases();
 		String base1 = Utils.convertBase(v, 10, bases[0]), base2 = Utils.convertBase(v, 10, bases[1]);
-		return MultiValued.of(String.format("What is %s in base %d?", Prettifier.ensureMath(Prettifier.base(base1, bases[0])), bases[1]))
-				.addBaseResult(base2, bases[1]);
+		return Builder.of(String.format("What is %s in base %d?", Prettifier.ensureMath(Prettifier.base(base1, bases[0])), bases[1]))
+				.addBaseResult(base2, bases[1]).build();
 	}	
 	
 	private static int[] generateBases() {

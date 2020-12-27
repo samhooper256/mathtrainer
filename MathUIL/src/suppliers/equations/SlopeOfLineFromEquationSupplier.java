@@ -30,7 +30,7 @@ public class SlopeOfLineFromEquationSupplier extends SettingsProblemSupplier {
 		String exp = displayExp(xCo, yCo);
 		String eq = Math.random() <= 0.5 ? exp + " = " + constant : constant + " = " + exp;
 		BigFraction slope = BigFraction.of(-xCo, yCo);
-		return MultiValued.of(String.format("Find the slope of the line %s:", eq)).addResult(slope);
+		return Builder.of(String.format("Find the slope of the line %s:", eq)).addResult(slope).build();
 	}
 	
 	private static String displayExp(final int xCo, final int yCo) {

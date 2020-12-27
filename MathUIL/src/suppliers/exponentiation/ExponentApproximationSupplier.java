@@ -5,6 +5,7 @@ import static suppliers.NamedIntRange.*;
 
 import java.util.List;
 
+import math.Evaluator;
 import problems.*;
 import suppliers.*;
 import utils.refs.BooleanRef;
@@ -30,7 +31,8 @@ public class ExponentApproximationSupplier extends SettingsProblemSupplier {
 		for(int i = 0; i < termCount; i++)
 			sb.append(getTerm()).append(getOp());
 		sb.append(getTerm());
-		return new SimpleApproximation(sb.toString());
+		final String str = sb.toString();
+		return Builder.approximation(str, Evaluator.evaluateAsBigDecimalExact(str));
 	}
 	
 	private String getOp() {
