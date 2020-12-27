@@ -9,12 +9,10 @@ import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import math.Utils;
 import suppliers.NamedSetting;
 import suppliers.ProblemSupplier;
 import suppliers.ProblemSuppliers;
-import utils.*;
 import utils.refs.*;
 
 /**
@@ -176,11 +174,8 @@ public class SettingTitledPane extends TitledPane {
 	
 	private static class BoolBox extends Label {
 		
-		private final BooleanRef ref;
-		
 		public BoolBox(final BooleanRef ref, final String text) {
 			super(text);
-			this.ref = ref;
 			CheckBox checkBox = new CheckBox();
 			checkBox.setSelected(ref.get());
 			checkBox.selectedProperty().addListener((obs, ov, nv) -> {

@@ -1,7 +1,6 @@
 package suppliers.other;
 
 import static problems.Problem.*;
-import static suppliers.NamedBooleanRef.*;
 import static suppliers.NamedIntRange.*;
 
 import java.util.*;

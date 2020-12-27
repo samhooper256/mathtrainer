@@ -23,10 +23,6 @@ import utils.*;
 //TODO Approx problems shouldn't show so many decimals!
 public class ProblemPane extends Pane {
 	
-	/**
-	 * 
-	 */
-	private static final int PROBLEM_LINE_HEIGHT = 20;
 	private static final Border FIELD_RED_BORDER = Borders.of(Color.RED);
 	private static final Border FIELD_EMPTY_BORDER = Borders.of(Color.TRANSPARENT);
 

@@ -1,6 +1,10 @@
 package suppliers;
 
+import problems.Problem;
+
 /**
+ * <p>An enum representing different categories of {@link Problem Problems}. There is also an {@link #OTHER} category for {@code Problems}
+ * that don't fit in any other.</p>
  * @author Sam Hooper
  *
  */

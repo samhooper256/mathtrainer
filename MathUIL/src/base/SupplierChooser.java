@@ -4,12 +4,9 @@ import java.util.*;
 
 import fxutils.*;
 import javafx.collections.ObservableList;
-import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import suppliers.*;
 
 /**
@@ -81,20 +78,14 @@ public class SupplierChooser extends StackPane {
 	
 	private class CategoryPane extends TitledPane {
 		
-		private final Category category;
 		private final FlowPane flowPane;
 		
 		public CategoryPane(final Category category) {
 			super();
-			this.category = category;
 			this.flowPane = new FlowPane();
 			setContent(flowPane);
 			flowPane.getStyleClass().add(FLOW_PANE_STYLE);
 			setText(category.display());
-		}
-		
-		public Category getCategory() {
-			return category;
 		}
 		
 		public void addSupplierButton(final SupplierButton button) {

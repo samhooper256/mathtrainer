@@ -2,8 +2,6 @@ package base;
 
 import java.util.*;
 
-import org.controlsfx.control.ToggleSwitch;
-
 import fxutils.*;
 import javafx.collections.ObservableList;
 import javafx.scene.*;
