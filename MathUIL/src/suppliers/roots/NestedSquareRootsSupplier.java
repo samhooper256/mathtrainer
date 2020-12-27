@@ -1,13 +1,10 @@
 package suppliers.roots;
 
-import static problems.Problem.*;
-import static suppliers.NamedBooleanRef.*;
 import static suppliers.NamedIntRange.*;
 
 
 import java.math.*;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import math.*;
 import problems.*;
@@ -23,13 +20,6 @@ public class NestedSquareRootsSupplier extends SettingsProblemSupplier {
 	private static final RangeStore VALUE = RangeStore.of(1, 10, 3, 6);
 	private static final List<Integer> SQUARES; //squares of the numbers from 1 to 100
 	
-	/*
-	public static void main(String[] args) {
-		NestedSquareRootsSupplier nsr = new NestedSquareRootsSupplier();
-		final Problem prob = nsr.get();
-		System.out.println(prob.displayString());
-	}
-	*/
 	static {
 		SQUARES = new ArrayList<>(100);
 		for(int i = 1; i <= SQUARES.size(); i++) {
@@ -275,7 +265,7 @@ public class NestedSquareRootsSupplier extends SettingsProblemSupplier {
 			for(int i = 0; i < complexity; i++) {
 				complicate();
 			}
-			return ComplexValued.of(Prettifier.ensureMath(root.mathMLString()), Evaluator.evaluateAsComplex(root.expString()), 1.25); //TODO get result
+			return ComplexValued.of(Prettifier.ensureMath(root.mathMLString()), Evaluator.evaluateAsComplex(root.expString())); //TODO get result
 		}
 		
 		private void complicate() {

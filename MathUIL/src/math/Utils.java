@@ -34,6 +34,8 @@ public class Utils {
 	private Utils() {}
 	
 	
+	public static final String INTEGER_MAX_VALUE_STRING = Integer.toString(Integer.MAX_VALUE);
+	public static final String INTEGER_MIN_VALUE_STRING = Integer.toString(Integer.MIN_VALUE);
 	
 	public static final String PI_STRING = "3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622";
 	/** <i>pi</i> rounded to 10 digits after the decimal.*/
@@ -183,9 +185,28 @@ public class Utils {
 		if(abs >= 10) return 2;
 		return 1;
 	}
-
+	
+	/**
+	 * Returns {@code true} if {@code c} is a digit in base 10 (that is, a number from 0-9), {@code false} otherwise.
+	 */
+	public static boolean isDigit(final char c) {
+		return c >= '0' && c <= '9';
+	}
+	
 	public static boolean isint(final String s) {
-		return isInteger(s) && s.length() <= 10 || (s.startsWith("-") && s.length() <= 11); //TODO
+		final boolean neg = s.charAt(0) == '-';
+		if((neg && s.length() > 11) || (!neg && s.length() > 10) || s.length() == 0)
+			return false;
+		for(int i = neg ? 1 : 0; i < s.length(); i++)
+			if(!isDigit(s.charAt(i)))
+				return false;
+		
+		if(neg && s.length() < 11 || !neg && s.length() < 10)
+			return true;
+		if(neg)
+			return s.compareTo(INTEGER_MIN_VALUE_STRING) <= 0;
+		else
+			return s.compareTo(INTEGER_MAX_VALUE_STRING) <= 0;
 	}
 	
 	public static boolean isInteger(final String s) {

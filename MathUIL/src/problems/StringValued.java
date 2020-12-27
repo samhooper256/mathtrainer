@@ -1,25 +1,21 @@
 package problems;
 
+import java.util.Objects;
+
 /**
  * @author Sam Hooper
  *
  */
 public interface StringValued extends Problem {
-	public static StringValued of(final String htmlFormattedText, final String answer) {
-		return of(htmlFormattedText, answer, 1.0);
-	}
 	
-	public static StringValued of(final String htmlFormattedText, final String answer, final double estimatedDisplayLines) {
+	public static StringValued of(final String htmlFormattedText, final String answer) {
+		Objects.requireNonNull(htmlFormattedText);
+		Objects.requireNonNull(answer);
 		return new StringValued() {
 			
 			@Override
 			public String displayString() {
 				return htmlFormattedText;
-			}
-
-			@Override
-			public double estimatedDisplayLines() {
-				return estimatedDisplayLines;
 			}
 
 			@Override
@@ -32,7 +28,7 @@ public interface StringValued extends Problem {
 
 	@Override
 	default boolean isCorrect(String input) {
-		return input.equals(answerAsString());
+		return Objects.equals(input, answerAsString());
 	}
 	
 }

@@ -13,26 +13,16 @@ public abstract class ComplexValued implements Problem {
 	 * Returns a new {@link ComplexValued} that will be displayed as the given formatted html text directly.
 	 * The {@link #result() result} is the given {@link Complex} value.
 	 */
-	public static ComplexValued of(final String htmlFormattedText, final Complex result, final double estimatedDisplayLinesNeeded) {
+	public static ComplexValued of(final String htmlFormattedText, final Complex result) {
+		
 		return new ComplexValued(result) {
 			@Override
 			public String displayString() {
 				return htmlFormattedText;
 			}
-
-			@Override
-			public double estimatedDisplayLines() {
-				return estimatedDisplayLinesNeeded;
-			}
+			
 		};
-	}
-	
-	/**
-	 * Returns a new {@link ComplexValued} that will be displayed as the given formatted html text directly.
-	 * The {@link #result() result} is the given {@link Complex} value.
-	 */
-	public static ComplexValued of(final String htmlFormattedText, final Complex result) {
-		return of(htmlFormattedText, result, 1.0);
+		
 	}
 	
 	private final Complex result;
@@ -58,9 +48,7 @@ public abstract class ComplexValued implements Problem {
 	
 	@Override
 	public boolean isCorrect(String input) {
-//		System.out.printf("entered ComplexVaued isCorrect%n");
 		final boolean result = Utils.isComplexInRectangularForm(input) && new Complex(input).equals(this.result);
-//		System.out.printf("]exit ComplexValued isCorrect%n");
 		return result;
 	}
 	

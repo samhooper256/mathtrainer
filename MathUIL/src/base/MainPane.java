@@ -1,8 +1,10 @@
 package base;
 
+import fxutils.Backgrounds;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import suppliers.*;
 import suppliers.bases.*;
@@ -44,7 +46,8 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new IntAddSubtractSupplier(2, 2, 2, 2)));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new MatrixDeterminantSupplier()));
+//		problemPane = new ProblemPane(CompositeProblemSupplier.of(new IntAddSubtractSupplier(2, 2, 2, 2)));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();

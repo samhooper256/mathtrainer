@@ -1,7 +1,5 @@
 package suppliers.roots;
 
-import static problems.Problem.*;
-import static suppliers.NamedBooleanRef.*;
 import static suppliers.NamedIntRange.*;
 
 import math.*;
@@ -26,7 +24,7 @@ public class OtherRootsSupplier extends SettingsProblemSupplier {
 		long rb = Problem.intInclusive(radicandBase);
 		long rootBottom = Problem.intInclusive(root);
 		long rootTop = rootBottom == 1L ? 1L : Problem.longInclusive(1, rootBottom - 1);
-		return ComplexValued.of(String.format("<math><msup><mn>%d</mn><mfrac><mn>%d</mn><mn>%d</mn></mfrac></msup></math>", Utils.pow(rb, rootBottom), rootTop, rootBottom), new Complex(Utils.pow(rb, rootTop)), 1.9);
+		return ComplexValued.of(String.format("<math><msup><mn>%d</mn><mfrac><mn>%d</mn><mn>%d</mn></mfrac></msup></math>", Utils.pow(rb, rootBottom), rootTop, rootBottom), new Complex(Utils.pow(rb, rootTop)));
 	}
 	
 }

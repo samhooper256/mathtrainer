@@ -19,15 +19,11 @@ public class MultiValued implements Problem {
 	public static final BigDecimal DEFAULT_APPROXIMATION_PERCENT = new BigDecimal("0.05");
 	
 	public static MultiValued of(final String htmlFormattedText) {
-		return of(htmlFormattedText, 1.0);
-	}
-	public static MultiValued of(final String htmlFormattedText, final double estimatedDisplayLinesNeeded) {
-		return new MultiValued(htmlFormattedText, estimatedDisplayLinesNeeded);
+		return new MultiValued(htmlFormattedText);
 	}
 	
 	private final String display;
 	private final Map<Object, Verifier> resultMap;
-	private double lines;
 	private boolean isApproximate;
 	private BigDecimal approximationPercent;
 	
@@ -38,10 +34,9 @@ public class MultiValued implements Problem {
 		boolean isValid(String input);
 	}
 	
-	private MultiValued(final String htmlFormattedDisplayText, final double estimatedDisplayLinesNeeded) {
+	private MultiValued(final String htmlFormattedDisplayText) {
 		this.display = htmlFormattedDisplayText;
 		this.resultMap = new LinkedHashMap<>();
-		this.lines = estimatedDisplayLinesNeeded;
 		this.isApproximate = false;
 		this.approximationPercent = DEFAULT_APPROXIMATION_PERCENT;
 	}
@@ -192,11 +187,6 @@ public class MultiValued implements Problem {
 		return this;
 	}
 	
-	public MultiValued setLines(final double newEstimatedDisplayLinesNeeded) {
-		this.lines = newEstimatedDisplayLinesNeeded;
-		return this;
-	}
-	
 	public MultiValued setApproximate(final boolean isApproximate) {
 		this.isApproximate = isApproximate;
 		return this;
@@ -212,11 +202,6 @@ public class MultiValued implements Problem {
 			throw new IllegalArgumentException("Percent cannot be negative");
 		this.approximationPercent = percent;
 		return this;
-	}
-	
-	@Override
-	public double estimatedDisplayLines() {
-		return lines;
 	}
 
 	/**

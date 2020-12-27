@@ -29,8 +29,7 @@ public class SpecialFractionsSupplier extends SettingsProblemSupplier {
 		int a = intInclusive(aValue), b = intInclusive(bValue), k = intInclusive(multiple), d = intInclusive(difference);
 		BigFraction frac1 = BigFraction.of(a, b), frac2 = BigFraction.of(k * a + d, k * b - d);
 		final BigFraction result = frac1.subtract(frac2);
-		MultiValued mv = MultiValued.of(new DisplayExpression().addTerm(frac1).addOperator("-").addTerm(frac2).toMathML()).setLines(1.5)
-				.addResult(result);
+		MultiValued mv = MultiValued.of(new DisplayExpression().addTerm(frac1).addOperator("-").addTerm(frac2).toMathML()).addResult(result);
 		if(result.isImproper())
 			mv.addResult(result.toMixedNumber());
 		return mv;

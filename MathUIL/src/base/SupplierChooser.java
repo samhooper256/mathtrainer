@@ -171,7 +171,7 @@ public class SupplierChooser extends StackPane {
 	
 	private void addDesired() {
 		mainPane.hideChooser();
-		for(Node n : scrollContent.getChildren()) {
+		for(Node n : buttonList()) {
 			SupplierButton sb = (SupplierButton) n;
 			if(sb.isDesired()) {
 				mainPane.addSupplierOrThrow(sb.getInfo().getFactory().get());

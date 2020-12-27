@@ -29,7 +29,7 @@ public class FractionsToDecimalsSupplier extends SettingsProblemSupplier {
 		BigFraction frac = BigFraction.of(num, den);
 		BigDecimal decimal = frac.toBigDecimal(new MathContext(dig + 1));
 		return MultiValued.of(String.format("What is %s accurate to %d decimal places?%n", Prettifier.ensureMath(Prettifier.frac(frac)), dig))
-				.setLines(1.5) .addMinimumDigitsAfterDecimalResult(decimal.toPlainString(), dig);
+				.addMinimumDigitsAfterDecimalResult(decimal.toPlainString(), dig);
 	}
 	
 }

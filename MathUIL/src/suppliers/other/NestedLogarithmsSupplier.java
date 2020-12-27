@@ -54,7 +54,7 @@ public class NestedLogarithmsSupplier extends SettingsProblemSupplier {
 			int pop = bases.removeLast();
 			display = display.isEmpty() ? log(num(pop), displayArg) : log(num(pop), display);
 		}
-		return MultiValued.of(ensureMath(display)).setLines(1.2).addResult(new Complex(answer));
+		return MultiValued.of(ensureMath(display)).addResult(new Complex(answer));
 	}
 	
 }

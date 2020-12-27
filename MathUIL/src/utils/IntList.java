@@ -15,7 +15,7 @@ public class IntList implements Iterable<Integer> {
 	int size;
 	
 	/** Returns a freshly created {@code IntList} containing exactly {@code numElements} elements, all of which are 0.
-	 * The capacity of the returned list is {@code numElements}. Runs in O(1).*/
+	 * The capacity of the returned list is {@code numElements}.*/
 	public static IntList zeroList(int numElements) {
 		IntList l = new IntList(numElements);
 		l.size = numElements;
@@ -23,7 +23,7 @@ public class IntList implements Iterable<Integer> {
 	}
 	
 	/** Returns a freshly created {@code IntList} containing exactly {@code numElements} elements, all of which are 0.
-	 * The capacity of the returned list is {@code capacity}. Runs in O(1).*/
+	 * The capacity of the returned list is {@code capacity}.*/
 	public static IntList zeroList(int numElements, int capacity) {
 		if(capacity < numElements) throw new IllegalArgumentException("capacity < numElements");
 		IntList l = new IntList(capacity);
