@@ -8,18 +8,21 @@ import math.*;
 import utils.Strings;
 
 /**
- * <p>A builder of {@link Problem Problems} that may have multiple correct answers. After configuring the {@code Problem}, it can be built via
- * the {@link #build()} method.</p>
+ * <p>A builder of {@link Problem Problems} that may have multiple correct answers. A new {@code Builder} can be created via the {@link #of(String)} method.
+ * After configuring the {@code Problem}, it can be built via the {@link #build()} method.</p>
+ * 
+ * <p><b>{@code Builders} cannot be reused - after {@link #build()}
+ * has been called once, <i>all</i> future behavior of the {@code Builder} is undefined.</b> If any other methods are called after the first
+ * call to {@code build()}, the behavior of any {@code Problems} that {@code Builder} has generated or will generate is undefined.</p>
  * 
  * <p>Correct answers can be added via the various {@code addResult} methods.
  * A {@link Problem#isCorrect(String) correct} answer to the generated {@code Problem} must match <i>one or more</i> of the {@link #allAnswers() answers}.
  * The method {@link #answerAsString()} returns a {@code String} containing all the correct answers, separated by {@code ", "}. By default,
- * {@code Problems} built by a {@code Builder} are not {@link #isApproximate() approximations}, but that can be changed via
+ * {@code Problems} built by a {@code Builder} are not {@link NumericProblem#isApproximateResult() approximations}, but that can be changed via
  * {@link #setApproximate(boolean)}.</p>
  * 
  * <p>{@code Builders} are mutable, but the {@code Problems} they generate are not. {@code Builders} are not safe for use by multiple concurrent threads.
- * {@code Builders} may be reused - for example, one may call {@code build()}, adjust some settings, then call {@code build()} again to generate a
- * different {@code Problem}.</p>
+ * 
  * 
  * @author Sam Hooper
  *
@@ -28,15 +31,37 @@ public class Builder {
 	
 	public static final BigDecimal DEFAULT_APPROXIMATION_PERCENT = new BigDecimal("0.05");
 	
+	/**
+	 * <p>A call to <pre><code>{@code approximation(html, result)}</code></pre> is equivalent to:
+	 * <pre><code>approximation(DEFAULT_APPROXIMATION_PERCENT, html, result)</code></pre></p>
+	 */
 	public static NumericProblem approximation(String htmlFormattedText, final BigDecimal result) {
 		return approximation(DEFAULT_APPROXIMATION_PERCENT, htmlFormattedText, result);
 	}
 	
+	/**
+	 * <p>Returns an {@link NumericProblem#isApproximateResult() approximate} {@link NumericProblem} with an
+	 * {@link NumericProblem#approximationPercent() approximation percent} of {@code approximationPercent}, a correct answer of {@code result},
+	 * and a {@link NumericProblem#displayString() display String} of {@code htmlFormattedText}.</p>
+	 * */
 	public static NumericProblem approximation(final BigDecimal approximationPercent, String htmlFormattedText, final BigDecimal result) {
 		return of(htmlFormattedText).setApproximate(true).setApproximationPercent(approximationPercent).addResult(result).build();
 	}
 	
-	public static Problem ofString(final String htmlFormattedText, final String result) {
+	/** 
+	 * <p>Returns a {@link Problem} whose correct answer is <code>result.{@link String#strip() strip()}</code>. The method
+	 * {@link Problem#isCorrect(String) isCorrect(String)} on the given {@code Problem} returns {@code true} if and only if
+	 * {@code Objects.equals(input, result.strip())}, {@code false} otherwise.</p>
+	 * 
+	 * @throws NullPointerException if any parameter is {@code null}
+	 * @throws IllegalArgumentException if {@code (result.strip().isEmpty())}
+	 * */
+	public static Problem ofString(final String htmlFormattedText, String result) {
+		Objects.requireNonNull(htmlFormattedText);
+		Objects.requireNonNull(result);
+		String realResult = result.strip();
+		if(realResult.isEmpty())
+			throw new IllegalArgumentException("Result String is empty");
 		return new Problem() {
 
 			@Override
@@ -57,12 +82,17 @@ public class Builder {
 		};
 	}
 	
+	/**
+	 * <p>Creates a new {@link Builder} whose {@link #getDisplay() display} {@code String} is the given one. The created
+	 * {@code Builder} has no {@link #allAnswers() answers}.</p>
+	 * */
 	public static Builder of(final String htmlFormattedText) {
 		return new Builder(htmlFormattedText);
 	}
 	
-	private final String display;
 	private final Map<Object, Verifier> resultMap;
+	
+	private String display;
 	private boolean isApproximate;
 	private BigDecimal approximationPercent;
 	
@@ -241,9 +271,10 @@ public class Builder {
 	}
 	
 	/**
-	 * Returns {@code true} if the {@link Problem} that would be built by a call to {@link #build()} would
+	 * Returns {@code true} if the {@link Problem} that would be built by a call to {@link #build()} would be
+	 * {@link NumericProblem#isApproximateResult() approximate}, {@code false} otherwise.
 	 */
-	private boolean isApproximate() {
+	public boolean isApproximate() {
 		return isApproximate;
 	}
 
@@ -252,6 +283,22 @@ public class Builder {
 		return this;
 	}
 	
+	public BigDecimal getApproximationPercent() {
+		return approximationPercent;
+	}
+	
+	/**
+	 * Returns the {@code String} that would be returned by the {@link Problem#displayString()} method if it were called on a {@link Problem}
+	 * returned by {@link #build()}.
+	 * */
+	public String getDisplay() {
+		return display;
+	}
+	
+	public void setDisplay(final String newDisplay) {
+		display = newDisplay;
+	}
+
 	/**
 	 * {@code percent} should be between {@code 0} and {@code 1}.
 	 * @return
@@ -261,10 +308,6 @@ public class Builder {
 			throw new IllegalArgumentException("Percent cannot be negative");
 		this.approximationPercent = percent;
 		return this;
-	}
-	
-	public BigDecimal getApproximationPercent() {
-		return approximationPercent;
 	}
 
 	/**
@@ -308,7 +351,7 @@ public class Builder {
 			}
 			
 			@Override
-			public BigDecimal approximationPercentAsBigDecimal() {
+			public BigDecimal approximationPercent() {
 				return approximationPercent;
 			}
 			

@@ -6,12 +6,17 @@ import java.util.function.IntSupplier;
 import java.util.regex.Pattern;
 
 import math.*;
-import suppliers.NamedSetting;
+import suppliers.*;
 import utils.*;
 import utils.function.CharSupplier;
 import utils.refs.IntRange;
 
 /**
+ * <p>A problem that the user can attempt to solve. Any {@link Problem} that will be displayed to the user must have a
+ * {@link ProblemSupplier} that supplies it.</p>
+ * 
+ * <p><b>All {@code Problems} are immutable.</b></p>
+ * 
  * @author Sam Hooper
  *
  */
@@ -187,8 +192,13 @@ public interface Problem {
 	String displayString();
 	
 	/**
-	 * Returns {@code true} if the input, given in the form of a {@link String}, is correct. There may be more than one correct
-	 * answer to this {@link Problem}. This method is guaranteed to return true for at least one {@link String}.
+	 * <p>Returns {@code true} if the input, given in the form of a {@link String}, is correct. There may be more than one correct
+	 * answer to this {@link Problem}. This method is guaranteed to return {@code true} for at least one {@link String}.</p>
+	 * 
+	 * <p>This method assumes that the given {@code String} has no leading nor trailing whitespace. More specifically, this method
+	 * assumes that <code>(Objects.equals(input, input.{@link String#strip() strip()})</code>.</p>
+	 * 
+	 * <p>Behavior is undefined if {@code input == null}.</p>
 	 */
 	boolean isCorrect(String input);
 	

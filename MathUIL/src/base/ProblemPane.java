@@ -234,7 +234,8 @@ public class ProblemPane extends Pane {
 	}
 
 	/**
-	 * Accepts the input that is currently in the {@link #field}. Does nothing if the input {@link String#isBlank() is blank}.
+	 * Accepts the input that is currently in the {@link #field}. Does nothing if the input {@link String#isBlank() is blank}; otherwise,
+	 * passes the {@link String#strip() stripped} version of the input {@code String} to {@link #acceptInput(String)}.
 	 */
 	private void acceptInput() {
 		final String input = field.getText().strip();
