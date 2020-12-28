@@ -8,10 +8,19 @@ import math.*;
 import utils.Strings;
 
 /**
- * A {@link Problem} with multiple correct answers. Correct answers can be added via the various {@code addResult} methods.
- * A {@link #isCorrect(String) correct} answer must match <i>one or more</i> of the {@link #allAnswers() answers} to this {@code Problem}.
- * {@link #answerAsString()} returns a {@code String} containing all the correct answers, separated by {@code ", "}. By default, {@code MultiValued}
- * {@code Problems} are not {@link #isApproximate() approximations}, but that can be changed via {@link #setApproximate(boolean)}.
+ * <p>A builder of {@link Problem Problems} that may have multiple correct answers. After configuring the {@code Problem}, it can be built via
+ * the {@link #build()} method.</p>
+ * 
+ * <p>Correct answers can be added via the various {@code addResult} methods.
+ * A {@link Problem#isCorrect(String) correct} answer to the generated {@code Problem} must match <i>one or more</i> of the {@link #allAnswers() answers}.
+ * The method {@link #answerAsString()} returns a {@code String} containing all the correct answers, separated by {@code ", "}. By default,
+ * {@code Problems} built by a {@code Builder} are not {@link #isApproximate() approximations}, but that can be changed via
+ * {@link #setApproximate(boolean)}.</p>
+ * 
+ * <p>{@code Builders} are mutable, but the {@code Problems} they generate are not. {@code Builders} are not safe for use by multiple concurrent threads.
+ * {@code Builders} may be reused - for example, one may call {@code build()}, adjust some settings, then call {@code build()} again to generate a
+ * different {@code Problem}.</p>
+ * 
  * @author Sam Hooper
  *
  */
@@ -245,7 +254,6 @@ public class Builder {
 	
 	/**
 	 * {@code percent} should be between {@code 0} and {@code 1}.
-	 * @param percent
 	 * @return
 	 */
 	public Builder setApproximationPercent(final BigDecimal percent) {
@@ -266,10 +274,12 @@ public class Builder {
 		return resultMap.keySet();
 	}
 	
-	
-	
+	/**
+	 * @throws IllegalStateException if <code>({@link #allAnswers()}.size() == 0)</code>
+	 */
 	public NumericProblem build() {
-		
+		if(allAnswers().size() == 0)
+			throw new IllegalStateException("This Builder has no correct answers.");
 		return new NumericProblem() {
 			@Override
 			public String displayString() {
