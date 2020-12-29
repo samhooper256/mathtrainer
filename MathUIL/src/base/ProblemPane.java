@@ -65,11 +65,12 @@ public class ProblemPane extends Pane {
 	 * {@code true} if text had been deleted (either by using the backspace or delete keys or by using the "clear" button).
 	 */
 	private boolean hasDeletedText;
-	/**
-	 * {@code true} if the user has shown the answer to the {@link #currentProblem} (using the {@link #showAnswer} Button.
-	 */
+	
 	/** Number of the user's most recent problem attempts whose times and accuracies will be kept in temporary storage (and displayed to the user). */
 	private int resultsTracked = 100;
+	/**
+	 * {@code true} if the user has shown the answer to the {@link #currentProblem} (using the {@link #showAnswer} Button).
+	 */
 	private boolean hasShownAnswer;
 	private Problem currentProblem;
 	private ProblemSupplier currentProblemSupplier;
@@ -182,6 +183,7 @@ public class ProblemPane extends Pane {
 
 	private void initInputField() {
 		field.setBorder(FIELD_EMPTY_BORDER);
+		field.setAlignment(Pos.CENTER);
 		field.maxWidthProperty().bind(root.widthProperty().divide(2));
 		field.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
 			switch(keyEvent.getCode()) {
