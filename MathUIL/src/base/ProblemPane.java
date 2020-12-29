@@ -3,7 +3,7 @@ package base;
 import java.util.*;
 
 import fxutils.*;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
@@ -123,17 +123,11 @@ public class ProblemPane extends Pane {
 	}
 	
 	private void finishInit() {
-		buttonBox.setAlignment(Pos.CENTER);
-		VBox vBox = new VBox(10, problemViewWrap, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
-		vBox.setAlignment(Pos.CENTER);
-		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel, resetResults);
-		AnchorPane anchor = new AnchorPane(resultsBox);
-		anchor.setPickOnBounds(false);
-		AnchorPane.setBottomAnchor(resultsBox, 10d);
-		AnchorPane.setLeftAnchor(resultsBox, 10d);
-		AnchorPane.setRightAnchor(resultsBox, 10d);
 		
-		root.getChildren().addAll(vBox, anchor);
+		final GridPane gridPane = createGridPane();
+		final AnchorPane anchor = createAnchorPane();
+		
+		root.getChildren().addAll(gridPane, anchor);
 		root.prefWidthProperty().bind(this.widthProperty());
 		root.prefHeightProperty().bind(this.heightProperty());
 		getChildren().add(root);
@@ -145,6 +139,36 @@ public class ProblemPane extends Pane {
 		approxStack.layoutYProperty().bind(field.layoutYProperty());
 		approxWrap.setVisible(false);
 		getChildren().add(approxStack);
+	}
+
+	private AnchorPane createAnchorPane() {
+		HBox resultsBox = new HBox(10, lastTimeLabel, averageTimeLabel, averageAccuracyLabel, resetResults);
+		AnchorPane anchor = new AnchorPane(resultsBox);
+		anchor.setPickOnBounds(false);
+		AnchorPane.setBottomAnchor(resultsBox, 10d);
+		AnchorPane.setLeftAnchor(resultsBox, 10d);
+		AnchorPane.setRightAnchor(resultsBox, 10d);
+		return anchor;
+	}
+	
+	/** Only called by {@link #finishInit()}.*/
+	private GridPane createGridPane() {
+		final GridPane gridPane = new GridPane();
+		RowConstraints r1 = new RowConstraints(), r2 = new RowConstraints();
+		r1.setPercentHeight(40);
+		r2.setPercentHeight(60);
+		ColumnConstraints c1 = new ColumnConstraints();
+		c1.setPercentWidth(100);
+		gridPane.getRowConstraints().addAll(r1, r2);
+		gridPane.getColumnConstraints().addAll(c1);
+		VBox vBox = new VBox(10, field, buttonBox, deleteText, markWrongIfCleared, markWrongIfShownAnswer, clearOnWrongAnswer, skillLabel);
+		vBox.setAlignment(Pos.TOP_CENTER);
+		gridPane.add(problemViewWrap, 0, 0);
+		gridPane.add(vBox, 0, 1);
+		
+		buttonBox.setAlignment(Pos.CENTER);
+		
+		return gridPane;
 	}
 
 	private void initCompositeSupplier() {
