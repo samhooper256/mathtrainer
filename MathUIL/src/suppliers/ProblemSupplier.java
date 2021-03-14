@@ -1,7 +1,5 @@
 package suppliers;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -9,8 +7,7 @@ import java.util.regex.Pattern;
 import base.*;
 import problems.*;
 import utils.EnumSetView;
-import utils.refs.Ref;
-
+import utils.refs.*;
 /**
  * <p>An interface that all classes which will generate {@link Problem Problems} must implement in order for their problems
  * to be displayed to the user.</p>
@@ -25,9 +22,11 @@ import utils.refs.Ref;
  */
 @FunctionalInterface
 public interface ProblemSupplier extends Supplier<Problem> {
-	
+			
+	ObjectRef<SupplierMode> RANDOM_ONLY_REF = ObjectRef.of(SupplierMode.RANDOM);
+			
 	EnumSetView<SupplierMode> RANDOM_ONLY = EnumSetView.of(SupplierMode.RANDOM);
-
+	
 	static ProblemSupplier from(final String displayName, final Supplier<? extends Problem> supplier) {
 		return new ProblemSupplier() {
 			
@@ -88,13 +87,16 @@ public interface ProblemSupplier extends Supplier<Problem> {
 		return RANDOM_ONLY;
 	}
 	
-	default SupplierMode getCurrentMode() {
-		return SupplierMode.RANDOM;
+	default ObjectRef<SupplierMode> getModeRef() {
+		return RANDOM_ONLY_REF;
 	}
 	
+	default SupplierMode getMode() {
+		return getModeRef().getValue();
+	}
 	
 	default void setMode(SupplierMode newMode) {
-		if(newMode == getCurrentMode())
+		if(newMode == getModeRef().getValue())
 			return;
 		if(supportsUnderAnySettings(newMode))
 			throw new UnsupportedOperationException("Must override setMode to allow all supported modes to be set");
@@ -110,7 +112,7 @@ public interface ProblemSupplier extends Supplier<Problem> {
 	/** Called to notify this {@link ProblemSupplier} that its {@link #settings()} have changed in some way.*/
 	default void settingsChanged() {
 		System.out.printf("%s settings changed%n", this);//TODO remove
-		//Overridden for functionality
+		setMode(SupplierMode.RANDOM);
 	}
 	
 }

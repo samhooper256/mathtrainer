@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 import problems.*;
 import suppliers.*;
 import utils.EnumSetView;
+import utils.refs.*;
 /**
  * <p>Supports {@link SupplierMode#RANDOM} and {@link SupplierMode#STACKED} (under certain conditions). </p>
  * @author Sam Hooper
@@ -23,17 +24,19 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 	
 	private List<SimpleExpression> stackedProblems = null;
 	private int stackedProblemsMaxIndex = -1, lastStackedProblemsIndex = -1;
-	private SupplierMode mode;
+	private MutableObjectRef<SupplierMode> modeRef;
+	private SupplierMode currentProblemMode = null;
 	
 	/** Will be {@link SupplierMode#RANDOM} by default.*/
 	public IntegerMultiplicationSupplier() {
-		this.mode = SupplierMode.RANDOM;
+		this.modeRef = new MutableObjectRef<>(SupplierMode.RANDOM);
 		addAllSettings(values = of(VALUES, "Values"), terms = of(TERMS, "Terms"));
 	}
 	
 	@Override
 	public SimpleExpression get() {
-		return switch(mode) {
+		currentProblemMode = getMode();
+		return switch(currentProblemMode) {
 			case RANDOM -> {
 				yield SimpleExpression.multiplyTerms(IntStream.generate(() -> Problem.intInclusive(values))
 						.limit(Problem.intInclusive(terms)).toArray());
@@ -42,7 +45,7 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 				lastStackedProblemsIndex = Problem.intExclusive(stackedProblemsMaxIndex);
 				yield stackedProblems.get(lastStackedProblemsIndex);
 			}
-			default -> throw new IllegalStateException(String.format("Should not be in mode: %s", mode));
+			default -> throw new IllegalStateException(String.format("Should not be in mode: %s", currentProblemMode));
 		};
 	}
 
@@ -59,8 +62,8 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 	}
 	
 	@Override
-	public SupplierMode getCurrentMode() {
-		return mode;
+	public ObjectRef<SupplierMode> getModeRef() {
+		return modeRef;
 	}
 
 	@Override
@@ -90,17 +93,18 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 
 	@Override
 	public void setMode(SupplierMode newMode) {
-		if(mode == newMode) {
+		System.out.printf("enter IntegerMultiplicationSupplier.setMode(newMode=%s)%n",newMode);
+		if(getMode() == newMode) {
 			return;
 		}
 		switch(newMode) {
 			case RANDOM -> {
-				mode = SupplierMode.RANDOM;
+				modeRef.set(SupplierMode.RANDOM);
 			}
 			case STACKED -> {
 				stackedProblems = generateAllPossibleProblems();
 				stackedProblemsMaxIndex = stackedProblems.size();
-				mode = SupplierMode.STACKED;
+				modeRef.set(SupplierMode.STACKED);
 			}
 			default -> throw new UnsupportedOperationException(String.format("%s is unsupported", newMode));
 		}
@@ -108,12 +112,14 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 
 	@Override
 	public void strictlySolved(Problem p) {
-		if(stackedProblemsMaxIndex <= 1) {
-			stackedProblemsMaxIndex = stackedProblems.size();
-		}
-		else {
-			stackedProblemsMaxIndex--;
-			Collections.swap(stackedProblems, lastStackedProblemsIndex, stackedProblemsMaxIndex);
+		if(currentProblemMode == SupplierMode.STACKED) {
+			if(stackedProblemsMaxIndex <= 1) {
+				stackedProblemsMaxIndex = stackedProblems.size();
+			}
+			else {
+				stackedProblemsMaxIndex--;
+				Collections.swap(stackedProblems, lastStackedProblemsIndex, stackedProblemsMaxIndex);
+			} 
 		}
 	}
 	

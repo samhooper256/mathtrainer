@@ -11,9 +11,11 @@ import utils.IntChangeListener;
  *
  */
 public class IntRef extends AbstractRef {
+	
 	private int value;
 	
-	private ArrayList<IntChangeListener> changeListeners; //only constructed when a listener is actually added.
+	/** only initialized when a listener is actually added. */
+	private ArrayList<IntChangeListener> changeListeners;
 	
 	/**
 	 * Creates a new {@code IntRef} storing the given value.

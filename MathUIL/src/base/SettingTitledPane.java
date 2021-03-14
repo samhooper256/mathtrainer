@@ -1,6 +1,6 @@
 package base;
 
-import java.util.Objects;
+import java.util.*;
 
 import org.controlsfx.control.RangeSlider;
 
@@ -23,6 +23,8 @@ public class SettingTitledPane extends TitledPane {
 	private ProblemSupplier problemSupplier;
 	private final SettingsPane settingsPane;
 	private final Button removeButton;
+	private final List<ModeRadioButton> modeRadioButtons;
+	
 	/**
 	 * @throws NullPointerException if {@code supplier} is {@code null}.
 	 */
@@ -38,6 +40,7 @@ public class SettingTitledPane extends TitledPane {
 		this.problemSupplier = Objects.requireNonNull(supplier);
 		this.settingsPane = Objects.requireNonNull(settingsPane);
 		this.removeButton = Buttons.of("X", this::removeSelf);
+		this.modeRadioButtons = new ArrayList<>();
 		this.setText(supplier.getName());
 		VBox vBox = new VBox();
 		setContent(vBox);
@@ -56,11 +59,48 @@ public class SettingTitledPane extends TitledPane {
 			final EnumSetView<SupplierMode> currentSupported = supplier.getSupportedModesUnderCurrentSettings();
 			ToggleGroup group = new ToggleGroup();
 			for(SupplierMode mode : supported) {
-				RadioButton button = new RadioButton(currentSupported.contains(mode) ? mode.getDisplayName() : getUnsupportedModeDisplay(mode));
+				ModeRadioButton button = new ModeRadioButton(mode, currentSupported.contains(mode) ? mode.getDisplayName() : getUnsupportedModeDisplay(mode));
+				button.selectedProperty().addListener((x, ov, nv) -> {
+					if(nv) {
+						supplier.setMode(mode);
+					}
+				});
+				
 				if(mode == SupplierMode.RANDOM)
 					button.setSelected(true);
 				button.setToggleGroup(group);
+				modeRadioButtons.add(button);
 				vBox.getChildren().add(button);
+			}
+			System.out.printf("adding listener to %s%n", supplier.getModeRef());
+			supplier.getModeRef().addChangeListener((ov, nv) -> {
+				System.out.printf("entered mode ref change listener%n");
+				setSelectedMode(nv);
+			});
+		}
+	}
+	
+	private static class ModeRadioButton extends RadioButton {
+
+		private final SupplierMode mode;
+		
+		public ModeRadioButton(final SupplierMode mode, final String text) {
+			super(text);
+			this.mode = mode;
+		}
+		
+		public SupplierMode getMode() {
+			return mode;
+		}
+		
+		
+		
+	}
+	
+	private void setSelectedMode(SupplierMode newMode) {
+		for(ModeRadioButton button : modeRadioButtons) {
+			if(button.getMode() == newMode) {
+				button.setSelected(true);
 			}
 		}
 	}
@@ -98,13 +138,6 @@ public class SettingTitledPane extends TitledPane {
 		else if(ref instanceof BooleanRef) {
 			BooleanRef br = (BooleanRef) ref;
 			vBox.getChildren().add(new BoolBox(br, name));
-//			System.out.printf("size before: %d%n", br.getChangeActionsUnmodifiable().size()); //TODO remove this commented stuff
-//			br.addChangeListener((ov,nv) -> {
-//				System.out.printf("CHANGED (%b to %b)%n",ov,nv);
-//			});
-//			br.addChangeAction(() -> {
-//				System.out.printf("CHANGED (action)%n");
-//			});
 		}
 		else {
 			throw new UnsupportedOperationException("Unsupported setting type: " + ref.getClass());
