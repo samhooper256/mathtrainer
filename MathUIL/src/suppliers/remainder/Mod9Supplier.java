@@ -11,7 +11,6 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
-@Named("Remainder when divided by 9")
 public class Mod9Supplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore DIGITS = RangeStore.of(1, 5);
@@ -25,4 +24,10 @@ public class Mod9Supplier extends SettingsProblemSupplier {
 	public Problem get() {
 		return new Remainder(Problem.intWithDigits(digits), 9);
 	}
+
+	@Override
+	public String getName() {
+		return "Remainder when divided by 9";
+	}
+	
 }

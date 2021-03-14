@@ -12,7 +12,6 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
-@Named("Sum of two consecutive squares")
 public class SumConsecutiveSquaresSupplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore SMALL = RangeStore.of(0, 200, 1, 50);
@@ -27,5 +26,9 @@ public class SumConsecutiveSquaresSupplier extends SettingsProblemSupplier {
 		return new SimpleExpression(String.format("%s^2+%d^2", term, term + 1));
 	}
 	
+	@Override
+	public String getName() {
+		return "Powers of e";
+	}
 	
 }

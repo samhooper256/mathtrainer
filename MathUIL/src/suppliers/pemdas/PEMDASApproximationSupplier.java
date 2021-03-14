@@ -12,7 +12,6 @@ import utils.refs.IntRange;
  * @author Sam Hooper
  *
  */
-@Named("PEMDAS Approximation")
 public class PEMDASApproximationSupplier extends SettingsProblemSupplier {
 	
 	public static final int MIN_TERMS = 2, MAX_TERMS = 5, MIN_DIGITS = 1, MAX_DIGITS = 6;
@@ -59,5 +58,11 @@ public class PEMDASApproximationSupplier extends SettingsProblemSupplier {
 	public int maxDigits() {
 		return digitRange.ref().getHigh();
 	}
+
+	@Override
+	public String getName() {
+		return "PEMDAS Approximation";
+	}
+	
 	
 }

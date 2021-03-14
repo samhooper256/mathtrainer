@@ -11,7 +11,6 @@ import utils.refs.*;
  * @author Sam Hooper
  *
  */
-@Named("Multiply by 125 and like")
 public class Multiply125Supplier extends SettingsProblemSupplier {
 	
 	private static final int MIN_DIGITS = 1, MAX_DIGITS = 4, LOW_DIGITS = 1, HIGH_DIGITS = 3;
@@ -47,6 +46,11 @@ public class Multiply125Supplier extends SettingsProblemSupplier {
 	
 	public boolean include375() {
 		return include375.ref().get();
+	}
+	
+	@Override
+	public String getName() {
+		return "Multiply by 125 and like";
 	}
 	
 }

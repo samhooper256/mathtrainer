@@ -10,7 +10,6 @@ import utils.refs.IntRange;
  * @author Sam Hooper
  *
  */
-@Named("Multiply by 25")
 public class Multiply25Supplier extends SettingsProblemSupplier {
 	
 	private static final int MIN_DIGITS = 1, MAX_DIGITS = 4, LOW_DIGITS = 1, HIGH_DIGITS = 3;
@@ -38,5 +37,12 @@ public class Multiply25Supplier extends SettingsProblemSupplier {
 	public int highDigits() {
 		return digits.ref().getHigh();
 	}
+
+	@Override
+	public String getName() {
+		return "Multiply by 25";
+	}
+	
+	
 	
 }

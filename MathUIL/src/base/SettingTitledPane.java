@@ -39,7 +39,7 @@ public class SettingTitledPane extends TitledPane {
 		this.problemSupplier = Objects.requireNonNull(supplier);
 		this.settingsPane = Objects.requireNonNull(settingsPane);
 		this.removeButton = Buttons.of("X", this::removeSelf);
-		this.setText(ProblemSuppliers.nameOf(supplier.getClass()));
+		this.setText(supplier.getName());
 		VBox vBox = new VBox();
 		setContent(vBox);
 		if(supplier.settings().isEmpty()) {

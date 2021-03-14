@@ -33,7 +33,7 @@ public class FactorialsSupplier extends SettingsProblemSupplier {
 		return new SimpleExpression(sb.toString());
 	}
 	
-	private String getOp(List<String> opList) {
+	private static String getOp(List<String> opList) {
 		return Colls.getRandom(opList);
 	}
 	

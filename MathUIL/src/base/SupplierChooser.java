@@ -178,7 +178,7 @@ public class SupplierChooser extends StackPane {
 	public void show() {
 		for(final Node n : buttonList()) {
 			SupplierButton b = (SupplierButton) n;
-			if(mainPane.getProblemPane().hasSupplierOfClass(b.getInfo().getSupplierClass()))
+			if(mainPane.getProblemPane().hasSupplierNamed(b.getInfo().getDisplayName()))
 				b.setDisable(true);
 			else
 				b.setDisable(false);

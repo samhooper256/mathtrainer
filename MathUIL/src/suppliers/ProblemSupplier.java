@@ -1,7 +1,10 @@
 package suppliers;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import base.*;
 import problems.*;
@@ -22,8 +25,26 @@ import utils.refs.Ref;
 @FunctionalInterface
 public interface ProblemSupplier extends Supplier<Problem> {
 	
-	default List<Ref> settings() {
-		return Collections.emptyList();
+	static ProblemSupplier from(final String displayName, final Supplier<? extends Problem> supplier) {
+		return new ProblemSupplier() {
+			
+			@Override
+			public Problem get() {
+				return supplier.get();
+			}
+
+			@Override
+			public String getName() {
+				return displayName;
+			}
+			
+		};
+	}
+	
+	private static String getNameFromClass(Class<?> clazz) {
+		final String simpleName = clazz.getSimpleName();
+		int endIndex = simpleName.lastIndexOf("Supplier");
+		return NAME_SPACE_LOCATIONS.matcher(simpleName.substring(0, endIndex)).replaceAll(" ");
 	}
 	
 	/**
@@ -32,4 +53,15 @@ public interface ProblemSupplier extends Supplier<Problem> {
 	 */
 	@Override
 	public Problem get();
+	
+	default List<Ref> settings() {
+		return Collections.emptyList();
+	}
+	
+	Pattern NAME_SPACE_LOCATIONS = Pattern.compile("(?<![A-Z])(?=[A-Z])|(?<!\\d)(?=\\d)");
+	
+	default String getName() {
+		return getNameFromClass(getClass());
+	}
+	
 }

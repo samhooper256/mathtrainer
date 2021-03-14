@@ -12,7 +12,6 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
-@Named("Find term given GCD and LCM")
 public class BackwardsGCDLCMSupplier extends SettingsProblemSupplier {
 	private static final RangeStore DIGITS = RangeStore.of(1, 3, 1, 2);
 	private final NamedIntRange digits;
@@ -32,4 +31,8 @@ public class BackwardsGCDLCMSupplier extends SettingsProblemSupplier {
 		return ComplexValued.of(String.format("Given GCD(%d,x)=%d and LCM(%1$d,x)=%d, find x", a, gcd, lcm), new Complex(b));
 	}
 	
+	@Override
+	public String getName() {
+		return "Find term given GCD and LCM";
+	}
 }

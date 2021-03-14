@@ -11,7 +11,6 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
-@Named("Multiplying fractions with same whole part and fractional parts adding to 1")
 public class WholeNumbersSameFractionsAddTo1Supplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore WHOLE = RangeStore.of(1, 25, 1, 20), DENOM = RangeStore.of(2, 20, 2, 10);
@@ -25,6 +24,11 @@ public class WholeNumbersSameFractionsAddTo1Supplier extends SettingsProblemSupp
 	public Problem get() {
 		int w = intInclusive(whole), den = intInclusive(denom.low(), Math.max(denom.high(), denom.low() + 1)), num1 = intInclusive(1, den - 1);
 		return FracSupUtils.multiplyScrambled(MixedNumber.of(w, BigFraction.of(num1, den)), MixedNumber.of(w, BigFraction.of(den - num1, den)));
+	}
+
+	@Override
+	public String getName() {
+		return "Multiplying fractions with same whole part and fractional parts adding to 1";
 	}
 	
 }

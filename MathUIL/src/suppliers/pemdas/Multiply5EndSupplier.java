@@ -12,7 +12,6 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
-@Named("Multiply ending in 5")
 public class Multiply5EndSupplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore DIGITS5 = RangeStore.of(1, 3, 2, 2), DIGITS = RangeStore.of(1, 3);
@@ -44,5 +43,11 @@ public class Multiply5EndSupplier extends SettingsProblemSupplier {
 	public int highDigitsN() {
 		return digitsN.high();
 	}
+
+	@Override
+	public String getName() {
+		return "Multiply ending in 5";
+	}
+	
 	
 }

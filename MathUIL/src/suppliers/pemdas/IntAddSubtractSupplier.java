@@ -11,7 +11,6 @@ import utils.refs.IntRange;
  * @author Sam Hooper
  *
  */
-@Named("Integer Addition & Subtraction")
 public class IntAddSubtractSupplier extends SettingsProblemSupplier {
 	
 	public static final int MIN_DIGITS = 1, MAX_DIGITS = 5, MIN_TERMS = 2, MAX_TERMS = 5;
@@ -49,5 +48,11 @@ public class IntAddSubtractSupplier extends SettingsProblemSupplier {
 	public int highDigits() {
 		return digitRange.ref().getHigh();
 	}
+
+	@Override
+	public String getName() {
+		return "Integer Addition & Subtraction";
+	}
+	
 }
 

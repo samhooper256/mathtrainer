@@ -11,7 +11,6 @@ import utils.refs.IntRange;
  * @author Sam Hooper
  *
  */
-@Named("Multiply 2 numbers with same tens digit and ones digits that add to 10")
 public class MultiplySame10sOnesAddTo10Supplier extends SettingsProblemSupplier {
 	private static final int MIN_TENS = 1, MAX_TENS = 25, LOW_TENS = 1, HIGH_TENS = 20;
 	
@@ -40,5 +39,12 @@ public class MultiplySame10sOnesAddTo10Supplier extends SettingsProblemSupplier 
 	public int highTens() {
 		return tens.ref().getHigh();
 	}
+
+	@Override
+	public String getName() {
+		return "Multiply 2 numbers with same tens digit and ones digits that add to 10";
+	}
+	
+	
 	
 }

@@ -14,7 +14,6 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
-@Named("Adding fractions of the form a/b + b/(a+b)")
 public class AddingABPlusBAPlusBSupplier extends SettingsProblemSupplier {
 	
 	private static final RangeStore A_VALUE = RangeStore.of(1, 20, 1, 10), B_VALUE = RangeStore.of(2, 20, 2, 13);
@@ -32,7 +31,10 @@ public class AddingABPlusBAPlusBSupplier extends SettingsProblemSupplier {
 		final BigFraction f2 = BigFraction.of(b, a + b);
 		return FracSupUtils.addScrambled(f1, f2, true, false);
 	}
-	
-	
+
+	@Override
+	public String getName() {
+		return "Adding fractions of the form a/b + b/(a+b)";
+	}
 	
 }

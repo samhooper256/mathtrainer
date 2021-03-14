@@ -11,7 +11,6 @@ import utils.refs.*;
  * @author Sam Hooper
  *
  */
-@Named("Multiply by 11 and like")
 public class Multiply11Supplier extends SettingsProblemSupplier {
 	
 	private static final int MIN_ONES = 2, MAX_ONES = 4, MIN_NON_ONES_DIGITS = 1, MAX_NON_ONES_DIGITS = 4;
@@ -68,4 +67,11 @@ public class Multiply11Supplier extends SettingsProblemSupplier {
 	public boolean include121() {
 		return include121.ref().get();
 	}
+
+	@Override
+	public String getName() {
+		return "Multiply by 11 and like";
+	}
+	
+	
 }

@@ -13,7 +13,6 @@ import suppliers.*;
  * @author Sam Hooper
  *
  */
-@Named("Powers of e")
 public class PowersOfESupplier extends SettingsProblemSupplier {
 	public static final boolean DEFAULT_INCLUDE_E_TO_PI = true;
 	public static final Problem TO_PI_PROBLEM = Builder.approximation(
@@ -34,5 +33,11 @@ public class PowersOfESupplier extends SettingsProblemSupplier {
 		int exp = Problem.intInclusive(exponent);
 		return Builder.approximation(Prettifier.E_HTML + "<sup>" + exp + "</sup>", Utils.eTo(exp));
 	}
+
+	@Override
+	public String getName() {
+		return "Powers of e";
+	}
+	
 }
 
