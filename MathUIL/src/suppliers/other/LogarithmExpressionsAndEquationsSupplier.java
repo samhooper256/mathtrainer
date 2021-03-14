@@ -20,7 +20,7 @@ public class LogarithmExpressionsAndEquationsSupplier extends SettingsProblemSup
 	private final NamedIntRange bases = of(BASES, "Bases of logarithms"), values = of(VALUES, "Values of logarithm expressions");
 	
 	public LogarithmExpressionsAndEquationsSupplier() {
-		settings(bases, values);
+		addAllSettings(bases, values);
 	}
 	
 	@Override

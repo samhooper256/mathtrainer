@@ -30,7 +30,7 @@ public class NestedSquareRootsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange value = of(VALUE, "Value of expression");
 	
 	public NestedSquareRootsSupplier() {
-		settings(value);
+		addAllSettings(value);
 	}
 	
 	

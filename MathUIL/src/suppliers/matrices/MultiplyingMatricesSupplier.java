@@ -19,7 +19,7 @@ public class MultiplyingMatricesSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange values = of(VALUES, "Values of matrix elements"), rows = of(ROWS, "Rows in left matrix"), cols = of(COLS, "Columns in left matrix");
 	
 	public MultiplyingMatricesSupplier() {
-		settings(values, rows, cols);
+		addAllSettings(values, rows, cols);
 	}
 
 	@Override

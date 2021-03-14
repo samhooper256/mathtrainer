@@ -21,7 +21,7 @@ public class SumOfSquaresX3XSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange base;
 	
 	public SumOfSquaresX3XSupplier() {
-		settings = List.of(base = of(BASE, "Base of smaller term"));
+		addAllSettings(base = of(BASE, "Base of smaller term"));
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class AdditiveAndMultiplicativeInversesSupplier extends SettingsProblemSu
 	private final NamedIntRange values = of(VALUES, "Value(s) of number(s)");
 	
 	public AdditiveAndMultiplicativeInversesSupplier() {
-		settings(values);
+		addAllSettings(values);
 	}
 
 	@Override

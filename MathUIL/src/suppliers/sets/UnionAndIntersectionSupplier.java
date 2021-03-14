@@ -22,7 +22,7 @@ public class UnionAndIntersectionSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange size = of(SIZE, "Size of sets");
 	
 	public UnionAndIntersectionSupplier() {
-		settings(size);
+		addAllSettings(size);
 	}
 
 	@Override

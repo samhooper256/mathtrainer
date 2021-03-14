@@ -16,7 +16,7 @@ public class CombinationsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange n = of(N, "Value of n in C(n, r)"), r = of(R, "Value of r in C(n, r)");
 	
 	public CombinationsSupplier() {
-		settings(n, r);
+		addAllSettings(n, r);
 	}
 
 	@Override

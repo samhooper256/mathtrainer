@@ -22,7 +22,7 @@ public class SubsetsSupplier extends SettingsProblemSupplier {
 	
 	
 	public SubsetsSupplier() {
-		settings(size);
+		addAllSettings(size);
 	}
 
 	@Override

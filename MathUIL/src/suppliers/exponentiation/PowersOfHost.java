@@ -29,7 +29,7 @@ public class PowersOfHost implements ProblemSupplierHost {
 		
 		private PowersOfN(String number) {
 			this.number = number;
-			settings = List.of(exponent);
+			addAllSettings(exponent);
 		}
 
 		@Override

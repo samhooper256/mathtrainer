@@ -33,7 +33,7 @@ public class PEMDASApproximationSupplier extends SettingsProblemSupplier {
 		this.operators = operators;
 		this.termRange = NamedSetting.of(new IntRange(MIN_TERMS, MAX_TERMS, minTerms, maxTerms), "Terms");
 		this.digitRange = NamedSetting.of(new IntRange(MIN_DIGITS, MAX_DIGITS, minDigits, maxDigits), "Digits");
-		settings = List.of(termRange, digitRange);
+		addAllSettings(termRange, digitRange);
 	}
 
 	@Override

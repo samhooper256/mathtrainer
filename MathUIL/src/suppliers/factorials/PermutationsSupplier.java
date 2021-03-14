@@ -16,7 +16,7 @@ public class PermutationsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange n = of(N, "Value of n in P(n, r)"), r = of(R, "Value of r in P(n, r)");
 	
 	public PermutationsSupplier() {
-		settings(n, r);
+		addAllSettings(n, r);
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class ExponentApproximationSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange terms, base, exponent;
 	private final NamedSetting<BooleanRef> division;
 	public ExponentApproximationSupplier() {
-		settings = List.of(division = NamedSetting.of(new BooleanRef(true), "Divison"),
+		addAllSettings(division = NamedSetting.of(new BooleanRef(true), "Divison"),
 				terms = of(TERMS, "Terms"), exponent = of(EXPONENT, "Exponents"), base = of(BASE, "Bases"));
 	}
 	@Override

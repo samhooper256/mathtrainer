@@ -18,7 +18,7 @@ public class PolygonalNumbersSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange n = of(N, "Polygonal number index"), s = of(S, "Sides of polygon");
 	
 	public PolygonalNumbersSupplier() {
-		settings(s, n);
+		addAllSettings(s, n);
 	}
 
 	@Override

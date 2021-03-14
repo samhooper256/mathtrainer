@@ -18,7 +18,7 @@ public class SumConsecutiveSquaresSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange small;
 	
 	public SumConsecutiveSquaresSupplier() {
-		settings = List.of(small = of(SMALL, "Smaller term base"));
+		addAllSettings(small = of(SMALL, "Smaller term base"));
 	}
 	@Override
 	public Problem get() {

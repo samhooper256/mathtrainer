@@ -22,7 +22,7 @@ public class ProperAndImproperSubsetsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange size = of(SIZE, "Size of set");
 	
 	public ProperAndImproperSubsetsSupplier() {
-		settings(size);
+		addAllSettings(size);
 	}
 
 	@Override

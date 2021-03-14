@@ -17,7 +17,7 @@ public class WholeNumbersSameFractionsAddTo1Supplier extends SettingsProblemSupp
 	private final NamedIntRange whole = of(WHOLE, "Value of whole number part"), denom = of(DENOM, "Denominator of fractional part");
 	
 	public WholeNumbersSameFractionsAddTo1Supplier() {
-		settings(whole, denom);
+		addAllSettings(whole, denom);
 	}
 
 	@Override

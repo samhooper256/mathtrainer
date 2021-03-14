@@ -20,7 +20,7 @@ public class RelativelyPrimeSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange value = of(VALUE, "Value of number");
 	
 	public RelativelyPrimeSupplier() {
-		settings(value);
+		addAllSettings(value);
 	}
 
 	@Override

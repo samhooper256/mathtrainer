@@ -19,7 +19,7 @@ public class SquareRootsSupplier extends SettingsProblemSupplier {
 	
 	
 	public SquareRootsSupplier() {
-		settings = List.of(radicand);
+		addAllSettings(radicand);
 	}
 
 	@Override

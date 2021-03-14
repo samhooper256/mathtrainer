@@ -17,7 +17,7 @@ public class AbsoluteValueSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange terms = of(TERMS, "Terms"), values = of(VALUES, "Absolute values of terms"), bars = of(BARS, "Absolute value operations");
 	
 	public AbsoluteValueSupplier() {
-		settings(terms, values, bars);
+		addAllSettings(terms, values, bars);
 	}
 
 	@Override

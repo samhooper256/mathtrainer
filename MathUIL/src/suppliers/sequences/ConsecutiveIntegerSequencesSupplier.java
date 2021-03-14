@@ -16,7 +16,7 @@ public class ConsecutiveIntegerSequencesSupplier extends SettingsProblemSupplier
 	private final NamedIntRange terms = of(TERMS, "Terms in sequence"), start = of(START, "Start value of sequence");
 	
 	public ConsecutiveIntegerSequencesSupplier() {
-		settings(terms, start);
+		addAllSettings(terms, start);
 	}
 
 	@Override

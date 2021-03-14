@@ -18,7 +18,7 @@ public class LCMSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange digits;
 	
 	public LCMSupplier() {
-		settings = List.of(digits = of(DIGITS, "Digits"));
+		addAllSettings(digits = of(DIGITS, "Digits"));
 	}
 
 	@Override

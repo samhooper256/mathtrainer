@@ -20,7 +20,7 @@ public class MultiplyingOrDividingAnyFractionsSupplier extends SettingsProblemSu
 			denom1 = of(DENOM1, "First denominator"), denom2 = of(DENOM2, "First denominator");
 	
 	public MultiplyingOrDividingAnyFractionsSupplier() {
-		settings(num1, denom1, num2, denom2);
+		addAllSettings(num1, denom1, num2, denom2);
 	}
 
 	@Override

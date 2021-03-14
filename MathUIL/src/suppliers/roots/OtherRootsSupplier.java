@@ -16,7 +16,7 @@ public class OtherRootsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange root = of(ROOT, "Root"), radicandBase = of(RADICAND_BASE, "Base of the radicand");
 	
 	public OtherRootsSupplier() {
-		settings(root, radicandBase);
+		addAllSettings(root, radicandBase);
 	}
 
 	@Override

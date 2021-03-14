@@ -18,7 +18,7 @@ public class RemainderWithOperationsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange terms, digits, divisor;
 	
 	public RemainderWithOperationsSupplier() {
-		settings = List.of(terms = of(TERMS, "Terms in expression"), digits = of(DIGITS, "Digits in expression terms"), divisor = of(DIVISOR, "Divisor value"));
+		addAllSettings(terms = of(TERMS, "Terms in expression"), digits = of(DIGITS, "Digits in expression terms"), divisor = of(DIVISOR, "Divisor value"));
 	}
 
 	@Override

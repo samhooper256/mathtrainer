@@ -20,7 +20,7 @@ public class CompareFractionsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange denom = of(DENOM, "Denominators of fractions");
 	
 	public CompareFractionsSupplier() {
-		settings(denom);
+		addAllSettings(denom);
 	}
 
 	@Override

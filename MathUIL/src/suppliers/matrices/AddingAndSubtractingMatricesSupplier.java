@@ -22,7 +22,7 @@ public class AddingAndSubtractingMatricesSupplier extends SettingsProblemSupplie
 	private final NamedIntRange rows = of(ROWS, "Rows in matrices"), cols = of(COLS, "Cols in matrices"), values = of(VALUES, "Values of matrix elements");
 	
 	public AddingAndSubtractingMatricesSupplier() {
-		settings(values, rows, cols);
+		addAllSettings(values, rows, cols);
 	}
 
 	@Override

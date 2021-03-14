@@ -18,7 +18,7 @@ public class RootsOfQuadraticsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange magnitudes = of(MAGNITUDES, "Magnitudes of integer roots"), denoms = of(DENOMS, "Denominators of fractional roots");
 	
 	public RootsOfQuadraticsSupplier() {
-		settings(magnitudes, denoms);
+		addAllSettings(magnitudes, denoms);
 	}
 	
 	@Override

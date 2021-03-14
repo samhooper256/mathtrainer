@@ -10,9 +10,8 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import math.Utils;
-import suppliers.NamedSetting;
-import suppliers.ProblemSupplier;
-import suppliers.ProblemSuppliers;
+import suppliers.*;
+import utils.EnumSetView;
 import utils.refs.*;
 
 /**
@@ -32,10 +31,10 @@ public class SettingTitledPane extends TitledPane {
 	}
 	
 	/**
-	 * The given {@link ProblemSupplier} must not be {@code null}.
 	 * @throws NullPointerException if {@code supplier} or {@code settingsPane} is {@code null}.
 	 */
 	private SettingTitledPane(final ProblemSupplier supplier, final SettingsPane settingsPane) {
+		System.out.printf("NEW STP!%n");
 		this.problemSupplier = Objects.requireNonNull(supplier);
 		this.settingsPane = Objects.requireNonNull(settingsPane);
 		this.removeButton = Buttons.of("X", this::removeSelf);
@@ -46,10 +45,28 @@ public class SettingTitledPane extends TitledPane {
 			setExpanded(false);
 			setCollapsible(false);
 		}
-		else
-			for(Ref ref : supplier.settings())
+		else {
+			for(Ref ref : supplier.settings()) {
 				vBox.getChildren().add(displayNodeForRef(ref));
-		
+			}
+		}
+		final EnumSetView<SupplierMode> supported = supplier.getSupportedModesUnderAnySettings();
+		supplier.setMode(SupplierMode.RANDOM);
+		if(supported.size() > 1) {
+			final EnumSetView<SupplierMode> currentSupported = supplier.getSupportedModesUnderCurrentSettings();
+			ToggleGroup group = new ToggleGroup();
+			for(SupplierMode mode : supported) {
+				RadioButton button = new RadioButton(currentSupported.contains(mode) ? mode.getDisplayName() : getUnsupportedModeDisplay(mode));
+				if(mode == SupplierMode.RANDOM)
+					button.setSelected(true);
+				button.setToggleGroup(group);
+				vBox.getChildren().add(button);
+			}
+		}
+	}
+	
+	private static String getUnsupportedModeDisplay(SupplierMode mode) {
+		return String.format("%s (unsupported under current settings)", mode.getDisplayName());
 	}
 	
 	/**
@@ -81,7 +98,13 @@ public class SettingTitledPane extends TitledPane {
 		else if(ref instanceof BooleanRef) {
 			BooleanRef br = (BooleanRef) ref;
 			vBox.getChildren().add(new BoolBox(br, name));
-			
+//			System.out.printf("size before: %d%n", br.getChangeActionsUnmodifiable().size()); //TODO remove this commented stuff
+//			br.addChangeListener((ov,nv) -> {
+//				System.out.printf("CHANGED (%b to %b)%n",ov,nv);
+//			});
+//			br.addChangeAction(() -> {
+//				System.out.printf("CHANGED (action)%n");
+//			});
 		}
 		else {
 			throw new UnsupportedOperationException("Unsupported setting type: " + ref.getClass());

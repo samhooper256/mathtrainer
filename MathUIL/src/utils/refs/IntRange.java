@@ -1,5 +1,7 @@
 package utils.refs;
 
+import java.util.List;
+
 import suppliers.*;
 
 /**
@@ -69,16 +71,16 @@ public class IntRange implements Ref {
 	 */
 	public IntRange(final int min, final int max, final int low, final int high) {
 		super();
-//		System.out.printf("(enter) IntRange constructor with args=(min=%d, max=%d, low=%d, high=%d)%n", min, max, low, high);
 		verify(min, max, low, high);
 		this.min = min;
 		this.max = max;
 		this.lowRef = new LowRef(low);
 		this.highRef = new HighRef(high);
-//		System.out.printf("new IntRange created: %s%n", this);
 	}
 	
 	private static void verify(final int min, final int max, final int low, final int high) {
+		if(min > max)
+			throw new IllegalArgumentException(String.format("min > max"));
 		if(low < min)
 			throw new IllegalArgumentException("Low value must be greater than or equal to min value.");
 		if(high > max)
@@ -117,7 +119,7 @@ public class IntRange implements Ref {
 		return lowRef().get();
 	}
 	
-	/** Returns the total number of {@code int}s that would be allowed in this {@link IntRange}, equal to {@code (getHigh() - getLow() + 1)}.
+	/** Returns the total number of {@code ints} that would be allowed in this {@link IntRange}, equal to {@code (getHigh() - getLow() + 1)}.
 	 */
 	public int valueRange() {
 		return getHigh() - getLow() + 1;
@@ -132,7 +134,26 @@ public class IntRange implements Ref {
 	
 	@Override
 	public String toString() {
-		return "IntRange[min=" + min + ", max=" + max + ", lowRef=" + lowRef + ", highRef=" + highRef + "]";
+		return String.format("IntRange[min=%d, max=%d, lowRef=%s, highRef=%s]", min, max, lowRef, highRef);
+	}
+
+	@Override
+	public void addChangeAction(Runnable action) {
+		lowRef.addChangeAction(action);
+		highRef.addChangeAction(action);
+	}
+
+	@Override
+	public boolean removeChangeAction(Runnable action) {
+		boolean lowResult = lowRef.removeChangeAction(action);
+		boolean highResult = highRef.removeChangeAction(action);
+		assert lowResult == highResult;
+		return lowResult;
+	}
+
+	@Override
+	public List<Runnable> getChangeActionsUnmodifiable() {
+		return lowRef.getChangeActionsUnmodifiable();
 	}
 	
 	

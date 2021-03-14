@@ -25,7 +25,7 @@ public class IntAddSubtractSupplier extends SettingsProblemSupplier {
 	public IntAddSubtractSupplier(int lowTerms, int highTerms, int lowDigits, int highDigits) {
 		this.termRange = NamedSetting.of(new IntRange(MIN_TERMS, MAX_TERMS, lowTerms, highTerms), "Terms");
 		this.digitRange = NamedSetting.of(new IntRange(MIN_DIGITS, MAX_DIGITS, lowDigits, highDigits), "Digits");
-		settings = List.of(termRange, digitRange);
+		addAllSettings(termRange, digitRange);
 	}
 	
 	@Override

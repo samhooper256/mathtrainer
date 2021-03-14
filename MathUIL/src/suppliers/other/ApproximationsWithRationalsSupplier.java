@@ -21,7 +21,7 @@ public class ApproximationsWithRationalsSupplier extends SettingsProblemSupplier
 	private final NamedIntRange terms = of(TERMS, "terms"), fracNumbers = of(FRAC_NUMBERS, "Numbers in fractional terms"), sigFigs = of(SIG_FIGS, "Significant figures in non-fractional terms");
 	
 	public ApproximationsWithRationalsSupplier() {
-		settings(terms, fracNumbers, sigFigs);
+		addAllSettings(terms, fracNumbers, sigFigs);
 	}
 
 	@Override

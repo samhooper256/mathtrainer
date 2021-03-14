@@ -177,7 +177,7 @@ public final class ProblemSuppliers {
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException ex) {
-				throw new RuntimeException("Could not execute constructor.", ex);
+				throw new RuntimeException(String.format("Could not execute constructor (constructor belogns to class: %s)", clazz), ex);
 			}
 		};
 	}

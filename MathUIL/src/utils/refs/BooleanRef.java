@@ -9,14 +9,16 @@ import utils.BooleanChangeListener;
  * 
  * <p>A {@link BooleanChangeListener} listening to this {@code BooleanRef} is permitted to {@link #removeChangeListener(BooleanChangeListener) remove} 
  * itself <b>and <i>only</i> itself</b> from this {@code BooleanRef}'s list
- * of {@code BooleanChangeListener}s during its action. If it removes any other {@code BooleanChangeListener}, all future behavior of this object is undefined.</p>
+ * of {@code BooleanChangeListener}s during its action. If it removes any other {@code BooleanChangeListeners}, all future behavior of this object is undefined.</p>
  * @author Sam Hooper
  *
  */
-public class BooleanRef implements Ref {
+public class BooleanRef extends AbstractRef {
+	
 	private boolean value;
 	
-	private ArrayList<BooleanChangeListener> changeListeners; //only constructed when a listener is actually added.
+	/** only initialized when a listener is actually added. */
+	private ArrayList<BooleanChangeListener> changeListeners; 
 	
 	/**
 	 * Creates a new {@code BooleanRef} storing the given value.
@@ -43,6 +45,7 @@ public class BooleanRef implements Ref {
 		boolean oldValue = this.value;
 		this.value = newValue;
 		runChangeListeners(oldValue, newValue);
+		runChangeActions();
 		return true;
 	}
 
@@ -79,9 +82,4 @@ public class BooleanRef implements Ref {
 		return changeListeners != null && changeListeners.remove(listener);
 	}
 	
-	public List<BooleanChangeListener> getChangeListenersUnmodifiable() {
-		if(changeListeners == null)
-			return Collections.emptyList();
-		return Collections.unmodifiableList(changeListeners);
-	}
 }

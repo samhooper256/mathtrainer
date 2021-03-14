@@ -15,7 +15,7 @@ public class RemainderWithExponentsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange base, exponent, divisor;
 	
 	public RemainderWithExponentsSupplier() {
-		settings = List.of(base = of(BASE, "Base Value"), exponent = of(EXPONENT, "Exponent Value"), divisor = of(DIVISOR, "Divisor Value"));
+		addAllSettings(base = of(BASE, "Base Value"), exponent = of(EXPONENT, "Exponent Value"), divisor = of(DIVISOR, "Divisor Value"));
 	}
 
 	@Override

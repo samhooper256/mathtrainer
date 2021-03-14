@@ -25,7 +25,7 @@ public class ModSupplierHost implements ProblemSupplierHost {
 		
 		public ModSupplier(final int number) {
 			this.number = number;
-			settings = List.of(digits = of(DIGITS, "Digits in terms"));
+			addAllSettings(digits = of(DIGITS, "Digits in terms"));
 		}
 
 		@Override

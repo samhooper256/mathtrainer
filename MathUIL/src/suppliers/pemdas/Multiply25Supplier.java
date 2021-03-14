@@ -21,7 +21,7 @@ public class Multiply25Supplier extends SettingsProblemSupplier {
 	
 	public Multiply25Supplier(final int lowDigits, final int highDigits) {
 		digits = NamedSetting.of(new IntRange(MIN_DIGITS, MAX_DIGITS, lowDigits, highDigits), "Digits in non-25 term");
-		settings = List.of(digits);
+		addAllSettings(digits);
 	}
 
 	@Override

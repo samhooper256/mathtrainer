@@ -19,7 +19,7 @@ public class SolvingLinearEquationsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange xCoefficient = of(X_COEFFICIENT, "Coefficient of x"), constant = of(CONSTANT, "Constant term");
 	
 	public SolvingLinearEquationsSupplier() {
-		settings(xCoefficient, constant);
+		addAllSettings(xCoefficient, constant);
 	}
 
 	@Override

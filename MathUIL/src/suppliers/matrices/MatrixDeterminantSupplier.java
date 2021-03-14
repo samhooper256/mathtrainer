@@ -19,7 +19,7 @@ public class MatrixDeterminantSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange values = of(VALUES, "Values of matrix elements");
 	
 	public MatrixDeterminantSupplier() {
-		settings(values);
+		addAllSettings(values);
 	}
 
 	@Override

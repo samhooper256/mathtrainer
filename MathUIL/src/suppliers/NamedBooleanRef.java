@@ -9,7 +9,7 @@ import utils.refs.BooleanRef;
  * @author Sam Hooper
  *
  */
-public class NamedBooleanRef implements NamedSetting<BooleanRef> {
+public class NamedBooleanRef extends AbstractNamedSetting<BooleanRef> {
 	
 	public static NamedBooleanRef of(final BooleanRef ref, final String name) {
 		return new NamedBooleanRef(ref, name);

@@ -6,13 +6,14 @@ import java.util.function.Supplier;
 import utils.SingleListener;
 
 /**
- * A reference to a {@link List}. Allows for {@link SingleListener SingleListeners} to be run when an element is added or removed.
+ * A reference to a {@link List}. Allows for {@link SingleListener SingleListeners} to be run when an element is added or removed <b>through
+ * the {@code ListRef}.</b>
  * Note that the listeners are run <i>after</i> the element is added or removed, and the object passed to the listener
- * is the element that was added/removed.
+ * is the element that was added/removed. Change actions are run after add/remove listeners.
  * @author Sam Hooper
  *
  */
-public class ListRef<E> implements Ref, Iterable<E> {
+public class ListRef<E> extends AbstractRef implements Iterable<E> {
 	
 	private List<E> list;
 	private ArrayList<SingleListener<E>> addListeners; //only constructed when a listener is actually added.
@@ -32,6 +33,7 @@ public class ListRef<E> implements Ref, Iterable<E> {
 	public boolean add(E item) {
 		if(list.add(item)) {
 			runAddListeners(item);
+			runChangeActions();
 			return true;
 		}
 		return false;
@@ -78,6 +80,7 @@ public class ListRef<E> implements Ref, Iterable<E> {
 	public boolean remove(E item) {
 		if(list.remove(item)) {
 			runRemoveListeners(item);
+			runChangeActions();
 			return true;
 		}
 		return false;
@@ -130,4 +133,5 @@ public class ListRef<E> implements Ref, Iterable<E> {
 	public String toString() {
 		return "ListRef" + list.toString();
 	}
+	
 }

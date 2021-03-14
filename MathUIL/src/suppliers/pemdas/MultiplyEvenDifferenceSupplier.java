@@ -36,7 +36,7 @@ public class MultiplyEvenDifferenceSupplier extends SettingsProblemSupplier {
 			
 		}, "Distance from center");
 		center = NamedSetting.of(new IntRange(MIN_CENTER, MAX_CENTER, lowCenter, highCenter), "Center");
-		settings = List.of(dist, center);
+		addAllSettings(dist, center);
 	}
 
 	@Override

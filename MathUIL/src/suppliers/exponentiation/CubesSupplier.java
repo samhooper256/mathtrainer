@@ -17,7 +17,7 @@ public class CubesSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange base = of(BASE, "Base Value");
 	
 	public CubesSupplier() {
-		settings = List.of(base);
+		addAllSettings(base);
 	}
 
 	@Override

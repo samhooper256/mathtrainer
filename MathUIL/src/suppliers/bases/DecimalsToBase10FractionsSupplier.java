@@ -19,7 +19,7 @@ public class DecimalsToBase10FractionsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange digits = of(DIGITS, "Digits in decimals"), base = of(BASE, "Base of original number");
 	
 	public DecimalsToBase10FractionsSupplier() {
-		settings(base, digits);
+		addAllSettings(base, digits);
 	}
 
 	@Override

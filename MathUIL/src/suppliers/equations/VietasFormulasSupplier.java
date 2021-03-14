@@ -19,7 +19,7 @@ public class VietasFormulasSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange values = of(VALUES, "Values of coefficients"), degree = of(DEGREE, "Degree of polynomial");
 	
 	public VietasFormulasSupplier() {
-		settings(values, degree);
+		addAllSettings(values, degree);
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class MultiplyAbove100Supplier extends SettingsProblemSupplier {
 	public MultiplyAbove100Supplier(int lowDist, int highDist, int lowMult, int highMult) {
 		dist = NamedSetting.of(new IntRange(MIN_DIST, MAX_DIST, lowDist, highDist), "Amount above 100");
 		multiple = NamedSetting.of(new IntRange(MIN_MULTIPLE, MAX_MULTIPLE, lowMult, highMult), "Multiple of 100");
-		settings = List.of(dist, multiple);
+		addAllSettings(dist, multiple);
 	}
 	
 	@Override

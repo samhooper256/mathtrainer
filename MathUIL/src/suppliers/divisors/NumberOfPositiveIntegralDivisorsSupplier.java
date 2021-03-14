@@ -18,7 +18,7 @@ public class NumberOfPositiveIntegralDivisorsSupplier extends SettingsProblemSup
 	private final NamedIntRange value = of(VALUE, "Value of number");
 	
 	public NumberOfPositiveIntegralDivisorsSupplier() {
-		settings(value);
+		addAllSettings(value);
 	}
 
 	@Override

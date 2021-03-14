@@ -23,7 +23,7 @@ public class OtherSequencesSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange seqLength = of(SEQ_LENGTH, "Length of sequence");
 	
 	public OtherSequencesSupplier() {
-		settings(seqLength);
+		addAllSettings(seqLength);
 	}
 
 	@Override

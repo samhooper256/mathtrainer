@@ -17,7 +17,7 @@ public class DifferenceOfCubes1ApartSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange smallerBase = of(SMALLER_BASE, "Smaller Base Value");
 	
 	public DifferenceOfCubes1ApartSupplier() {
-		settings = List.of(smallerBase);
+		addAllSettings(smallerBase);
 	}
 
 	@Override

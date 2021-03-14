@@ -21,7 +21,7 @@ public class Base10FractionsToDecimalsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange digits = of(DIGITS, "Digits in answer"), base = of(BASE, "Base of answer");
 	
 	public Base10FractionsToDecimalsSupplier() {
-		settings(base, digits);
+		addAllSettings(base, digits);
 	}
 
 	@Override

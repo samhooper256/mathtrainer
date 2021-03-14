@@ -8,7 +8,7 @@ import utils.refs.IntRange;
  * @author Sam Hooper
  *
  */
-public class NamedIntRange implements NamedSetting<IntRange> {
+public class NamedIntRange extends AbstractNamedSetting<IntRange> {
 	
 	/**
 	 * Equivalent to {@code new IntRange(range, name)}.
@@ -69,6 +69,5 @@ public class NamedIntRange implements NamedSetting<IntRange> {
 	public String toString() {
 		return String.format("NamedIntRange[min=%d, max=%d, low=%d, high=%d]", min(), max(), low(), high());
 	}
-	
 	
 }

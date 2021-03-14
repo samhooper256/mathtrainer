@@ -16,7 +16,7 @@ public class ArithmeticSequencesSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange terms = of(TERMS, "Terms in sequence"), startDigits = of(START_DIGITS, "Digits in first term"), diffDigits = of(DIFF_DIGITS, "Digits in common difference");
 	
 	public ArithmeticSequencesSupplier() {
-		settings(terms, startDigits, diffDigits);
+		addAllSettings(terms, startDigits, diffDigits);
 	}
 
 	@Override

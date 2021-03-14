@@ -18,7 +18,7 @@ public class GCDSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange digits;
 	
 	public GCDSupplier() {
-		settings = List.of(digits = of(DIGITS, "Digits"));
+		addAllSettings(digits = of(DIGITS, "Digits"));
 	}
 
 	@Override

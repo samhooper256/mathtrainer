@@ -19,7 +19,7 @@ public class FactorialsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange values = of(VALUES, "Values of terms (before factorial)"), terms = of(TERMS, "Terms");
 	private final NamedBooleanRef addition = of(true, "Addition"), subtraction = of(true, "Subtraction"), multiplication = of(true, "Multiplication");
 	public FactorialsSupplier() {
-		settings(terms, values, addition, subtraction, multiplication);
+		addAllSettings(terms, values, addition, subtraction, multiplication);
 	}
 
 	@Override

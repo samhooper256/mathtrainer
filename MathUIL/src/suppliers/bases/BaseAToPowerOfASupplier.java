@@ -33,7 +33,7 @@ public class BaseAToPowerOfASupplier extends SettingsProblemSupplier {
 	private final NamedIntRange value = of(VALUE, "Base 10 value of number");
 	
 	public BaseAToPowerOfASupplier() {
-		settings(value);
+		addAllSettings(value);
 	}
 
 	@Override

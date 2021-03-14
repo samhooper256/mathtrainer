@@ -21,7 +21,7 @@ public class AddingABPlusBAPlusBSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange aValue = of(A_VALUE, "Value of a"), bValue = of(B_VALUE, "Value of b");
 	
 	public AddingABPlusBAPlusBSupplier() {
-		settings(aValue, bValue);
+		addAllSettings(aValue, bValue);
 	}
 
 	@Override

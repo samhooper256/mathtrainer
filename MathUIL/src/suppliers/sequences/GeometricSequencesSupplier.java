@@ -19,7 +19,7 @@ public class GeometricSequencesSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange sNum = of(S_NUM, "Numerator of first term"), sDenom = of(S_DENOM, "Denominator of first term"), rDenom = of(R_DENOM, "Denominator of ratio");
 	
 	public GeometricSequencesSupplier() {
-		settings(sNum, sDenom, rDenom);
+		addAllSettings(sNum, sDenom, rDenom);
 	}
 	
 	@Override

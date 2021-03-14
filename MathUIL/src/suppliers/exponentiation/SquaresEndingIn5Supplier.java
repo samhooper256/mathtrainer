@@ -19,7 +19,7 @@ public class SquaresEndingIn5Supplier extends SettingsProblemSupplier {
 	private final NamedIntRange tens;
 	
 	public SquaresEndingIn5Supplier() {
-		settings = List.of(tens = of(TENS, "\"Tens\" Digit"));
+		addAllSettings(tens = of(TENS, "\"Tens\" Digit"));
 	}
 
 	@Override

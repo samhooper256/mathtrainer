@@ -10,7 +10,7 @@ import utils.IntChangeListener;
  * @author Sam Hooper
  *
  */
-public class IntRef implements Ref {
+public class IntRef extends AbstractRef {
 	private int value;
 	
 	private ArrayList<IntChangeListener> changeListeners; //only constructed when a listener is actually added.
@@ -39,10 +39,15 @@ public class IntRef implements Ref {
 			return false;
 		int oldValue = this.value;
 		this.value = newValue;
+		runChangeListeners(newValue, oldValue);
+		runChangeActions();
+		return true;
+	}
+
+	private void runChangeListeners(int newValue, int oldValue) {
 		if(changeListeners != null)
 			for(IntChangeListener listener : changeListeners)
 				listener.changed(oldValue, newValue);
-		return true;
 	}
 	
 	/**
@@ -67,7 +72,7 @@ public class IntRef implements Ref {
 
 	@Override
 	public String toString() {
-		return "IntRef[" + value + "]";
+		return String.format("IntRef[%d]", value);
 	}
 	
 	

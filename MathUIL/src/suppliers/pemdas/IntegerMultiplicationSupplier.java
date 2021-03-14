@@ -28,7 +28,7 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 	/** Will be {@link SupplierMode#RANDOM} by default.*/
 	public IntegerMultiplicationSupplier() {
 		this.mode = SupplierMode.RANDOM;
-		settings = List.of(values = of(VALUES, "Values"), terms = of(TERMS, "Terms"));
+		addAllSettings(values = of(VALUES, "Values"), terms = of(TERMS, "Terms"));
 	}
 	
 	@Override
@@ -90,6 +90,9 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 
 	@Override
 	public void setMode(SupplierMode newMode) {
+		if(mode == newMode) {
+			return;
+		}
 		switch(newMode) {
 			case RANDOM -> {
 				mode = SupplierMode.RANDOM;

@@ -15,7 +15,7 @@ public class RomanNumeralsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange value = of(VALUE, "Value");
 	
 	public RomanNumeralsSupplier() {
-		settings(value);
+		addAllSettings(value);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class Multiply5EndSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange digits5, digitsN;
 	
 	public Multiply5EndSupplier() {
-		settings = List.of(digits5 = of(DIGITS5, "Digits in term ending in 5"), digitsN = of(DIGITS, "Digits in term not ending in 5"));
+		addAllSettings(digits5 = of(DIGITS5, "Digits in term ending in 5"), digitsN = of(DIGITS, "Digits in term not ending in 5"));
 	}
 
 	@Override

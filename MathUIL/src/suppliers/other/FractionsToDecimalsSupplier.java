@@ -20,7 +20,7 @@ public class FractionsToDecimalsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange denom = of(DENOM, "Denominator of fraction"), digits = of(DIGITS, "Number of decimal places");
 	
 	public FractionsToDecimalsSupplier() {
-		settings(denom, digits);
+		addAllSettings(denom, digits);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class ComplexNumbersSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange value = of(VALUE, "Value of real and imaginary parts");
 	
 	public ComplexNumbersSupplier() {
-		settings(value);
+		addAllSettings(value);
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class Multiply101Supplier extends SettingsProblemSupplier {
 	public Multiply101Supplier(int low101, int high101, int low, int high) {
 		digits101 = NamedSetting.of(new IntRange(MIN_DIGITS101, MAX_DIGITS101, low101, high101), "Digits in 1...1 term");
 		digitsN = NamedSetting.of(new IntRange(MIN_DIGITS, MAX_DIGITS, low, high), "Digits in other term");
-		settings = List.of(digits101, digitsN);
+		addAllSettings(digits101, digitsN);
 	}
 	
 	@Override

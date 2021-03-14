@@ -21,7 +21,7 @@ public class CartesianProductSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange size = of(SIZE, "Size of sets");
 	
 	public CartesianProductSupplier() {
-		settings(size);
+		addAllSettings(size);
 	}
 
 	@Override

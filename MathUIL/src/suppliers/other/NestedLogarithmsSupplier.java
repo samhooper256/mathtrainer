@@ -23,7 +23,7 @@ public class NestedLogarithmsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange base = of(BASE, "Bases of logarithms"), value = of(VALUE, "Values of logarithms"), layers = of(LAYERS, "Layers of nesting");
 	
 	public NestedLogarithmsSupplier() {
-		settings(base, value, layers);
+		addAllSettings(base, value, layers);
 	}
 
 	@Override

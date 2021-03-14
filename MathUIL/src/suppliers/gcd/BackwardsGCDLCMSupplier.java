@@ -17,7 +17,7 @@ public class BackwardsGCDLCMSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange digits;
 	
 	public BackwardsGCDLCMSupplier() {
-		settings = List.of(digits = of(DIGITS, "Digits in terms"));
+		addAllSettings(digits = of(DIGITS, "Digits in terms"));
 	}
 
 	@Override

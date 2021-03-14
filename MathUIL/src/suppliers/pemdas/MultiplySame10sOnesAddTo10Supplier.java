@@ -22,7 +22,7 @@ public class MultiplySame10sOnesAddTo10Supplier extends SettingsProblemSupplier 
 	
 	public MultiplySame10sOnesAddTo10Supplier(int lowTens, int highTens) {
 		tens = NamedSetting.of(new IntRange(MIN_TENS, MAX_TENS, lowTens, highTens), "\"Tens\" Digit");
-		settings = List.of(tens);
+		addAllSettings(tens);
 	}
 
 	@Override

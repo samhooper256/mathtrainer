@@ -17,7 +17,7 @@ public class FibbonacciSupplier extends SettingsProblemSupplier {
 
 	
 	public FibbonacciSupplier() {
-		settings(seeds);
+		addAllSettings(seeds);
 	}
 
 

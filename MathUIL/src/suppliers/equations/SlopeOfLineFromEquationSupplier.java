@@ -19,7 +19,7 @@ public class SlopeOfLineFromEquationSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange xCoefficient = of(X_COEFFICIENT, "Coefficient of x"), yCoefficient = of(Y_COEFFICIENT, "Coefficient of y");
 	
 	public SlopeOfLineFromEquationSupplier() {
-		settings(xCoefficient, yCoefficient);
+		addAllSettings(xCoefficient, yCoefficient);
 	}
 	
 	@Override

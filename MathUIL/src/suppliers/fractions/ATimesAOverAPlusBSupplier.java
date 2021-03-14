@@ -19,7 +19,7 @@ private static final RangeStore A_VALUE = RangeStore.of(1, 30), B_VALUE = RangeS
 	private final NamedIntRange aValue = of(A_VALUE, "Value of a"), bValue = of(B_VALUE, "Value of b");
 	
 	public ATimesAOverAPlusBSupplier() {
-		settings(aValue, bValue);
+		addAllSettings(aValue, bValue);
 	}
 
 	@Override

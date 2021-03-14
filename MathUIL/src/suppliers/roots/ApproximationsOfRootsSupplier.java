@@ -20,7 +20,7 @@ public class ApproximationsOfRootsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange terms = of(TERMS, "Terms"), sqrtDigits = of(SQRT_DIGITS, "Digits in radicands"), otherDigits = of(OTHER_DIGITS, "Digits in other terms");
 	
 	public ApproximationsOfRootsSupplier() {
-		settings(terms, sqrtDigits, otherDigits);
+		addAllSettings(terms, sqrtDigits, otherDigits);
 	}
 
 	@Override

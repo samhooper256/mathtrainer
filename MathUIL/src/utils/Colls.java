@@ -149,4 +149,12 @@ public class Colls {
 		return list.get(list.size() - 1);
 	}
 	
+	public static boolean containsInstanceOf(Collection<?> coll, Class<?> clazz) {
+		for(Object obj : coll) {
+			if(obj != null && clazz.isAssignableFrom(obj.getClass()))
+				return true;
+		}
+		return false;
+	}
+	
 }

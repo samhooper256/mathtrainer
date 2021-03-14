@@ -22,7 +22,7 @@ public class MultiplyBelow100Supplier extends SettingsProblemSupplier {
 	
 	public MultiplyBelow100Supplier(int lowDist, int highDist) {
 		dist = NamedSetting.of(new IntRange(MIN_DIST, MAX_DIST, lowDist, highDist), "Amount below 100");
-		settings = List.of(dist);
+		addAllSettings(dist);
 	}
 
 	@Override

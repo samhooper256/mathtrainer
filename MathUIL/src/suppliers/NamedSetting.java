@@ -13,7 +13,7 @@ public interface NamedSetting<T extends Ref> extends Ref {
 	T ref();
 	
 	public static <T extends Ref> NamedSetting<T> of(final T ref, final String name) {
-		return new NamedSetting<>() {
+		return new AbstractNamedSetting<>() {
 			
 			@Override
 			public String getName() {
@@ -29,6 +29,7 @@ public interface NamedSetting<T extends Ref> extends Ref {
 			public String toString() {
 				return String.format("NamedSetting[name=%s, ref=%s]", name, ref);
 			}
+			
 		};
 	}
 }

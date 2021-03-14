@@ -17,7 +17,7 @@ public class MultiplyingAAndNSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange aValue = of(A_VALUE, "Value of a"), nValue = of(N_VALUE, "Value of n");
 	
 	public MultiplyingAAndNSupplier() {
-		settings(aValue, nValue);
+		addAllSettings(aValue, nValue);
 	}
 
 	@Override

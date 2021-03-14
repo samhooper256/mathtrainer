@@ -19,7 +19,7 @@ public class MultiplyingMixedNumbersWithSameFractionSupplier extends SettingsPro
 	private final NamedIntRange whole = of(WHOLE, "Values of whole numbers"), denom = of(DENOM, "Denominator of fractional part");
 	
 	public MultiplyingMixedNumbersWithSameFractionSupplier() {
-		settings(whole, denom);
+		addAllSettings(whole, denom);
 	}
 
 	@Override

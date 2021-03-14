@@ -21,7 +21,7 @@ public class SpecialFractionsSupplier extends SettingsProblemSupplier {
 			multiple = of(MULTIPLE, "Multiple of first fraction"), difference = of(DIFFERENCE, "Difference of terms in second fraction from first");
 	
 	public SpecialFractionsSupplier() {
-		settings(aValue, bValue, multiple, difference);
+		addAllSettings(aValue, bValue, multiple, difference);
 	}
 
 	@Override

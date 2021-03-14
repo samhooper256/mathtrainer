@@ -61,6 +61,7 @@ public interface ProblemSupplier extends Supplier<Problem> {
 	@Override
 	public Problem get();
 	
+	/** Returns an unmodifiable view. */
 	default List<Ref> settings() {
 		return Collections.emptyList();
 	}
@@ -105,4 +106,11 @@ public interface ProblemSupplier extends Supplier<Problem> {
 	default void strictlySolved(Problem p) {
 		//Overridden for functionality
 	}
+	
+	/** Called to notify this {@link ProblemSupplier} that its {@link #settings()} have changed in some way.*/
+	default void settingsChanged() {
+		System.out.printf("%s settings changed%n", this);//TODO remove
+		//Overridden for functionality
+	}
+	
 }

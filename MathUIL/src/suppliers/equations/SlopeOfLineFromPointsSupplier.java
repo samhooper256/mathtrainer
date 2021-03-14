@@ -18,7 +18,7 @@ public class SlopeOfLineFromPointsSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange xCoords = of(X_COORDS, "X coordinates"), yCoords = of(Y_COORDS, "Y coordinates");
 
 	public SlopeOfLineFromPointsSupplier() {
-		settings(xCoords, yCoords);
+		addAllSettings(xCoords, yCoords);
 	}
 
 	@Override

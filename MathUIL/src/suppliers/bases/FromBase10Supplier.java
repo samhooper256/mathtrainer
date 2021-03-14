@@ -17,7 +17,7 @@ private static final RangeStore BASE = RangeStore.of(Utils.MIN_RADIX, Utils.MAX_
 	private final NamedIntRange base = of(BASE, "Base of answer"), value = of(VALUE, "Base 10 value of original number");
 	
 	public FromBase10Supplier() {
-		settings(base, value);
+		addAllSettings(base, value);
 	}
 
 	@Override

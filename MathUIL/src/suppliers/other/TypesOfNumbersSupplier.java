@@ -20,7 +20,7 @@ public class TypesOfNumbersSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange options = of(OPTIONS, "Number of options to choose from"), values = of(VALUES, "Values of numbers");
 	
 	public TypesOfNumbersSupplier() {
-		settings(options);
+		addAllSettings(options);
 	}
 
 	@Override

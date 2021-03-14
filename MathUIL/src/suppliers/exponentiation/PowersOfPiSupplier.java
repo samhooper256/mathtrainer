@@ -23,7 +23,7 @@ public class PowersOfPiSupplier extends SettingsProblemSupplier {
 	private final NamedBooleanRef includePiToE = of(DEFAULT_INCLUDE_PI_TO_E, "Include pi to the power of e");
 	
 	public PowersOfPiSupplier() {
-		settings = List.of(includePiToE, exponent);
+		addAllSettings(includePiToE, exponent);
 	}
 
 	@Override

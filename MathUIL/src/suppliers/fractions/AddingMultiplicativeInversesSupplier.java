@@ -18,7 +18,7 @@ public class AddingMultiplicativeInversesSupplier extends SettingsProblemSupplie
 	private final NamedIntRange numbers = of(NUMBERS, "Numbers in fractions");
 	
 	public AddingMultiplicativeInversesSupplier() {
-		settings(numbers);
+		addAllSettings(numbers);
 	}
 
 	@Override
