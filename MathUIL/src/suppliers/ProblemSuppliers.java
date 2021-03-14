@@ -72,7 +72,7 @@ public final class ProblemSuppliers {
 		CAT_MAP.put(MultiplyingMatricesSupplier.class.getPackage(), Category.MATRICES);
 		CAT_MAP.put(AbsoluteValueSupplier.class.getPackage(), Category.OTHER);
 		CAT_MAP.put(FOILSupplier.class.getPackage(), Category.PEMDAS);
-		CAT_MAP.put(Mod9Supplier.class.getPackage(), Category.REMAINDER);
+		CAT_MAP.put(ModSupplierHost.class.getPackage(), Category.REMAINDER);
 		CAT_MAP.put(OtherRootsSupplier.class.getPackage(), Category.ROOTS);
 		CAT_MAP.put(FibbonacciSupplier.class.getPackage(), Category.SEQUENCES);
 		CAT_MAP.put(SubsetsSupplier.class.getPackage(), Category.SETS);
