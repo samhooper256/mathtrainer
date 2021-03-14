@@ -27,7 +27,7 @@ public class VietasFormulasSupplier extends SettingsProblemSupplier {
 		int[] cos = RAND.ints(intInclusive(degree) + 1, values.low(), values.high() + 1).toArray();
 		if(cos[0] == 0) cos[0] = 1;
 		String displayExpr = Prettifier.polynomialEqualsZero('x', cos);
-		if(Math.random() <= 0.5)
+		if(Problem.random() <= 0.5)
 			return Builder.of(String.format("Find the sum of the roots of %s:", Prettifier.ensureMath(displayExpr))).addResult(BigFraction.of(cos[1], -1)
 					.divide(BigFraction.of(cos[0], 1))).build();
 		else {

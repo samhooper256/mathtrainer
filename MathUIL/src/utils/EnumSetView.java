@@ -14,6 +14,32 @@ public class EnumSetView<E extends Enum<E>> implements Set<E> {
 		return new EnumSetView<>(set);
 	}
 	
+	public static <E extends Enum<E>> EnumSetView<E> of(E e) {
+		return of(EnumSet.of(e));
+	}
+	
+	public static <E extends Enum<E>> EnumSetView<E> of(E e1, E e2) {
+		return of(EnumSet.of(e1, e2));
+	}
+	
+	public static <E extends Enum<E>> EnumSetView<E> of(E e1, E e2, E e3) {
+		return of(EnumSet.of(e1, e2, e3));
+	}
+	
+	public static <E extends Enum<E>> EnumSetView<E> of(E e1, E e2, E e3, E e4) {
+		return of(EnumSet.of(e1, e2, e3, e4));
+	}
+	
+	public static <E extends Enum<E>> EnumSetView<E> of(E e1, E e2, E e3, E e4, E e5) {
+		return of(EnumSet.of(e1, e2, e3, e4, e5));
+	}
+	
+	@SafeVarargs
+    public static <E extends Enum<E>> EnumSetView<E> of(E first, E... rest) {
+		return of(EnumSet.of(first, rest));
+	}
+	
+	
 	private EnumSetView(EnumSet<E> set) {
 		this.set = set;
 	}

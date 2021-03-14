@@ -35,7 +35,7 @@ public class SolvingLinearEquationsSupplier extends SettingsProblemSupplier {
 	}
 	
 	private String displayExp(int xCo, int constTerm) {
-		if(Math.random() <= 0.5)
+		if(Problem.random() <= 0.5)
 			return xCo + "x" + (constTerm == 0 ? "" : constTerm > 0 ? (" + " + constTerm) : (" - " + -constTerm));
 		else
 			return (constTerm == 0 ? "" : constTerm + " + ") + xCo + "x";

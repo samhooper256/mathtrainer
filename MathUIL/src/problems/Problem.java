@@ -34,6 +34,10 @@ public interface Problem {
 		return diff.compareTo(boundPercent) <= 0;
 	}
 	
+	public static double random() {
+		return RAND.nextDouble();
+	}
+	
 	/** Returns an {@code int} between 0 (inclusive) and max (exclusive). */
 	public static int intExclusive(int max) {
 		if(max <= 0)

@@ -25,7 +25,7 @@ public class RootsOfQuadraticsSupplier extends SettingsProblemSupplier {
 	public Problem get() {
 		BigFraction a = makeRoot(), b = makeRoot();
 		String quad = Prettifier.polynomialEqualsZero('x', Utils.intQuadraticFromRoots(a, b));
-		if(Math.random() <= 0.5) {
+		if(Problem.random() <= 0.5) {
 			return Builder.of(String.format("What is the larger root of %s:", Prettifier.ensureMath(quad)))
 					.addResult(BigFraction.max(a, b)).build();
 		}
@@ -38,8 +38,8 @@ public class RootsOfQuadraticsSupplier extends SettingsProblemSupplier {
 
 
 	private BigFraction makeRoot() {
-		if(Math.random() <= 0.5)
-			return BigFraction.of((Math.random() <= 0.5 ? -1 : 1) * intInclusive(magnitudes), 1);
+		if(Problem.random() <= 0.5)
+			return BigFraction.of((Problem.random() <= 0.5 ? -1 : 1) * intInclusive(magnitudes), 1);
 		else {
 			int denom = intInclusive(denoms);
 			int num = intInclusive(1, denom - 1);

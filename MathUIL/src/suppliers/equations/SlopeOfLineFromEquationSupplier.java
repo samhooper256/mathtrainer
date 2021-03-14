@@ -28,13 +28,13 @@ public class SlopeOfLineFromEquationSupplier extends SettingsProblemSupplier {
 		if(xCo == 0) xCo = 1;
 		if(yCo == 0) yCo = 1;
 		String exp = displayExp(xCo, yCo);
-		String eq = Math.random() <= 0.5 ? exp + " = " + constant : constant + " = " + exp;
+		String eq = Problem.random() <= 0.5 ? exp + " = " + constant : constant + " = " + exp;
 		BigFraction slope = BigFraction.of(-xCo, yCo);
 		return Builder.of(String.format("Find the slope of the line %s:", eq)).addResult(slope).build();
 	}
 	
 	private static String displayExp(final int xCo, final int yCo) {
-		if(Math.random() <= 0.5)
+		if(Problem.random() <= 0.5)
 			return (xCo == 1 ? "" : xCo) + "x" + (yCo == 1 ? " + " : yCo == -1 ? " - " : yCo > 0 ? " + " + yCo : " - " + -yCo) + "y";
 		else
 			return (yCo == 1 ? "" : yCo) + "y" + (xCo == 1 ? " + " : xCo == -1 ? " - " : xCo > 0 ? " + " + xCo : " - " + -xCo) + "x";

@@ -183,9 +183,16 @@ public class ProblemPane extends Pane {
 	 */
 	private void acceptInput(final String inputString) {
 		if(isCorrectAnswerToCurrentProblem(inputString))
-			setupNextProblem();
+			correctAnswerSubmitted();
 		else
 			wrongAnswerSubmitted();
+	}
+
+	private void correctAnswerSubmitted() {
+		if(lastWasStrictlySolved()) {
+			currentProblemSupplier.strictlySolved(currentProblem);
+		}
+		setupNextProblem();
 	}
 
 	/**
@@ -410,13 +417,11 @@ public class ProblemPane extends Pane {
 	 * clearing the input field. Updates {@link #startTime}.
 	 */
 	private void setupNextProblem() {
-//		System.out.printf("enter setupNextProblem()%n");
 		updateResults();
 		clearInputField();
 		field.setBorder(FIELD_EMPTY_BORDER);
 		hideAnswerIfShowing();
 		generateAndDisplayFreshProblem();
-//		System.out.printf("exit setupNextProblem()%n");
 	}
 
 	/**
@@ -458,10 +463,13 @@ public class ProblemPane extends Pane {
 	}
 
 	private void updateAccuracies() {
-		accuracies.addFirst(wrongAnswers == 0 && (!hasDeletedText || !isMarkWrongIfCleared())
-				&& (!hasShownAnswer || !isMarkWrongIfShownAnswer()));
+		accuracies.addFirst(lastWasStrictlySolved());
 		averageAccuracyLabel.setText(
 				String.format("Last %d Accuracy: %.1f%%", accuracies.size(), accuracies.truthProportion() * 100));
+	}
+
+	public boolean lastWasStrictlySolved() {
+		return wrongAnswers == 0 && (!hasDeletedText || !isMarkWrongIfCleared()) && (!hasShownAnswer || !isMarkWrongIfShownAnswer());
 	}
 
 	private void updateLabel() {

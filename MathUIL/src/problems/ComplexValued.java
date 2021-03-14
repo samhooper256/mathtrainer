@@ -56,4 +56,10 @@ public abstract class ComplexValued implements Problem {
 	public String answerAsString() {
 		return Problem.prettyComplex(result);
 	}
+
+	@Override
+	public String toString() {
+		return displayString();
+	}
+	
 }
