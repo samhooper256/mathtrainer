@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import base.*;
 import problems.*;
+import utils.EnumSetView;
 import utils.refs.Ref;
 
 /**
@@ -25,6 +26,8 @@ import utils.refs.Ref;
 @FunctionalInterface
 public interface ProblemSupplier extends Supplier<Problem> {
 	
+	EnumSetView<SupplierMode> RANDOM_ONLY = EnumSetView.of(EnumSet.of(SupplierMode.RANDOM));
+
 	static ProblemSupplier from(final String displayName, final Supplier<? extends Problem> supplier) {
 		return new ProblemSupplier() {
 			
@@ -43,12 +46,12 @@ public interface ProblemSupplier extends Supplier<Problem> {
 	
 	/** {@link Pattern} that matches locations where a space (' ') should be placed when generating a default
 	 * name from the class name of a {@code ProblemSupplier} (used in {@link #getNameFromClass(Class)}).*/
-	Pattern NAME_SPACE_LOCATIONS = Pattern.compile("(?<![A-Z])(?=[A-Z])|(?<!\\d)(?=\\d)");
+	Pattern SPACE_LOCATIONS_IN_SUPPLIER_CLASSNAME = Pattern.compile("(?<![A-Z])(?=[A-Z])|(?<!\\d)(?=\\d)");
 	
 	private static String getNameFromClass(Class<?> clazz) {
 		final String simpleName = clazz.getSimpleName();
-		int endIndex = simpleName.lastIndexOf("Supplier");
-		return NAME_SPACE_LOCATIONS.matcher(simpleName.substring(0, endIndex)).replaceAll(" ");
+		final String usedPortion = simpleName.substring(0, simpleName.lastIndexOf("Supplier"));
+		return SPACE_LOCATIONS_IN_SUPPLIER_CLASSNAME.matcher(usedPortion).replaceAll(" ");
 	}
 	
 	/**
@@ -69,7 +72,14 @@ public interface ProblemSupplier extends Supplier<Problem> {
 	/** Returns {@code true} if this {@link ProblemSupplier} supports the given {@link SupplierMode}. Every {@code ProblemSupplier} supports
 	 * {@link SupplierMode#RANDOM}, but some may support other modes, such as {@link SupplierMode#STACKED}. */
 	default boolean supports(SupplierMode mode) {
-		return mode == SupplierMode.RANDOM;
+		return getSupportedModes().contains(mode);
 	}
 	
+	default SupplierMode getCurrentMode() {
+		return SupplierMode.RANDOM;
+	}
+	
+	default EnumSetView<SupplierMode> getSupportedModes() {
+		return RANDOM_ONLY;
+	}
 }
