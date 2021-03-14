@@ -9,7 +9,7 @@ import utils.refs.IntRange;
 
 /**
  * <p>A {@link Problem} where the user must evaluate a simple mathematical expression. This class is capable of representing expressions
- * containing addition (+), subtraction (-), negation/negative numbers (-), multiplication(*), division(/), exponentiation (^), <b>only</b>. The
+ * containing addition (+), subtraction (-), negation/negative numbers (-), multiplication(*), division(/), and exponentiation (^) <b>only</b>. The
  * expression may not have variables. It cannot contain more complicated things like derivatives, integrals, matrices, vectors, etc.</p>
  * @author Sam Hooper
  *

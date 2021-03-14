@@ -41,6 +41,10 @@ public interface ProblemSupplier extends Supplier<Problem> {
 		};
 	}
 	
+	/** {@link Pattern} that matches locations where a space (' ') should be placed when generating a default
+	 * name from the class name of a {@code ProblemSupplier} (used in {@link #getNameFromClass(Class)}).*/
+	Pattern NAME_SPACE_LOCATIONS = Pattern.compile("(?<![A-Z])(?=[A-Z])|(?<!\\d)(?=\\d)");
+	
 	private static String getNameFromClass(Class<?> clazz) {
 		final String simpleName = clazz.getSimpleName();
 		int endIndex = simpleName.lastIndexOf("Supplier");
@@ -58,10 +62,14 @@ public interface ProblemSupplier extends Supplier<Problem> {
 		return Collections.emptyList();
 	}
 	
-	Pattern NAME_SPACE_LOCATIONS = Pattern.compile("(?<![A-Z])(?=[A-Z])|(?<!\\d)(?=\\d)");
-	
 	default String getName() {
 		return getNameFromClass(getClass());
+	}
+	
+	/** Returns {@code true} if this {@link ProblemSupplier} supports the given {@link SupplierMode}. Every {@code ProblemSupplier} supports
+	 * {@link SupplierMode#RANDOM}, but some may support other modes, such as {@link SupplierMode#STACKED}. */
+	default boolean supports(SupplierMode mode) {
+		return mode == SupplierMode.RANDOM;
 	}
 	
 }
