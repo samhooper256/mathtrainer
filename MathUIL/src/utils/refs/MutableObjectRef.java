@@ -21,7 +21,6 @@ public class MutableObjectRef<T> extends AbstractObjectRef<T> {
 	}
 	
 	public boolean set(T newValue) {
-		System.out.printf("enter %s.set(%s)%n",this, newValue);
 		if(Objects.equals(newValue, value))
 			return false;
 		T oldValue = this.value;

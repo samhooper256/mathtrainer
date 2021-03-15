@@ -71,9 +71,7 @@ public class SettingTitledPane extends TitledPane {
 				modeRadioButtons.add(button);
 				vBox.getChildren().add(button);
 			}
-//			System.out.printf("adding listener to %s%n", supplier.getModeRef());
 			supplier.getModeRef().addChangeListener((ov, nv) -> {
-				System.out.printf("entered mode ref change listener%n");
 				setDisplayedSelectedMode(nv);
 			});
 		}
@@ -144,22 +142,24 @@ public class SettingTitledPane extends TitledPane {
 	
 	/** Returns the {@link ModeRadioButton} corresponding to {@code newMode}.*/
 	private ModeRadioButton setDisplayedSelectedMode(SupplierMode newMode) {
-		System.out.printf("[enter] setDisplayedSelectedMode(newMode=%s)%n",newMode);
 		final ModeRadioButton button = modeRadioButtonForOrThrow(newMode);
-		button.setSelected(true);
+		if(!button.isSelected()) {
+			button.setSelected(true);
+			if(newMode != SupplierMode.STACKED) {
+				getStackedModeRadioButton().clearUnsolvedNumber();
+			}
+		}
 		return button;
 	}
 	
 	
 	private void setSelectedMode(SupplierMode newMode) {
-		System.out.printf("[enter] setSelectedMode(newMode=%s)%n",newMode);
 		final ModeRadioButton button = setDisplayedSelectedMode(newMode);
-		if(!problemSupplier.setMode(newMode)) {
-			System.out.printf("\tfalse, returning%n");
+		final boolean modeChanged = problemSupplier.setMode(newMode);
+		if(!modeChanged) {
 			return; //we already have the right mode.
 		}
 		if(newMode == SupplierMode.STACKED) {
-			System.out.printf("\tnewMode == STACKED%n");
 			StackedModeRadioButton stackedButton = (StackedModeRadioButton) button;
 			final IntRef unsolvedRef = problemSupplier.getStackedUnsolved();
 			Collection<IntChangeListener> changeListeners = unsolvedRef.getChangeListenersUnmodifiable();

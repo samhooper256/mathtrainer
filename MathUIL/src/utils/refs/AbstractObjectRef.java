@@ -32,11 +32,9 @@ abstract class AbstractObjectRef<T> extends AbstractRef implements ObjectRef<T> 
 	}
 
 	protected void runChangeListeners(T oldValue, T newValue) {
-		System.out.printf("\t%srunning ChangeListeners, oldValue=%s, newValue=%s%n", this, oldValue, newValue);
 		if(changeListeners != null)
 			for(ChangeListener<T> listener : changeListeners)
 				listener.changed(oldValue, newValue);
-		System.out.printf("\tdone running ChangeListeners!");
 	}
 	
 	
