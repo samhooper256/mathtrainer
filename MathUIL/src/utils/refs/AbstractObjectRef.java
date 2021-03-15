@@ -9,7 +9,7 @@ import utils.ChangeListener;
  * @author Sam Hooper
  * @param <T>
  */
-public abstract class AbstractObjectRef<T> extends AbstractRef implements ObjectRef<T> {
+abstract class AbstractObjectRef<T> extends AbstractRef implements ObjectRef<T> {
 
 	/** only initialized when a listener is actually added. */
 	protected ArrayList<ChangeListener<T>> changeListeners;
@@ -32,8 +32,12 @@ public abstract class AbstractObjectRef<T> extends AbstractRef implements Object
 	}
 
 	protected void runChangeListeners(T oldValue, T newValue) {
+		System.out.printf("\t%srunning ChangeListeners, oldValue=%s, newValue=%s%n", this, oldValue, newValue);
 		if(changeListeners != null)
 			for(ChangeListener<T> listener : changeListeners)
 				listener.changed(oldValue, newValue);
+		System.out.printf("\tdone running ChangeListeners!");
 	}
+	
+	
 }

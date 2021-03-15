@@ -21,14 +21,14 @@ public class IntRange implements Ref {
 	
 	
 	private final int min, max;
-	private IntRef lowRef, highRef;
+	private MutableIntRef lowRef, highRef;
 	
 	/**
 	 * {@link IntRange#min} must be initialized to its final value before a {@link LowRef} is constructed.
 	 * @author Sam Hooper
 	 *
 	 */
-	private class LowRef extends IntRef {
+	private class LowRef extends MutableIntRef {
 		
 		public LowRef(int value) {
 			super(value);
@@ -48,7 +48,7 @@ public class IntRange implements Ref {
 	 * @author Sam Hooper
 	 *
 	 */
-	private class HighRef extends IntRef {
+	private class HighRef extends MutableIntRef {
 		
 		public HighRef(int value) {
 			super(value);
@@ -95,11 +95,11 @@ public class IntRange implements Ref {
 		return max;
 	}
 
-	public IntRef lowRef() {
+	public MutableIntRef lowRef() {
 		return lowRef;
 	}
 
-	public IntRef highRef() {
+	public MutableIntRef highRef() {
 		return highRef;
 	}
 	

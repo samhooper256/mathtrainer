@@ -1,6 +1,7 @@
 package base;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 import org.controlsfx.control.RangeSlider;
 
@@ -11,7 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import math.Utils;
 import suppliers.*;
-import utils.EnumSetView;
+import utils.*;
 import utils.refs.*;
 
 /**
@@ -59,23 +60,21 @@ public class SettingTitledPane extends TitledPane {
 			final EnumSetView<SupplierMode> currentSupported = supplier.getSupportedModesUnderCurrentSettings();
 			ToggleGroup group = new ToggleGroup();
 			for(SupplierMode mode : supported) {
-				ModeRadioButton button = new ModeRadioButton(mode, currentSupported.contains(mode) ? mode.getDisplayName() : getUnsupportedModeDisplay(mode));
-				button.selectedProperty().addListener((x, ov, nv) -> {
-					if(nv) {
-						supplier.setMode(mode);
-					}
-				});
+				final String buttonText = currentSupported.contains(mode) ? mode.getDisplayName() : getUnsupportedModeDisplay(mode);
+				ModeRadioButton button = mode == SupplierMode.STACKED ? new StackedModeRadioButton(buttonText) : new ModeRadioButton(mode, buttonText);
+				button.setOnAction(eventHandler -> setSelectedMode(mode));
 				
-				if(mode == SupplierMode.RANDOM)
+				if(mode == SupplierMode.RANDOM) {
 					button.setSelected(true);
+				}
 				button.setToggleGroup(group);
 				modeRadioButtons.add(button);
 				vBox.getChildren().add(button);
 			}
-			System.out.printf("adding listener to %s%n", supplier.getModeRef());
+//			System.out.printf("adding listener to %s%n", supplier.getModeRef());
 			supplier.getModeRef().addChangeListener((ov, nv) -> {
 				System.out.printf("entered mode ref change listener%n");
-				setSelectedMode(nv);
+				setDisplayedSelectedMode(nv);
 			});
 		}
 	}
@@ -93,15 +92,83 @@ public class SettingTitledPane extends TitledPane {
 			return mode;
 		}
 		
+	}
+	
+	private static class StackedModeRadioButton extends ModeRadioButton {
+	
 		
+		public StackedModeRadioButton(final String text) {
+			super(SupplierMode.STACKED, text);
+			setText(text);
+		}
+		
+		public boolean isDisplayingUnsolvedNumber() {
+			return getText().endsWith(")");
+		}
+		
+		public void setUnsolvedNumber(int num) {
+			if(isDisplayingUnsolvedNumber())
+				setText(Regex.DIGITS.matcher(getText()).replaceAll(String.valueOf(num)));
+			else
+				setText(String.format("%s (%d)", getText(), num));
+		}
+		
+		public void clearUnsolvedNumber() {
+			if(isDisplayingUnsolvedNumber())
+				setText(getText().substring(0, getText().indexOf('(') - 1));
+		}
 		
 	}
 	
-	private void setSelectedMode(SupplierMode newMode) {
+	private class StackedListener implements IntChangeListener {
+		
+		@Override
+		public void changed(int oldValue, int newValue) {
+			getStackedModeRadioButton().setUnsolvedNumber(newValue);
+		}
+		
+	}
+	
+	private StackedModeRadioButton getStackedModeRadioButton() {
+		return (StackedModeRadioButton) modeRadioButtonForOrThrow(SupplierMode.STACKED);
+	}
+	
+	private ModeRadioButton modeRadioButtonForOrThrow(final SupplierMode mode) {
 		for(ModeRadioButton button : modeRadioButtons) {
-			if(button.getMode() == newMode) {
-				button.setSelected(true);
+			if(button.getMode() == mode) {
+				return button;
 			}
+		}
+		throw new IllegalArgumentException(String.format("Button for mode %s not present.", mode.getDisplayName()));
+	}
+	
+	/** Returns the {@link ModeRadioButton} corresponding to {@code newMode}.*/
+	private ModeRadioButton setDisplayedSelectedMode(SupplierMode newMode) {
+		System.out.printf("[enter] setDisplayedSelectedMode(newMode=%s)%n",newMode);
+		final ModeRadioButton button = modeRadioButtonForOrThrow(newMode);
+		button.setSelected(true);
+		return button;
+	}
+	
+	
+	private void setSelectedMode(SupplierMode newMode) {
+		System.out.printf("[enter] setSelectedMode(newMode=%s)%n",newMode);
+		final ModeRadioButton button = setDisplayedSelectedMode(newMode);
+		if(!problemSupplier.setMode(newMode)) {
+			System.out.printf("\tfalse, returning%n");
+			return; //we already have the right mode.
+		}
+		if(newMode == SupplierMode.STACKED) {
+			System.out.printf("\tnewMode == STACKED%n");
+			StackedModeRadioButton stackedButton = (StackedModeRadioButton) button;
+			final IntRef unsolvedRef = problemSupplier.getStackedUnsolved();
+			Collection<IntChangeListener> changeListeners = unsolvedRef.getChangeListenersUnmodifiable();
+			if(!Colls.containsInstanceOf(changeListeners, StackedListener.class))
+				unsolvedRef.addChangeListener(new StackedListener());
+			stackedButton.setUnsolvedNumber(unsolvedRef.get());
+		}
+		else if(problemSupplier.supportsUnderAnySettings(SupplierMode.STACKED)) {
+			((StackedModeRadioButton) (modeRadioButtonForOrThrow(SupplierMode.STACKED))).clearUnsolvedNumber();
 		}
 	}
 	

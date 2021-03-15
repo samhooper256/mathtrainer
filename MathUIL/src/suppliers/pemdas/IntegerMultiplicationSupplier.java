@@ -23,7 +23,8 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 	private final NamedIntRange values, terms;
 	
 	private List<SimpleExpression> stackedProblems = null;
-	private int stackedProblemsMaxIndex = -1, lastStackedProblemsIndex = -1;
+	private MutableIntRef stackedProblemsMaxIndex = new MutableIntRef(-1);
+	private int lastStackedProblemsIndex = -1;
 	private MutableObjectRef<SupplierMode> modeRef;
 	private SupplierMode currentProblemMode = null;
 	
@@ -92,37 +93,46 @@ public class IntegerMultiplicationSupplier extends SettingsProblemSupplier {
 	}
 
 	@Override
-	public void setMode(SupplierMode newMode) {
-		System.out.printf("enter IntegerMultiplicationSupplier.setMode(newMode=%s)%n",newMode);
+	public boolean setMode(SupplierMode newMode) {
+		System.out.printf("enter IntegerMultiplicationSupplier.setMode(newMode=%s). Currently, getMode()=%s%n",newMode, getMode());
 		if(getMode() == newMode) {
-			return;
+			return false;
 		}
+		if(!supportsUnderCurrentSettings(newMode))
+			throw new UnsupportedOperationException(String.format("%s is unsupported under the current settings"));
 		switch(newMode) {
 			case RANDOM -> {
 				modeRef.set(SupplierMode.RANDOM);
 			}
 			case STACKED -> {
 				stackedProblems = generateAllPossibleProblems();
-				stackedProblemsMaxIndex = stackedProblems.size();
+				stackedProblemsMaxIndex.set(stackedProblems.size());
 				modeRef.set(SupplierMode.STACKED);
 			}
-			default -> throw new UnsupportedOperationException(String.format("%s is unsupported", newMode));
+			default -> throw new UnsupportedOperationException(String.format("%s is unsupported under any settings", newMode));
 		}
+		return true;
 	}
 
 	@Override
 	public void strictlySolved(Problem p) {
 		if(currentProblemMode == SupplierMode.STACKED) {
-			if(stackedProblemsMaxIndex <= 1) {
-				stackedProblemsMaxIndex = stackedProblems.size();
+			if(stackedProblemsMaxIndex.get() <= 1) {
+				stackedProblemsMaxIndex.set(stackedProblems.size());
 			}
 			else {
-				stackedProblemsMaxIndex--;
-				Collections.swap(stackedProblems, lastStackedProblemsIndex, stackedProblemsMaxIndex);
+				stackedProblemsMaxIndex.decrement();
+				Collections.swap(stackedProblems, lastStackedProblemsIndex, stackedProblemsMaxIndex.get());
 			} 
 		}
 	}
-	
-	
+
+	@Override
+	public IntRef getStackedUnsolved() {
+		if(getMode() != SupplierMode.STACKED) {
+			throw new UnsupportedOperationException(String.format("Not in " + SupplierMode.STACKED.getDisplayName() + " mode"));
+		}
+		return stackedProblemsMaxIndex;
+	}
 	
 }

@@ -9,7 +9,7 @@ import math.*;
 import suppliers.*;
 import utils.*;
 import utils.function.CharSupplier;
-import utils.refs.IntRange;
+import utils.refs.*;
 
 /**
  * <p>A problem that the user can attempt to solve. Any {@link Problem} that will be displayed to the user must have a
@@ -36,6 +36,10 @@ public interface Problem {
 	
 	public static double random() {
 		return RAND.nextDouble();
+	}
+	
+	public static int intExclusive(MutableIntRef max) {
+		return intExclusive(max.get());
 	}
 	
 	/** Returns an {@code int} between 0 (inclusive) and max (exclusive). */
