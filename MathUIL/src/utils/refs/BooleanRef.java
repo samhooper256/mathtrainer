@@ -2,75 +2,63 @@ package utils.refs;
 
 import java.util.*;
 
-import utils.BooleanChangeListener;
+import utils.*;
 
 /**
- * <p>A reference to a {@code boolean}.</p>
+ * <p>A {@link Ref} whose {@link #get() value} is a {@code boolean}. Changes to the value can be listened to using {@link BooleanChangeListener BooleanChangeListeners}.</p>
  * 
- * <p>A {@link BooleanChangeListener} listening to this {@code BooleanRef} is permitted to {@link #removeChangeListener(BooleanChangeListener) remove} 
- * itself <b>and <i>only</i> itself</b> from this {@code BooleanRef}'s list
- * of {@code BooleanChangeListener}s during its action. If it removes any other {@code BooleanChangeListeners}, all future behavior of this object is undefined.</p>
+ * @implNote
+ * <p>{@code BooleanRefs} whose {@link #get() value} does not change are permitted to do nothing when {@link #addChangeListener(BooleanChangeListener)} is called,
+ * always return {@code false} when {@link #removeChangeListener(BooleanChangeListener)} is called, and return an empty {@link Collection} when
+ * {@link #getChangeListenersUnmodifiable()} is called.</p>
  * @author Sam Hooper
- *
  */
-public class BooleanRef extends AbstractRef {
+public interface BooleanRef {
 	
-	private boolean value;
-	
-	/** only initialized when a listener is actually added. */
-	private ArrayList<BooleanChangeListener> changeListeners; 
-	
-	/**
-	 * Creates a new {@code BooleanRef} storing the given value.
-	 */
-	public BooleanRef(boolean value) {
-		this.value = value;
-	}
-	
-	/**
-	 * @return the {@code boolean} value currently stored by this {@code BooleanRef}.
-	 */
-	public boolean get() {
-		return value;
-	}
-	
-	/**
-	 * Does <b>not</b> trigger the {@link BooleanChangeListener}s if {@code newValue} is the same as the {@code boolean} currently stored by this
-	 * {@code booleanRef}. Returns {@code false} if the new value is the same as the current one, {@code true} otherwise.
-	 * @param newValue
-	 */
-	public boolean set(boolean newValue) {
-		if(value == newValue)
-			return false;
-		boolean oldValue = this.value;
-		this.value = newValue;
-		runChangeListeners(oldValue, newValue);
-		runChangeActions();
-		return true;
-	}
-
-	private void runChangeListeners(boolean oldValue, boolean newValue) {
-		if(changeListeners != null) {
-			int size = changeListeners.size();
-			for(int i = 0; i < size; i++) {
-				changeListeners.get(i).changed(oldValue, newValue);
-				if(size == changeListeners.size() + 1) {
-					i--;
-					size = changeListeners.size();
-				}
-			}
+	static class ConstantBooleanRef implements BooleanRef {
+		
+		final boolean value;
+		
+		private ConstantBooleanRef(final boolean value) {
+			this.value = value;
 		}
+		
+		@Override
+		public boolean get() {
+			return value;
+		}
+
+		@Override
+		public void addChangeListener(BooleanChangeListener listener) {
+			//do nothing; the value of this BooleanRef will never change.
+		}
+
+		@Override
+		public boolean removeChangeListener(BooleanChangeListener listener) {
+			return false;
+		}
+
+		@Override
+		public Collection<BooleanChangeListener> getChangeListenersUnmodifiable() {
+			return Collections.emptySet();
+		}
+		
 	}
+	
+	BooleanRef FALSE = new ConstantBooleanRef(false), TRUE = new ConstantBooleanRef(true);
+	
+	/** Returns a constant {@link BooleanRef} with the given value.*/
+	public static BooleanRef of(boolean value) {
+		return value ? TRUE : FALSE;
+	}
+	
+	boolean get();
 	
 	/**
 	 * Adds the given {@link BooleanChangeListener} to this {@code BooleanRef}'s list of {@code BooleanChangeListener}s.
 	 * @param listener
 	 */
-	public void addChangeListener(BooleanChangeListener listener) {
-		if(changeListeners == null)
-			changeListeners = new ArrayList<>();
-		changeListeners.add(listener);
-	}
+	void addChangeListener(BooleanChangeListener listener);
 	
 	/**
 	 * Removes the given {@link BooleanChangeListener} from this {@code BooleanRef}'s list of {@code BooleanChangeListener}s.
@@ -78,8 +66,8 @@ public class BooleanRef extends AbstractRef {
 	 * @param listener
 	 * @return {@code true} if the listener was present and has been removed, {@code false} if the listener was not present.
 	 */
-	public boolean removeChangeListener(BooleanChangeListener listener) {
-		return changeListeners != null && changeListeners.remove(listener);
-	}
+	boolean removeChangeListener(BooleanChangeListener listener);
+	
+	Collection<BooleanChangeListener> getChangeListenersUnmodifiable();
 	
 }

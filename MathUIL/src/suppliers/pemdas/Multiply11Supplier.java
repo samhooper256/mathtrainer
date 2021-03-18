@@ -19,7 +19,7 @@ public class Multiply11Supplier extends SettingsProblemSupplier {
 	
 	private final NamedSetting<IntRange> onesRange;
 	private final NamedSetting<IntRange> nonDigitRange;
-	private final NamedSetting<BooleanRef> include121;
+	private final NamedSetting<MutableBooleanRef> include121;
 	
 	public Multiply11Supplier() {
 		this(DEFUALT_LOW_ONES, DEFAULT_HIGH_ONES, DEFAULT_LOW_NON_ONES_DIGITS, DEFUALT_HIGH_NON_ONES_DIGITS);
@@ -28,7 +28,7 @@ public class Multiply11Supplier extends SettingsProblemSupplier {
 	public Multiply11Supplier(final int lowOnes, final int highOnes, final int lowNon, final int highNon) {
 		this.onesRange = NamedSetting.of(new IntRange(MIN_ONES, MAX_ONES, lowOnes, highOnes), "Ones");
 		this.nonDigitRange = NamedSetting.of(new IntRange(MIN_NON_ONES_DIGITS, MAX_NON_ONES_DIGITS, lowNon, highNon), "Non-ones term digits");
-		include121 = NamedSetting.of(new BooleanRef(DEFAULT_INCLUDE_121), "Include 121");
+		include121 = NamedSetting.of(new MutableBooleanRef(DEFAULT_INCLUDE_121), "Include 121");
 		addAllSettings(include121, onesRange, nonDigitRange);
 	}
 	

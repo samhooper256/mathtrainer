@@ -16,6 +16,7 @@ import utils.refs.*;
  * adjusted by the user. An example of a setting would be the amount of terms in an {@link IntAddSubtract}. A
  * {@link ProblemSupplier ProblemSupplier's} settings are returned as a {@link Collection} of {@link Ref Refs}.</p>
  * 
+ * <p>Every {@code ProblemSupplier} starts in {@link SupplierMode#RANDOM}.</p>
  * <p><b>Implementation note:</b> In order for a setting to be displayed to and adjusted by the user, it must be of a
  * {@link Ref} subtype that is supported by {@link SettingTitledPane#displayNodeForRef(Ref)}</p>
  * @author Sam Hooper
@@ -79,10 +80,14 @@ public interface ProblemSupplier extends Supplier<Problem> {
 		return RANDOM_ONLY;
 	}
 	
+	/** Returns {@code false} for any {@link SupplierMode SupplierModes} that are not supported {@link #getSupportedModesUnderAnySettings() supported under any settings}.*/
 	default boolean supportsUnderCurrentSettings(SupplierMode mode) {
-		return getSupportedModesUnderCurrentSettings().contains(mode);
+		return supportsRef(mode).get();
 	}
 	
+	/** This method is <b>not</b> required to return the same object each time it is called nor is it required to return
+	 * a view of the same {@link Set} every time it is called. This implies that, if the settings change after this method
+	 * is called, the returned {@code Set} may not be updated.*/
 	default EnumSetView<SupplierMode> getSupportedModesUnderCurrentSettings() {
 		return RANDOM_ONLY;
 	}
@@ -100,7 +105,7 @@ public interface ProblemSupplier extends Supplier<Problem> {
 		return getModeRef().getValue();
 	}
 	
-	/** Returns {@code true} if the mode was successfully changed {@code false} if the given mode is the same as the current one. Throws an
+	/** Returns {@code true} if the mode was successfully changed and {@code false} if the given mode is the same as the current one. Throws an
 	 * {@link UnsupportedOperationException} if the given mode is not {@link #supportsUnderCurrentSettings(SupplierMode) supported under the current settings}.*/
 	default boolean setMode(SupplierMode newMode) {
 		if(newMode == getMode())
@@ -113,7 +118,8 @@ public interface ProblemSupplier extends Supplier<Problem> {
 		//Overridden for functionality
 	}
 	
-	/** Called to notify this {@link ProblemSupplier} that its {@link #settings()} have changed in some way.*/
+	/** Called to notify this {@link ProblemSupplier} that its {@link #settings()} have changed in some way. <b>Any method
+	 * that overrides this must immediately call {@code super.settingsChanged()}.</b>*/
 	default void settingsChanged() {
 		setMode(SupplierMode.RANDOM);
 	}
@@ -122,6 +128,13 @@ public interface ProblemSupplier extends Supplier<Problem> {
 	 * Behavior undefined if this {@code ProblemSupplier} is not currently in {@code STACKED} mode (may return {@code null}, throw an exception, return an {@code IntRef}, etc.).*/
 	default IntRef getStackedUnsolved() {
 		throw new UnsupportedOperationException("This ProblemSupplier is not in stacked mode.");
+	}
+	
+	/** Returns a {@link BooleanRef} whose {@link BooleanRef #get() value} is whether or not this {@link ProblemSupplier} supports
+	 * the given {@link SupplierMode} under its current {@link #settings() settings}. This method always returns the same object when
+	 * given the same {@code SupplierMode}.*/
+	default BooleanRef supportsRef(SupplierMode mode) {
+		return BooleanRef.of(mode == SupplierMode.RANDOM);
 	}
 	
 }

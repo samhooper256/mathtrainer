@@ -19,6 +19,7 @@ import utils.refs.*;
  * @author Sam Hooper
  *
  */
+//TODO if they remove a supplier, then add it again, the listeners that are listening from the old SettingTitledPane remain attached.
 public class SettingTitledPane extends TitledPane {
 	
 	private ProblemSupplier problemSupplier;
@@ -59,7 +60,7 @@ public class SettingTitledPane extends TitledPane {
 		if(supported.size() > 1) {
 			final EnumSetView<SupplierMode> currentSupported = supplier.getSupportedModesUnderCurrentSettings();
 			ToggleGroup group = new ToggleGroup();
-			for(SupplierMode mode : supported) {
+			for(final SupplierMode mode : supported) {
 				final String buttonText = currentSupported.contains(mode) ? mode.getDisplayName() : getUnsupportedModeDisplay(mode);
 				ModeRadioButton button = mode == SupplierMode.STACKED ? new StackedModeRadioButton(buttonText) : new ModeRadioButton(mode, buttonText);
 				button.setOnAction(eventHandler -> setSelectedMode(mode));
@@ -67,6 +68,11 @@ public class SettingTitledPane extends TitledPane {
 				if(mode == SupplierMode.RANDOM) {
 					button.setSelected(true);
 				}
+				
+				problemSupplier.supportsRef(mode).addChangeListener((ov, nv) -> {
+//					System.out.printf("enter change listener for mode: %s (ov=%b, nv=%b)%n", mode,ov,nv);
+					modeRadioButtonForOrThrow(mode).setSupportedDisplay(nv);
+				});
 				button.setToggleGroup(group);
 				modeRadioButtons.add(button);
 				vBox.getChildren().add(button);
@@ -88,6 +94,29 @@ public class SettingTitledPane extends TitledPane {
 		
 		public SupplierMode getMode() {
 			return mode;
+		}
+		
+		private String textWithoutParens() {
+			String text = getText();
+			int index = text.indexOf('(');
+			return index < 0 ? text : text.substring(0, index - 1);
+		}
+		
+		public void setSupportedDisplay(boolean isSupported) {
+			if(isSupported)
+				displaySupported();
+			else
+				displayUnsupported();
+		}
+		
+		private void displayUnsupported() {
+			setText(String.format("%s (unsupported under current settings)", textWithoutParens()));
+			setDisable(true);
+		}
+		
+		private void displaySupported() {
+			setText(textWithoutParens());
+			setDisable(false);
 		}
 		
 	}
@@ -182,7 +211,7 @@ public class SettingTitledPane extends TitledPane {
 	 * <p>This method supports the following types and their subtypes:
 	 * <ul>
 	 * <li>{@link IntRange}</li>
-	 * <li>{@link BooleanRef}</li>
+	 * <li>{@link MutableBooleanRef}</li>
 	 * </ul>
 	 * </p>
 	 */
@@ -202,8 +231,8 @@ public class SettingTitledPane extends TitledPane {
 			final Pane rangeSlider = new IntRangeBox(ir);
 			vBox.getChildren().add(rangeSlider);
 		}
-		else if(ref instanceof BooleanRef) {
-			BooleanRef br = (BooleanRef) ref;
+		else if(ref instanceof MutableBooleanRef) {
+			MutableBooleanRef br = (MutableBooleanRef) ref;
 			vBox.getChildren().add(new BoolBox(br, name));
 		}
 		else {
@@ -297,7 +326,7 @@ public class SettingTitledPane extends TitledPane {
 	
 	private static class BoolBox extends Label {
 		
-		public BoolBox(final BooleanRef ref, final String text) {
+		public BoolBox(final MutableBooleanRef ref, final String text) {
 			super(text);
 			CheckBox checkBox = new CheckBox();
 			checkBox.setSelected(ref.get());

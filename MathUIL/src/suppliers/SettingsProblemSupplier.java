@@ -30,5 +30,12 @@ public abstract class SettingsProblemSupplier implements ProblemSupplier {
 			setting.addChangeAction(changeAction);
 		}
 		Collections.addAll(settings, newSettings);
+		settingsAdded();
+	}
+	
+	/** Called immediately after a setting is added via {@link #addAllSettings(Ref...)}. Does nothing
+	 * by default.*/
+	protected void settingsAdded() {
+		//overridden for functionality
 	}
 }

@@ -17,7 +17,7 @@ public class Multiply125Supplier extends SettingsProblemSupplier {
 	private static final double CHANCE_375 = 0.30;
 	private static final boolean DEFAULT_INCLUDE375 = true;
 	private final NamedSetting<IntRange> digits;
-	private final NamedSetting<BooleanRef> include375;
+	private final NamedSetting<MutableBooleanRef> include375;
 	
 	public Multiply125Supplier() {
 		this(LOW_DIGITS, HIGH_DIGITS);
@@ -25,7 +25,7 @@ public class Multiply125Supplier extends SettingsProblemSupplier {
 	
 	public Multiply125Supplier(final int lowDigits, final int highDigits) {
 		digits = NamedSetting.of(new IntRange(MIN_DIGITS, MAX_DIGITS, lowDigits, highDigits), "Digits in non-125 term");
-		include375 = NamedSetting.of(new BooleanRef(DEFAULT_INCLUDE375), "Include 375");
+		include375 = NamedSetting.of(new MutableBooleanRef(DEFAULT_INCLUDE375), "Include 375");
 		addAllSettings(include375, digits);
 	}
 

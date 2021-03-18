@@ -8,7 +8,7 @@ import java.util.List;
 import math.Evaluator;
 import problems.*;
 import suppliers.*;
-import utils.refs.BooleanRef;
+import utils.refs.MutableBooleanRef;
 
 /**
  * @author Sam Hooper
@@ -19,9 +19,9 @@ public class ExponentApproximationSupplier extends SettingsProblemSupplier {
 	private static final RangeStore TERMS = RangeStore.of(1, 4, 1, 3), BASE = RangeStore.of(1, 100, 1, 20), EXPONENT = RangeStore.of(1, 6, 1, 4);
 	
 	private final NamedIntRange terms, base, exponent;
-	private final NamedSetting<BooleanRef> division;
+	private final NamedSetting<MutableBooleanRef> division;
 	public ExponentApproximationSupplier() {
-		addAllSettings(division = NamedSetting.of(new BooleanRef(true), "Divison"),
+		addAllSettings(division = NamedSetting.of(new MutableBooleanRef(true), "Divison"),
 				terms = of(TERMS, "Terms"), exponent = of(EXPONENT, "Exponents"), base = of(BASE, "Bases"));
 	}
 	@Override

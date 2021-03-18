@@ -12,10 +12,10 @@ public interface IntRef extends Ref {
 	
 	int get();
 	
-	public void addChangeListener(IntChangeListener listener);
+	void addChangeListener(IntChangeListener listener);
 	
-	public boolean removeChangeListener(IntChangeListener listener);
+	boolean removeChangeListener(IntChangeListener listener);
 	
-	public Collection<IntChangeListener> getChangeListenersUnmodifiable();
+	Collection<IntChangeListener> getChangeListenersUnmodifiable();
 	
 }

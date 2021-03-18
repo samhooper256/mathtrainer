@@ -26,10 +26,11 @@ public class Main extends Application {
 		assert (enabled = true) == true;
 		if(!enabled)
 			throw new AssertionError(String.format(
-					"%n%nAssertions are not enabled. The program currently requires assertons to be enabled.%n"
-					+ "Enable them by adding the '-ea' JVM argument.%n"
-					+ "In Eclipse, this can be done by clicking Run > Run Configurations > Arguments tab. Then, enter "
-					+ "'-ea' into the 'VM Arguments' box.%n"
+					"""
+					%nAssertions are not enabled. The program currently requires assertions to be enabled.
+					Enable them by adding the '-ea' JVM argument.
+					In Eclipse, this can be done by clicking Run > Run Configurations > Arguments tab. Then, enter
+					'-ea' into the 'VM Arguments' box.%n"""
 			));
 	}
 	public static void main(String[] args) {
