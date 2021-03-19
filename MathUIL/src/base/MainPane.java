@@ -14,13 +14,9 @@ import utils.*;
  */
 public class MainPane extends StackPane {
 
-	/**
-	 * in milliseconds
-	 */
+	/** in milliseconds */
 	private static final int SETTINGS_ENTER_DURATION = 800;
-	/**
-	 * in milliseconds
-	 */
+	/** in milliseconds */
 	private static final int SETTINGS_EXIT_DURATION = 800;
 	private static final int SETTINGS_WHEEL_INSET = 10;
 	private static final int SETTINGS_WHEEL_SIZE = 30;
@@ -35,7 +31,7 @@ public class MainPane extends StackPane {
 
 	public MainPane() {
 		super();
-		problemPane = new ProblemPane(CompositeProblemSupplier.of(new IntAddSubtractSupplier(2, 2, 2, 2)));
+		problemPane = new ProblemPane(CompositeProblemSupplier.of(new IntAddSubtractSupplier()));
 		settingsPane = new SettingsPane(this);
 		settingsEnterAnimation = createSettingsEnterAnimation();
 		settingsExitAnimation = createSettingsExitAnimation();

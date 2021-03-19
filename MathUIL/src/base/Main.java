@@ -23,7 +23,7 @@ public class Main extends Application {
 	 */
 	private static void ensureAssertionsAreEnabled() {
 		boolean enabled = false;
-		assert (enabled = true) == true;
+		assert enabled = true;
 		if(!enabled)
 			throw new AssertionError(String.format(
 					"""
@@ -33,6 +33,7 @@ public class Main extends Application {
 					'-ea' into the 'VM Arguments' box.%n"""
 			));
 	}
+	
 	public static void main(String[] args) {
 		ensureAssertionsAreEnabled();
 		launch(args);

@@ -1,43 +1,52 @@
 package suppliers.exponentiation;
 
-import java.util.*;
+import static suppliers.NamedIntRange.of;
 
-import base.*;
+import java.util.List;
+import java.util.stream.*;
+
 import problems.*;
 import suppliers.*;
-import utils.*;
-import utils.refs.*;
 
 /**
  * @author Sam Hooper
  *
  */
-public class SquaresSupplier extends SettingsProblemSupplier {
+public class SquaresSupplier extends RandomAndStackedSupplier {
 	
-	private static final int MIN_BASE = 0, MAX_BASE = 200;
-	public static final int DEFAULT_MIN_BASE = 1, DEFAULT_MAX_BASE = 30;
+	private static final RangeStore BASE = RangeStore.of(1, 200, 1, 30);
 	
-	private final NamedSetting<IntRange> baseRange;
+	private final NamedIntRange base;
 	
 	public SquaresSupplier() {
-		this(DEFAULT_MIN_BASE, DEFAULT_MAX_BASE);
-	}
-	
-	public SquaresSupplier(int minBase, int maxBase) {
-		this.baseRange = NamedSetting.of(new IntRange(MIN_BASE, MAX_BASE, minBase, maxBase), "Base");
-		addAllSettings(baseRange);
+		addAllSettings(base = of(BASE, "Base"));
 	}
 
 	@Override
-	public SimpleExpression get() {
-		return new SimpleExpression(String.format("%d^2", Problem.intInclusive(minBase(), maxBase())));
+	public SimpleExpression getRandom() {
+		return getWithBase(Problem.intInclusive(minBase(), maxBase()));
+	}
+
+	public SimpleExpression getWithBase(final int baseValue) {
+		return new SimpleExpression(String.format("%d^2", baseValue));
 	}
 	
 	public int minBase() {
-		return baseRange.ref().getLow();
+		return base.low();
 	}
 	
 	public int maxBase() {
-		return baseRange.ref().getHigh();
+		return base.high();
 	}
+
+	@Override
+	protected boolean supportsStacked() {
+		return true; //always support stacked, since there will always be < 1000 problems.
+	}
+
+	@Override
+	protected List<Problem> generateAllPossibleProblems() {
+		return IntStream.rangeClosed(base.low(), base.high()).mapToObj(this::getWithBase).collect(Collectors.toList());
+	}
+	
 }

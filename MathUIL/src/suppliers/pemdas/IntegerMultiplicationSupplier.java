@@ -1,14 +1,12 @@
 package suppliers.pemdas;
 
-import static suppliers.NamedIntRange.*;
+import static suppliers.NamedIntRange.of;
 
 import java.util.*;
 import java.util.stream.IntStream;
 
 import problems.*;
 import suppliers.*;
-import utils.EnumSetView;
-import utils.refs.*;
 /**
  * <p>Supports {@link SupplierMode#RANDOM} and {@link SupplierMode#STACKED} (under certain conditions). </p>
  * @author Sam Hooper

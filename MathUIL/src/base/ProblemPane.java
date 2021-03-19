@@ -37,6 +37,7 @@ public class ProblemPane extends Pane {
 			SHOW_ANSWER_TEXT = String.format("Show Answer (%C)", SHOW_ANSWER_CHAR),
 			HIDE_ANSWER_TEXT = String.format("Hide Answer (%C)", SHOW_ANSWER_CHAR);
 	private static final Image APPROX_IMAGE = Images.getImage("approx.png");
+	private static final int DEFAULT_RESULTS_TRACKED = 100;
 
 	private static String secString(double timeInNanos) {
 		return String.format("%.3fs", timeInNanos / 1_000_000_000);
@@ -72,7 +73,7 @@ public class ProblemPane extends Pane {
 	 * Number of the user's most recent problem attempts whose times and accuracies
 	 * will be kept in temporary storage (and displayed to the user).
 	 */
-	private int resultsTracked = 100;
+	private int resultsTracked;
 	/**
 	 * {@code true} if the user has shown the answer to the {@link #currentProblem}
 	 * (using the {@link #showAnswer} Button).
@@ -84,6 +85,7 @@ public class ProblemPane extends Pane {
 
 	public ProblemPane(final CompositeProblemSupplier problemSupplier) {
 		compositeSupplier = Objects.requireNonNull(problemSupplier);
+		resultsTracked = DEFAULT_RESULTS_TRACKED;
 		times = new FixedDoubleQueue(resultsTracked);
 		accuracies = new FixedBooleanQueue(resultsTracked);
 
@@ -93,7 +95,7 @@ public class ProblemPane extends Pane {
 		averageTimeLabel = new Label(DEFAULT_AVERAGE_TIME_TEXT);
 		averageAccuracyLabel = new Label(DEFAULT_AVERAGE_ACCURACY_TEXT);
 		resetResults = Buttons.of("Reset", this::resetResults);
-		submit = Buttons.of(SUBMIT_TEXT, () -> acceptInput());
+		submit = Buttons.of(SUBMIT_TEXT, this::acceptInput);
 		showAnswer = Buttons.of(SHOW_ANSWER_TEXT, this::showAnswerButtonAction);
 		clear = Buttons.of(CLEAR_TEXT, this::clearButtonAction);
 		showSkill = Buttons.of(SHOW_SKILL_TEXT, this::showSkillButtonAction);
@@ -114,6 +116,77 @@ public class ProblemPane extends Pane {
 		initOptions();
 		finishInit();
 		generateAndDisplayFreshProblem();
+	}
+
+	private void initCompositeSupplier() {
+		for(ProblemSupplier ps : compositeSupplier.suppliers())
+			supplierNames.add(ps.getName());
+		compositeSupplier.suppliers().addAddListener(ps -> supplierNames.add(ps.getName()));
+		compositeSupplier.suppliers().addRemoveListener(ps -> supplierNames.remove(ps.getName()));
+	}
+
+	private void initInputField() {
+		field.setBorder(FIELD_EMPTY_BORDER);
+		field.setAlignment(Pos.CENTER);
+		field.maxWidthProperty().bind(root.widthProperty().divide(2));
+		field.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+			switch (keyEvent.getCode()) {
+			case BACK_SPACE, DELETE -> {
+				if(!this.canDelete())
+					keyEvent.consume();
+				else
+					hasDeletedText = true;
+			}
+			}
+		});
+		field.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
+			if(keyEvent.getCharacter().length() > 1) {
+				keyEvent.consume();
+				return;
+			}
+			char c = keyEvent.getCharacter().charAt(0);
+			if(c >= 'a' && c <= 'z')
+				keyEvent.consume();
+			if(c == CLEAR_CHAR)
+				clearButtonAction();
+			else if(c == SHOW_ANSWER_CHAR)
+				showAnswerButtonAction();
+			else if(c == SHOW_SKILL_CHAR)
+				showSkillButtonAction();
+		});
+	}
+
+	private void initOptions() {
+		skillLabel.setWrapText(true);
+		skillLabel.setVisible(false);
+		deleteText.setSelected(true);
+		markWrongIfCleared.setSelected(true);
+		markWrongIfShownAnswer.setSelected(true);
+	}
+
+	private void initProblemView() {
+		problemView.getEngine().setUserStyleSheetLocation(getClass().getResource(PROBLEM_VIEW_CSS_FILENAME).toString());
+		problemViewWrap.prefWidthProperty().bind(field.widthProperty());
+		setOnKeyPressed(this::paneKeyHandler);
+	}
+
+	private void finishInit() {
+	
+		final GridPane gridPane = createGridPane();
+		final AnchorPane anchor = createAnchorPane();
+	
+		root.getChildren().addAll(gridPane, anchor);
+		root.prefWidthProperty().bind(this.widthProperty());
+		root.prefHeightProperty().bind(this.heightProperty());
+		getChildren().add(root);
+	
+		StackPane approxStack = new StackPane(approxWrap);
+		approxStack.prefHeightProperty().bind(field.heightProperty());
+		approxStack.prefWidthProperty().bind(approxStack.prefHeightProperty());
+		approxStack.layoutXProperty().bind(field.layoutXProperty().subtract(approxStack.widthProperty()));
+		approxStack.layoutYProperty().bind(field.layoutYProperty());
+		approxWrap.setVisible(false);
+		getChildren().add(approxStack);
 	}
 
 	/**
@@ -167,13 +240,12 @@ public class ProblemPane extends Pane {
 	 * Accepts the input that is currently in the {@link #field}. Does nothing if
 	 * the input {@link String#isBlank() is blank}; otherwise, passes the
 	 * {@link String#strip() stripped} version of the input {@code String} to
-	 * {@link #acceptInput(String)}.
+	 * {@link #accept(String)}.
 	 */
 	private void acceptInput() {
 		final String input = field.getText().strip();
-		if(input.isBlank())
-			return;
-		acceptInput(input);
+		if(!input.isBlank())
+			accept(input);
 	}
 
 	/**
@@ -181,7 +253,7 @@ public class ProblemPane extends Pane {
 	 * problem} if the input is a correct answer or {@link #wrongAnswerSubmitted()
 	 * processing it as a wrong answer} otherwise.
 	 */
-	private void acceptInput(final String inputString) {
+	private void accept(final String inputString) {
 		if(isCorrectAnswerToCurrentProblem(inputString))
 			correctAnswerSubmitted();
 		else
@@ -189,9 +261,8 @@ public class ProblemPane extends Pane {
 	}
 
 	private void correctAnswerSubmitted() {
-		if(lastWasStrictlySolved()) {
+		if(currentProblemWasStrictlySolved())
 			currentProblemSupplier.strictlySolved(currentProblem);
-		}
 		setupNextProblem();
 	}
 
@@ -257,111 +328,45 @@ public class ProblemPane extends Pane {
 		return gridPane;
 	}
 
-	private void finishInit() {
-
-		final GridPane gridPane = createGridPane();
-		final AnchorPane anchor = createAnchorPane();
-
-		root.getChildren().addAll(gridPane, anchor);
-		root.prefWidthProperty().bind(this.widthProperty());
-		root.prefHeightProperty().bind(this.heightProperty());
-		getChildren().add(root);
-
-		StackPane approxStack = new StackPane(approxWrap);
-		approxStack.prefHeightProperty().bind(field.heightProperty());
-		approxStack.prefWidthProperty().bind(approxStack.prefHeightProperty());
-		approxStack.layoutXProperty().bind(field.layoutXProperty().subtract(approxStack.widthProperty()));
-		approxStack.layoutYProperty().bind(field.layoutYProperty());
-		approxWrap.setVisible(false);
-		getChildren().add(approxStack);
-	}
-
 	/**
 	 * Generates and displays a new {@link Problem}. Does not
 	 * {@link #updateResults() update results} from a previous problem (if there has
 	 * been one).
 	 */
 	private void generateAndDisplayFreshProblem() {
-//		System.out.printf("enter freshProblem()%n");
-		generateProblemAndUpdateLabel();
-		updateSkillText();
-		wrongAnswers = 0;
-		hasDeletedText = false;
-		hasShownAnswer = false;
-//		System.out.printf("fresh is approx ? %b%n", currentProblem.isApproximateResult());
-		approxWrap.setVisible(
-				currentProblem instanceof NumericProblem && ((NumericProblem) currentProblem).isApproximateResult());
+		generateProblem();
+		updateProblemView();
+		updateSkillLabel();
+		resetProblemStats();
+		final boolean isApproximationQuestion = currentProblem instanceof NumericProblem p && p.isApproximateResult();
+		approxWrap.setVisible(isApproximationQuestion);
 		resetCurrentProblemTimer();
-//		System.out.printf("]exit freshProblem()%n");
 	}
 
 	private void generateProblem() {
 		currentProblemSupplier = compositeSupplier.getRandomSupplier();
 		currentProblem = currentProblemSupplier.get();
 	}
-
-	private void generateProblemAndUpdateLabel() {
-//		System.out.printf("enter generateProblemAndUpdateLabel%n");
-		generateProblem();
-		updateLabel();
-//		System.out.printf("]exit generateProblemAndUpdateLabel%n");
+	
+	private void updateProblemView() {
+		assert currentProblem.displayString() != null;
+		problemView.getEngine().loadContent("<html><body style=\"display: flex; align-items: flex-end; flex-wrap: wrap;\">"
+						+ "<div style=\"width: 100%;\">" + currentProblem.displayString() + "</div></body></html>");
 	}
 
-	private void hideAnswerIfShowing() {
+	private void updateSkillLabel() {
+		skillLabel.setText(currentProblemSupplier.getName());
+	}
+	
+	private void resetProblemStats() {
+		wrongAnswers = 0;
+		hasDeletedText = false;
+		hasShownAnswer = false;
+	}
+	
+	private void hideAnswer() {
 		if(isAnswerShowing())
 			toggleShowAnswer();
-	}
-
-	private void initCompositeSupplier() {
-		for(ProblemSupplier ps : compositeSupplier.suppliers())
-			supplierNames.add(ps.getName());
-		compositeSupplier.suppliers().addAddListener(ps -> supplierNames.add(ps.getName()));
-		compositeSupplier.suppliers().addRemoveListener(ps -> supplierNames.remove(ps.getName()));
-	}
-
-	private void initInputField() {
-		field.setBorder(FIELD_EMPTY_BORDER);
-		field.setAlignment(Pos.CENTER);
-		field.maxWidthProperty().bind(root.widthProperty().divide(2));
-		field.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-			switch (keyEvent.getCode()) {
-			case BACK_SPACE, DELETE -> {
-				if(!this.canDelete())
-					keyEvent.consume();
-				else
-					hasDeletedText = true;
-			}
-			}
-		});
-		field.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
-			if(keyEvent.getCharacter().length() > 1) {
-				keyEvent.consume();
-				return;
-			}
-			char c = keyEvent.getCharacter().charAt(0);
-			if(c >= 'a' && c <= 'z')
-				keyEvent.consume();
-			if(c == CLEAR_CHAR)
-				clearButtonAction();
-			else if(c == SHOW_ANSWER_CHAR)
-				showAnswerButtonAction();
-			else if(c == SHOW_SKILL_CHAR)
-				showSkillButtonAction();
-		});
-	}
-
-	private void initOptions() {
-		skillLabel.setWrapText(true);
-		skillLabel.setVisible(false);
-		deleteText.setSelected(true);
-		markWrongIfCleared.setSelected(true);
-		markWrongIfShownAnswer.setSelected(true);
-	}
-
-	private void initProblemView() {
-		problemView.getEngine().setUserStyleSheetLocation(getClass().getResource(PROBLEM_VIEW_CSS_FILENAME).toString());
-		problemViewWrap.prefWidthProperty().bind(field.widthProperty());
-		setOnKeyPressed(this::paneKeyHandler);
 	}
 
 	private boolean isAnswerShowing() {
@@ -394,7 +399,7 @@ public class ProblemPane extends Pane {
 
 	private void paneKeyHandler(KeyEvent keyEvent) {
 		switch (keyEvent.getCode()) {
-		case ENTER -> acceptInput();
+			case ENTER -> acceptInput();
 		}
 	}
 
@@ -420,7 +425,7 @@ public class ProblemPane extends Pane {
 		updateResults();
 		clearInputField();
 		field.setBorder(FIELD_EMPTY_BORDER);
-		hideAnswerIfShowing();
+		hideAnswer();
 		generateAndDisplayFreshProblem();
 	}
 
@@ -451,33 +456,22 @@ public class ProblemPane extends Pane {
 	}
 
 	private void toggleSkillShowing() {
-		if(isSkillShowing()) {
-			skillLabel.setVisible(false);
+		if(isSkillShowing())
 			showSkill.setText(SHOW_SKILL_TEXT);
-		}
-		else {
-			skillLabel.setVisible(true);
+		else
 			showSkill.setText(HIDE_SKILL_TEXT);
-		}
+		skillLabel.setVisible(isSkillShowing());
 
 	}
 
 	private void updateAccuracies() {
-		accuracies.addFirst(lastWasStrictlySolved());
+		accuracies.addFirst(currentProblemWasStrictlySolved());
 		averageAccuracyLabel.setText(
 				String.format("Last %d Accuracy: %.1f%%", accuracies.size(), accuracies.truthProportion() * 100));
 	}
 
-	public boolean lastWasStrictlySolved() {
+	public boolean currentProblemWasStrictlySolved() {
 		return wrongAnswers == 0 && (!hasDeletedText || !isMarkWrongIfCleared()) && (!hasShownAnswer || !isMarkWrongIfShownAnswer());
-	}
-
-	private void updateLabel() {
-		assert currentProblem.displayString() != null;
-		problemView.getEngine()
-				.loadContent("<html><body style=\"display: flex; align-items: flex-end; flex-wrap: wrap;\">"
-						+ "<div style=\"width: 100%;\">" + currentProblem.displayString() + "</div></body></html>");
-		problemViewWrap.setPrefHeight(300);
 	}
 
 	private void updateResults() {
@@ -485,13 +479,9 @@ public class ProblemPane extends Pane {
 		updateAccuracies();
 	}
 
-	private void updateSkillText() {
-		skillLabel.setText(currentProblemSupplier.getName());
-	}
-
 	private void updateTimes() {
-		final double time;
-		setLastTime(time = System.nanoTime() - startTime);
+		final double time = System.nanoTime() - startTime;
+		setLastTime(time);
 		times.addFirst(time);
 		averageTimeLabel.setText(String.format("Last %d Average: %s", times.size(), secString(times.average())));
 	}

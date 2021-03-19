@@ -113,8 +113,7 @@ public class SettingsPane extends StackPane {
 	private void removeAllSuppliersButtonAction() {
 		ObservableList<Node> list = settingTitledPanesList();
 		while(!list.isEmpty())
-			((SettingTitledPane) list.get(0)).removeSelf(); //will trigger the removal of an element from list, so we use "!list.isEmpty" and "list.get(0)"
-			//to avoid ConcurrentModificationException
+			((SettingTitledPane) list.get(list.size() - 1)).removeSelf();
 		disallowRemoval();
 	}
 	

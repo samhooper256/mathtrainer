@@ -59,7 +59,7 @@ public abstract class RandomAndStackedSupplier extends MultiModeSupplier {
 	}
 	
 	@Override
-	public Problem get() {
+	public final Problem get() {
 		currentProblemMode = getMode();
 		return switch(currentProblemMode) {
 			case RANDOM -> getRandom();
