@@ -23,6 +23,7 @@ import utils.*;
 //TODO Approx problems shouldn't show so many decimals!
 public class ProblemPane extends Pane {
 
+	private static final String NO_PROBLEMS_TEXT = "No problems to generate.";
 	private static final Border FIELD_RED_BORDER = Borders.of(Color.RED);
 	private static final Border FIELD_EMPTY_BORDER = Borders.of(Color.TRANSPARENT);
 
@@ -79,6 +80,7 @@ public class ProblemPane extends Pane {
 	 * (using the {@link #showAnswer} Button).
 	 */
 	private boolean hasShownAnswer;
+	private boolean problemless;
 	private Problem currentProblem;
 
 	private ProblemSupplier currentProblemSupplier;
@@ -89,6 +91,9 @@ public class ProblemPane extends Pane {
 		times = new FixedDoubleQueue(resultsTracked);
 		accuracies = new FixedBooleanQueue(resultsTracked);
 
+		hasShownAnswer = false;
+		problemless = false;
+		
 		root = new StackPane();
 		answerLabel = new Label();
 		lastTimeLabel = new Label(DEFAULT_LAST_TIME_TEXT);
@@ -121,8 +126,14 @@ public class ProblemPane extends Pane {
 	private void initCompositeSupplier() {
 		for(ProblemSupplier ps : compositeSupplier.suppliers())
 			supplierNames.add(ps.getName());
-		compositeSupplier.suppliers().addAddListener(ps -> supplierNames.add(ps.getName()));
+		compositeSupplier.suppliers().addAddListener(this::supplierAddedAction);
 		compositeSupplier.suppliers().addRemoveListener(ps -> supplierNames.remove(ps.getName()));
+	}
+
+	private void supplierAddedAction(final ProblemSupplier ps) {
+		supplierNames.add(ps.getName());
+		if(!hasProblem())
+			exitProblemlessState();
 	}
 
 	private void initInputField() {
@@ -156,6 +167,7 @@ public class ProblemPane extends Pane {
 		});
 	}
 
+	
 	private void initOptions() {
 		skillLabel.setWrapText(true);
 		skillLabel.setVisible(false);
@@ -188,6 +200,8 @@ public class ProblemPane extends Pane {
 		approxWrap.setVisible(false);
 		getChildren().add(approxStack);
 	}
+
+	
 
 	/**
 	 * Adds the given {@link ProblemSupplier} to this {@link ProblemPane
@@ -263,9 +277,33 @@ public class ProblemPane extends Pane {
 	private void correctAnswerSubmitted() {
 		if(currentProblemWasStrictlySolved())
 			currentProblemSupplier.strictlySolved(currentProblem);
-		setupNextProblem();
+		updateResults();
+		clearInputField();
+		field.setBorder(FIELD_EMPTY_BORDER);
+		hideAnswer();
+		if(canGenerateProblems())
+			generateAndDisplayFreshProblem();
+		else
+			enterProblemlessState();
+	}
+	
+	private void enterProblemlessState() {
+		setProblemText(NO_PROBLEMS_TEXT);
+		field.setDisable(true);
+		problemless = true;
+	}
+	
+	private void exitProblemlessState() {
+		assert !hasProblem() && canGenerateProblems();
+		problemless = false;
+		field.setDisable(false);
+		generateAndDisplayFreshProblem();
 	}
 
+	private boolean hasProblem() {
+		return !problemless;
+	}
+	
 	/**
 	 * Returns {@code true} if the given {@link ProblemSupplier} has been added as
 	 * one of the suppliers that will generate this {@link ProblemPane
@@ -349,9 +387,14 @@ public class ProblemPane extends Pane {
 	}
 	
 	private void updateProblemView() {
-		assert currentProblem.displayString() != null;
+		final String text = currentProblem.displayString();
+		assert text != null;
+		setProblemText(text);
+	}
+
+	public void setProblemText(final String text) {
 		problemView.getEngine().loadContent("<html><body style=\"display: flex; align-items: flex-end; flex-wrap: wrap;\">"
-						+ "<div style=\"width: 100%;\">" + currentProblem.displayString() + "</div></body></html>");
+						+ "<div style=\"width: 100%;\">" + text + "</div></body></html>");
 	}
 
 	private void updateSkillLabel() {
@@ -414,19 +457,6 @@ public class ProblemPane extends Pane {
 
 	private void setLastTime(double timeInNanos) {
 		lastTimeLabel.setText("Last Time: " + secString(timeInNanos));
-	}
-
-	/**
-	 * Sets up this {@link ProblemPane} with a new {@link Problem}, which involves
-	 * updating times and accuracies, displaying the new problem to the user, and
-	 * clearing the input field. Updates {@link #startTime}.
-	 */
-	private void setupNextProblem() {
-		updateResults();
-		clearInputField();
-		field.setBorder(FIELD_EMPTY_BORDER);
-		hideAnswer();
-		generateAndDisplayFreshProblem();
 	}
 
 	/**
@@ -495,4 +525,9 @@ public class ProblemPane extends Pane {
 			clearInputField();
 		wrongAnswers++;
 	}
+	
+	public boolean canGenerateProblems() {
+		return !compositeSupplier.isEmpty();
+	}
+	
 }

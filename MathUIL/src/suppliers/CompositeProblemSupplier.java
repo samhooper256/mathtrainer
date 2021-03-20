@@ -57,4 +57,8 @@ public class CompositeProblemSupplier implements ProblemSupplier {
 		return suppliers;
 	}
 	
+	public boolean isEmpty() {
+		return suppliers().isEmpty();
+	}
+	
 }

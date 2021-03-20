@@ -11,7 +11,6 @@ import javafx.stage.*;
  * @author Sam Hooper
  *
  */
-//TODO crashes if you remove all the problem suppliers and solve one of them (it has no suppliers to generate problems from).
 public class Main extends Application {
 	
 	private static final String SCENE_STYLESHEET_FILENAME = "base/basestyle.css";

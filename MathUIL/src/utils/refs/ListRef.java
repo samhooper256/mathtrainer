@@ -1,7 +1,6 @@
 package utils.refs;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 import utils.SingleListener;
 
@@ -13,7 +12,7 @@ import utils.SingleListener;
  * @author Sam Hooper
  *
  */
-public class ListRef<E> extends AbstractRef implements Iterable<E> {
+public class ListRef<E> extends AbstractRef implements Collection<E> {
 	
 	private List<E> list;
 	private ArrayList<SingleListener<E>> addListeners; //only constructed when a listener is actually added.
@@ -26,10 +25,7 @@ public class ListRef<E> extends AbstractRef implements Iterable<E> {
 		this.list = list;
 	}
 	
-	public ListRef(Supplier<? extends List<E>> listFactory) {
-		this.list = listFactory.get();
-	}
-	
+	@Override
 	public boolean add(E item) {
 		if(list.add(item)) {
 			runAddListeners(item);
@@ -37,16 +33,6 @@ public class ListRef<E> extends AbstractRef implements Iterable<E> {
 			return true;
 		}
 		return false;
-	}
-	
-	/**
-	 * Adds all of the given items to this {@link ListRef}. Calling this method is equivalent to calling 
-	 * {@link #add(Object)} on each of the given items in the order they are given. Note that this method uses
-	 * a non-reifiable vararg parameter, so take care to avoid heap pollution.
-	 */
-	public void addAll(@SuppressWarnings("unchecked") E... items) {
-		for(E item : items)
-			add(item);
 	}
 	
 	private void runAddListeners(E item) {
@@ -72,14 +58,17 @@ public class ListRef<E> extends AbstractRef implements Iterable<E> {
 	}
 	
 	/**
-	 * Removes the element from the list that this {@link ListRef} refers to.
+	 * Removes the first occurrence of the given item from the list that this {@link ListRef} refers to.
 	 * The listeners are only run if an item was removed.
 	 * @param item
 	 * @return {@code true} if an item was removed, {@code false} otherwise.
 	 */
-	public boolean remove(E item) {
+	@Override
+	public boolean remove(Object item) {
 		if(list.remove(item)) {
-			runRemoveListeners(item);
+			@SuppressWarnings("unchecked")
+			E cast = (E) item;
+			runRemoveListeners(cast);
 			runChangeActions();
 			return true;
 		}
@@ -108,10 +97,6 @@ public class ListRef<E> extends AbstractRef implements Iterable<E> {
 		return removeListeners.remove(removeListener);
 	}
 	
-	public boolean contains(E item) {
-		return list.contains(item);
-	}
-	
 	public List<E> getUnmodifiable() {
 		return Collections.unmodifiableList(list);
 	}
@@ -120,10 +105,16 @@ public class ListRef<E> extends AbstractRef implements Iterable<E> {
 		return list.get(index);
 	}
 	
+	@Override
 	public int size() {
 		return list.size();
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return list.isEmpty();
+	}
+	
 	@Override
 	public Iterator<E> iterator() {
 		return list.iterator();
@@ -131,7 +122,58 @@ public class ListRef<E> extends AbstractRef implements Iterable<E> {
 	
 	@Override
 	public String toString() {
-		return "ListRef" + list.toString();
+		return String.format("ListRef%s", list.toString());
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return list.contains(o);
+	}
+
+	@Override
+	public Object[] toArray() {
+		return list.toArray();
+	}
+
+	@Override
+	public <T> T[] toArray(T[] a) {
+		return list.toArray(a);
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		for(Object o : c)
+			if(!contains(o))
+				return false;
+		return true;
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends E> c) {
+		boolean result = false;
+		for(E o : c)
+			result |= add(o);
+		return result;
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		boolean changed = false;
+		for(Object o : c)
+			changed |= remove(o);
+		return changed;
+	}
+	
+	/** Unsupported. */
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		throw new UnsupportedOperationException("ListRefs do not support retainAll");
+	}
+
+	/** Unsupported. */
+	@Override
+	public void clear() {
+		throw new UnsupportedOperationException("ListRefs do no support clear");
 	}
 	
 }
