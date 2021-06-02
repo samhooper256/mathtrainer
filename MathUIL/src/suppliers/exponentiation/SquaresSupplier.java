@@ -16,6 +16,10 @@ public class SquaresSupplier extends RandomAndStackedSupplier {
 	
 	private static final RangeStore BASE = RangeStore.of(1, 200, 1, 30);
 	
+	private static SimpleExpression getWithBase(final int baseValue) {
+		return new SimpleExpression(String.format("%d^2", baseValue));
+	}
+	
 	private final NamedIntRange base;
 	
 	public SquaresSupplier() {
@@ -27,10 +31,6 @@ public class SquaresSupplier extends RandomAndStackedSupplier {
 		return getWithBase(Problem.intInclusive(minBase(), maxBase()));
 	}
 
-	public SimpleExpression getWithBase(final int baseValue) {
-		return new SimpleExpression(String.format("%d^2", baseValue));
-	}
-	
 	public int minBase() {
 		return base.low();
 	}
@@ -46,7 +46,7 @@ public class SquaresSupplier extends RandomAndStackedSupplier {
 
 	@Override
 	protected List<Problem> generateAllPossibleProblems() {
-		return IntStream.rangeClosed(base.low(), base.high()).mapToObj(this::getWithBase).collect(Collectors.toList());
+		return IntStream.rangeClosed(base.low(), base.high()).mapToObj(SquaresSupplier::getWithBase).collect(Collectors.toList());
 	}
 	
 }

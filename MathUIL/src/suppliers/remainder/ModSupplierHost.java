@@ -15,7 +15,11 @@ import suppliers.*;
 public class ModSupplierHost implements ProblemSupplierHost {
 
 	public static Set<Supplier<? extends ProblemSupplier>> getFactories() {
-		return Set.of(() -> new ModSupplier(9), () -> new ModSupplier(11));
+		return Set.of(supplierFor(3), supplierFor(9), supplierFor(11));
+	}
+
+	public static Supplier<? extends ProblemSupplier> supplierFor(int divisor) {
+		return () -> new ModSupplier(divisor);
 	}
 	
 	private static class ModSupplier extends SettingsProblemSupplier {
