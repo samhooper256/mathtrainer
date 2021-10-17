@@ -1,5 +1,5 @@
-# Math Trainer
-A problem generator for practicing mental math.
+# relearn Beta
+A problem generator for practicing mental math. This is a prototype/proof-of-concept for a math skills trainer called "relearn" (a separate respository). This app was created entirely by me, while relearn itself was created with the help of Ayuj Verma.
 
 ![basic](https://user-images.githubusercontent.com/60260374/120552448-e4832500-c3bc-11eb-8c7d-eea29bcaadd7.PNG)
 ![settings](https://user-images.githubusercontent.com/60260374/120552462-e947d900-c3bc-11eb-87a3-439a903c8cf5.PNG)
